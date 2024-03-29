@@ -1,6 +1,5 @@
 # Virtual Chess
-Put here a short paragraph describing your project. 
-Adding an screenshot or a mockup of your application in action would be nice.  
+This project is a Java-based application that allows users to play chess with their friends, or by themselves against a computer opponent. The appliation utilizes JavaFX for a GUI.
 
 ![This is a screenshot.](images.png)
 # How to run
