@@ -2,7 +2,7 @@
 Put here a short paragraph describing your project. 
 Adding an screenshot or a mockup of your application in action would be nice.  
 
-![This is a screenshot.](images.png)
+![This is a screenshot.](documentation/images/images.png)
 # How to run
 Provide here instructions on how to use your application.   
 - Download the latest binary from the Release section on the right on GitHub.  
