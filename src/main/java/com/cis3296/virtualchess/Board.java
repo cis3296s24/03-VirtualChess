@@ -41,8 +41,8 @@ public class Board {
     }
 
     private void setColor(BoardSquare square, int x, int y){
-        Color black = Color.web("#00000000");
-        Color white = Color.web("#ffffffff");
+        Color black = Color.web("#000000");
+        Color white = Color.web("#ffffff");
 
         if((x+y)%2==0){
             square.setBackground(new Background(new BackgroundFill(black, CornerRadii.EMPTY, Insets.EMPTY)));
