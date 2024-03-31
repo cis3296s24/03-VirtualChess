@@ -12,7 +12,7 @@ public class BoardSquare extends StackPane {
     boolean containsPiece;
 
     /**
-     *
+     * Constructor for a square in the board
      * @param x - The X position of the square in the board
      * @param y - The X position of the square in the board
      */
