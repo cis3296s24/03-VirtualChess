@@ -6,6 +6,10 @@ public class Game {
 
     private Board chessBoard;
 
+    /**
+     *
+     * @param chessBoard
+     */
     public Game(GridPane chessBoard){
         this.chessBoard = new Board(chessBoard);
     }

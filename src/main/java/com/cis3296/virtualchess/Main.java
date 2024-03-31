@@ -7,13 +7,17 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("board.fxml"));
+        //Loads the board file
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("board.fxml"));
+        //800 by 800 because each tile is 100 and its 8 by 8
         Scene scene = new Scene(fxmlLoader.load(), 800, 800);
         stage.setTitle("VirtualChess");
         stage.setScene(scene);
+        // Not resizable for now but that can be something we figure out later
+        stage.setResizable(false);
         stage.show();
     }
 
