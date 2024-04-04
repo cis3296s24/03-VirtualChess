@@ -9,6 +9,10 @@ import javafx.geometry.Pos;
 import java.util.ArrayList;
 
 public class Board {
+    // In case we need to change these column/row/size values for any reason later on...
+    public final int MAX_COL = 8, MAX_ROW = 8;
+    public static final int SQUARE_SIZE = 100;
+    public static final int HALF_SQUARE_SIZE = SQUARE_SIZE/2;
 
     private GridPane chessBoard;
     private ArrayList<BoardSquare> boardSquares = new ArrayList<>();
@@ -39,11 +43,11 @@ public class Board {
      * @param chessBoard - A gridpane representing the chessboard
      */
     private void init(GridPane chessBoard){
-        for(int x = 0; x < 8; x++){
-            for(int y = 0; y < 8; y++){
+        for(int x = 0; x < MAX_COL; x++){
+            for(int y = 0; y < MAX_ROW; y++){
                 BoardSquare square = new BoardSquare(x, y);
-                square.setPrefHeight(100);
-                square.setPrefWidth(100);
+                square.setPrefHeight(SQUARE_SIZE);
+                square.setPrefWidth(SQUARE_SIZE);
                 square.setBorder(border);
                 setSquareColor(square);
                 chessBoard.add(square, x, y, 1, 1);
