@@ -13,7 +13,7 @@ public class Main extends Application {
         //Loads the board file
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("board.fxml"));
         //800 by 800 because each tile is 100 and its 8 by 8
-        Scene scene = new Scene(fxmlLoader.load(), 800, 800);
+        Scene scene = new Scene(fxmlLoader.load(), 810, 800);
         stage.setTitle("VirtualChess");
         stage.setScene(scene);
         // Not resizable for now but that can be something we figure out later
