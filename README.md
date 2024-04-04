@@ -1,19 +1,115 @@
-# Virtual Chess
-This project is a Java-based application that allows users to play chess with their friends, or by themselves against a computer opponent. The appliation utilizes JavaFX for a GUI.
-#### Screenshot will go here upon working build
-![This is a screenshot.](images.png)
+<a name="readme-top"></a>
 
-## How to contribute
-Follow this project board to know the latest status of the project: [https://github.com/orgs/cis3296s24/projects/83]  
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Issues][issues-shield]][issues-url]
 
-## How to build
-- Use this github repository, or feel free to fork your own copy
-- Checkout the main branch for the stable build
-- Any Java IDE should work, but develoment was done in IntelliJ IDEA, so your mileage may vary using other IDEs
-- Press CTRL+Shift+ALT+S to access the SDK platform settings for the project
-- Set the SDK for the project to OpenJDK 21
-- Apply and close window
-### How to run
-- Make sure you have OpenJDK 21 installed on your device
-- Using the code provided, run the HelloApplication class to run the program (subject to changes)
-- You should be greeted with a pop-up window if all is working properly
+
+
+<br />
+<div align="center">
+
+<h3 align="center">Virtual Chess</h3>
+
+  <p align="center">
+    <br />
+    <a href="https://github.com/cis3296s24/03-VirtualChess/tree/main/documentation"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    ·
+    <a href="https://github.com/cis3296s24/03-VirtualChess/issues">Report Bug/Request Features</a>
+    ·
+  </p>
+</div>
+
+
+
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#abstract">Abstract</a>
+    </li>
+    <li>
+      <a href="#team-members">Team Members</a>
+    </li>
+    <li>
+      <a href="#downloads">Downloads</a>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#contributing">Contributing</a></li>
+      </ul>
+    </li>
+
+  </ol>
+</details>
+
+
+
+<!-- ABOUT THE PROJECT -->
+## Abstract
+A Java chess application with player vs player and player vs computer modes
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Team Members
+
+Aidan Cuff
+
+Ken Fonseca
+
+Matt Gibson
+
+Nick Rucinski
+
+Token Ahmed
+
+## Downloads
+
+1. Make sure Java 21 is installed on your machine
+   https://www.oracle.com/java/technologies/downloads/#java21
+2. Go to the releases and download the latest release
+   https://github.com/cis3296s24/03-VirtualChess/releases
+3. Run the chess.jar 
+
+<!-- GETTING STARTED -->
+## Getting Started
+
+To get a local copy up and running follow these simple example steps.
+
+
+### Installation
+
+1. Make sure Java 21 is installed on your machine
+   https://www.oracle.com/java/technologies/downloads/#java21
+2. Clone the repo
+   ```sh
+   git clone https://github.com/cis3296s24/03-VirtualChess.git
+   ```
+3. Run the maven build script to download all dependencies
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Contributing
+
+How to contribute to the project
+
+0. See Installation
+1. Create your Feature Branch (`git checkout -b YourName/Feature`)
+2. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+3. Push to the Branch (`git push origin feature/AmazingFeature`)
+4. Open a Pull Request
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+[contributors-shield]: https://img.shields.io/github/contributors/cis3296s24/03-VirtualChess.svg?style=for-the-badge
+[contributors-url]: https://github.com/cis3296s24/03-VirtualChess/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/cis3296s24/03-VirtualChess.svg?style=for-the-badge
+[forks-url]: https://github.com/cis3296s24/03-VirtualChess/network/members
+[issues-shield]: https://img.shields.io/github/issues/cis3296s24/03-VirtualChess.svg?style=for-the-badge
+[issues-url]: https://github.com/cis3296s24/03-VirtualChess/issues
