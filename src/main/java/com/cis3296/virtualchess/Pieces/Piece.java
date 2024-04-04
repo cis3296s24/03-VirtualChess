@@ -4,6 +4,8 @@ import com.cis3296.virtualchess.Board;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.io.InputStream;
+
 public class Piece extends ImageView {
     public int x, y; // Pixel coordinates for the pieces
     public int col, row, prevCol, prevRow; // We want to track previous location in addition to current location
@@ -11,7 +13,7 @@ public class Piece extends ImageView {
     public String color;
     public String type;
 
-    private final String imageFolderPath = "src/main/resources/com/cis3296/virtualchess/assets/piecesNorm";
+    private final String imageFolderPath = "";
     /**
      * Constructor method for pieces
      * @param col is the column number of the piece
@@ -45,7 +47,7 @@ public class Piece extends ImageView {
         return row * Board.SQUARE_SIZE;
     }
     public void setImage(){
-        this.setPiece(new Image(imageFolderPath + "b_bishop_1x.png"));
+        this.setPiece(new Image(getClass().getResourceAsStream("/assets/piecesNorm/w_bishop_1x.png")));
     }
     public void setPiece(Image image){
         this.setImage(image);
