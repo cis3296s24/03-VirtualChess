@@ -47,7 +47,7 @@ public class Piece extends ImageView {
         return row * Board.SQUARE_SIZE;
     }
     public void setImage(){
-        this.setPiece(new Image(getClass().getResourceAsStream("/assets/piecesNorm/w_bishop_1x.png")));
+        this.setPiece(new Image(getClass().getResourceAsStream("/assets/piecesNorm/w_bishop_1x.png"), 100, 100, false, false));
     }
     public void setPiece(Image image){
         this.setImage(image);
