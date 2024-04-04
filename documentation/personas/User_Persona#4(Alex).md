@@ -1,3 +1,5 @@
+Toker Ahmed
+
 Alex, a high school student  
   
 Alex, age 16, is a high school student, currently studying in his 10th grade. Alex is from Philadelphia, and he finished his elementary and middle school at his local neighborhood schools. He mostly plays action-adventure games such as war and combat games. However, he saw some of his friends play chess, and found it very interesting. So, he wants to learn and play chess too.  
