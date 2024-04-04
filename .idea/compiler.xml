@@ -9,8 +9,5 @@
         <module name="VirtualChess" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="VirtualChess" target="21" />
-    </bytecodeTargetLevel>
   </component>
 </project>
