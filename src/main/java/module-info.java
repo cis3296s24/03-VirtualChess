@@ -9,4 +9,6 @@ module com.cis3296.virtualchess {
 
     opens com.cis3296.virtualchess to javafx.fxml;
     exports com.cis3296.virtualchess;
+    exports com.cis3296.virtualchess.Pieces;
+    opens com.cis3296.virtualchess.Pieces to javafx.fxml;
 }

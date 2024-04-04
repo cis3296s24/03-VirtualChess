@@ -1,9 +1,9 @@
 package com.cis3296.virtualchess;
 
+import com.cis3296.virtualchess.Pieces.Pawn;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.geometry.Pos;
 
 
 import java.util.ArrayList;
