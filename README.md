@@ -58,7 +58,7 @@ A Java chess application with player vs player and player vs computer modes
 
 ## Team Members
 
-Aiden Cuff
+Aidan Cuff
 
 Ken Fonseca
 
