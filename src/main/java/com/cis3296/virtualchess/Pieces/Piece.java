@@ -12,8 +12,6 @@ public class Piece extends ImageView {
 
     public String color;
     public String type;
-
-    private final String imageFolderPath = "";
     /**
      * Constructor method for pieces
      * @param col is the column number of the piece
@@ -47,7 +45,7 @@ public class Piece extends ImageView {
         return row * Board.SQUARE_SIZE;
     }
     public void setImage(){
-        this.setPiece(new Image(getClass().getResourceAsStream("/assets/piecesNorm/w_bishop_1x.png"), 100, 100, false, false));
+        this.setPiece(new Image(getClass().getResourceAsStream("/assets/piecesNorm/" + this.color + "_" +  this.type + ".png"), 100, 100, false, false));
     }
     public void setPiece(Image image){
         this.setImage(image);

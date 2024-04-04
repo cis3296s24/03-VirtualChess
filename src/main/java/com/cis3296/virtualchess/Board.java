@@ -64,8 +64,8 @@ public class Board {
      */
     private void setSquareColor(BoardSquare square){
         // Could be easy to change the colors later here. Or load them from a settings file
-        Color black = Color.web("#000000");
-        Color white = Color.web("#ffffff");
+        Color black = Color.web("#e4c16f");
+        Color white = Color.web("#b88b4a");
 
         if((square.getxPos()+square.getyPos())%2==0){
             square.setBackground(new Background(new BackgroundFill(black, CornerRadii.EMPTY, Insets.EMPTY)));
