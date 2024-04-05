@@ -1,5 +1,5 @@
 #menu {
-    -fx-background-color: linear-gradient(to bottom, #090124 0%, #2d0040 35%, #350e55 100%);
+    -fx-background-color: linear-gradient(to bottom, #090124 0%, #2d0040 50%, #350e55 55%, #2d0040 75%, #090124 100%);
 }
 
 .button {
