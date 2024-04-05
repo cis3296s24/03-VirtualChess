@@ -30,7 +30,7 @@ public class Piece extends ImageView {
     /**
      * Getter method for the X value of a piece
      * @param col is the column number
-     * @returns col * SQUARE_SIZE. This is the X-coordinate pixel location of the piece
+     * @return col * SQUARE_SIZE. This is the X-coordinate pixel location of the piece
      */
     public int getX(int col) {
         return col * Board.SQUARE_SIZE;
@@ -39,11 +39,12 @@ public class Piece extends ImageView {
     /**
      * Getter method for the Y value of a piece
      * @param row is the row number
-     * @returns row * SQUARE_SIZE. This is the Y-coordinate pixel location of the piece
+     * @return row * SQUARE_SIZE. This is the Y-coordinate pixel location of the piece
      */
     public int getY(int row) {
         return row * Board.SQUARE_SIZE;
     }
+
     public void setImage(){
         this.setPiece(new Image(getClass().getResourceAsStream("/assets/piecesNorm/" + this.color + "_" +  this.type + ".png"), 100, 100, false, false));
     }
@@ -51,4 +52,15 @@ public class Piece extends ImageView {
         this.setImage(image);
     }
 
+    /**
+     * Determines if a piece can move to a desired space or not
+     * No additional code is needed here as of now
+     * Each child class will overwrite this method to distinguish different piece movement
+     * @param targetCol is the targeted column for movement
+     * @param targetRow is the targeted row for movement
+     * @return false by default, preventing erratic movement
+     */
+    public boolean canMove(int targetCol, int targetRow) {
+        return false;
+    }
 }
