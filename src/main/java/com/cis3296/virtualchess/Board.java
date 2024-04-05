@@ -7,6 +7,7 @@ import javafx.scene.paint.Color;
 
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Board {
     // In case we need to change these column/row/size values for any reason later on...
@@ -33,6 +34,7 @@ public class Board {
      * @param chessBoard - A gridpane representing the chessboard
      */
     public Board(GridPane chessBoard){
+
         this.chessBoard = chessBoard;
 
         init(this.chessBoard);
