@@ -1,0 +1,7 @@
+#menu {
+    -fx-background-color: linear-gradient(to bottom, #090124 0%, #2d0040 35%, #350e55 100%);
+}
+
+.button {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 10, 0, 0, 0);
+}
