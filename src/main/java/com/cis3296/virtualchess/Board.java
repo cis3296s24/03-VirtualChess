@@ -124,6 +124,7 @@ public class Board {
 
     private void addPiece(BoardSquare square, Piece piece){
         square.getChildren().add(piece);
+        square.containsPiece = true;
     }
 
 }
