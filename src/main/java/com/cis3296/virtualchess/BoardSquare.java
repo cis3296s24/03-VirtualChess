@@ -4,37 +4,37 @@ import javafx.scene.layout.StackPane;
 
 public class BoardSquare extends StackPane {
 
-    // The X position of the square
-    private int xPos;
-    // The Y position of the square
-    private int yPos;
+    // The column position of the square on the board
+    private final int colPos;
+    // The row position of the square on the board
+    private final int rowPos;
     // Not used now but can later be used when pieces are added
     boolean containsPiece;
 
     /**
      * Constructor for a square in the board
-     * @param x - The X position of the square in the board
-     * @param y - The X position of the square in the board
+     * @param col - The column position of the square in the board
+     * @param row - The row position of the square in the board
      */
-    public BoardSquare(int x, int y){
-        this.xPos = x;
-        this.yPos = y;
+    public BoardSquare(int col, int row){
+        this.colPos = col;
+        this.rowPos = row;
         this.containsPiece = false;
     }
 
     /**
-     * Getter for the X position
-     * @return the X position
+     * Getter for the column position
+     * @return the column position
      */
-    public int getxPos(){
-        return xPos;
+    public int getColPos(){
+        return colPos;
     }
 
     /**
-     * Getter for the Y position
-     * @return the Y position
+     * Getter for the row position
+     * @return the row position
      */
-    public int getyPos(){
-        return yPos;
+    public int getRowPos(){
+        return rowPos;
     }
 }

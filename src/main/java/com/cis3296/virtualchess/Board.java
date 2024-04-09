@@ -66,7 +66,7 @@ public class Board {
         Color black = Color.web("#e4c16f");
         Color white = Color.web("#b88b4a");
 
-        if((square.getxPos()+square.getyPos())%2==0){
+        if((square.getColPos()+square.getRowPos())%2==0){
             square.setBackground(new Background(new BackgroundFill(black, CornerRadii.EMPTY, Insets.EMPTY)));
         }else{
             square.setBackground(new Background(new BackgroundFill(white, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -74,46 +74,46 @@ public class Board {
     }
     private void addPieces(){
         for(BoardSquare square : boardSquares){
-            if(square.getyPos() == 0){
-                if(square.getxPos() == 0 || square.getxPos() == 7){
-                    addPiece(square, new Rook(square.getxPos(), square.getyPos(), "white"));
+            if(square.getRowPos() == 0){
+                if(square.getColPos() == 0 || square.getColPos() == 7){
+                    addPiece(square, new Rook(square.getColPos(), square.getRowPos(), "white"));
                 }
-                if(square.getxPos() == 1 || square.getxPos() == 6){
-                    addPiece(square, new Knight(square.getxPos(), square.getyPos(), "white"));
+                if(square.getColPos() == 1 || square.getColPos() == 6){
+                    addPiece(square, new Knight(square.getColPos(), square.getRowPos(), "white"));
                 }
-                if(square.getxPos() == 2 || square.getxPos() == 5){
-                    addPiece(square, new Bishop(square.getxPos(), square.getyPos(), "white"));
+                if(square.getColPos() == 2 || square.getColPos() == 5){
+                    addPiece(square, new Bishop(square.getColPos(), square.getRowPos(), "white"));
                 }
-                if(square.getxPos() == 3){
-                    addPiece(square, new Queen(square.getxPos(), square.getyPos(), "white"));
+                if(square.getColPos() == 3){
+                    addPiece(square, new Queen(square.getColPos(), square.getRowPos(), "white"));
                 }
-                if(square.getxPos() == 4){
-                    addPiece(square, new King(square.getxPos(), square.getyPos(), "white"));
+                if(square.getColPos() == 4){
+                    addPiece(square, new King(square.getColPos(), square.getRowPos(), "white"));
                 }
 
             }
-            if(square.getyPos() == 1){
-                addPiece(square, new Pawn(square.getxPos(), square.getyPos(), "white"));
+            if(square.getRowPos() == 1){
+                addPiece(square, new Pawn(square.getColPos(), square.getRowPos(), "white"));
             }
-            if(square.getyPos() == 6){
-                addPiece(square, new Pawn(square.getxPos(), square.getyPos(), "black"));
+            if(square.getRowPos() == 6){
+                addPiece(square, new Pawn(square.getColPos(), square.getRowPos(), "black"));
             }
 
-            if(square.getyPos() == 7){
-                if(square.getxPos() == 0 || square.getxPos() == 7){
-                    addPiece(square, new Rook(square.getxPos(), square.getyPos(), "black"));
+            if(square.getRowPos() == 7){
+                if(square.getColPos() == 0 || square.getColPos() == 7){
+                    addPiece(square, new Rook(square.getColPos(), square.getRowPos(), "black"));
                 }
-                if(square.getxPos() == 1 || square.getxPos() == 6){
-                    addPiece(square, new Knight(square.getxPos(), square.getyPos(), "black"));
+                if(square.getColPos() == 1 || square.getColPos() == 6){
+                    addPiece(square, new Knight(square.getColPos(), square.getRowPos(), "black"));
                 }
-                if(square.getxPos() == 2 || square.getxPos() == 5){
-                    addPiece(square, new Bishop(square.getxPos(), square.getyPos(), "black"));
+                if(square.getColPos() == 2 || square.getColPos() == 5){
+                    addPiece(square, new Bishop(square.getColPos(), square.getRowPos(), "black"));
                 }
-                if(square.getxPos() == 3){
-                    addPiece(square, new King(square.getxPos(), square.getyPos(), "black"));
+                if(square.getColPos() == 3){
+                    addPiece(square, new King(square.getColPos(), square.getRowPos(), "black"));
                 }
-                if(square.getxPos() == 4){
-                    addPiece(square, new Queen(square.getxPos(), square.getyPos(), "black"));
+                if(square.getColPos() == 4){
+                    addPiece(square, new Queen(square.getColPos(), square.getRowPos(), "black"));
                 }
             }
         }
