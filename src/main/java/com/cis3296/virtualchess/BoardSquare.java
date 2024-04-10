@@ -4,21 +4,17 @@ import javafx.scene.layout.StackPane;
 
 public class BoardSquare extends StackPane {
 
-    // The column position of the square on the board
-    private final int colPos;
-    // The row position of the square on the board
-    private final int rowPos;
+    Coordinates coordinates;
     // Not used now but can later be used when pieces are added
     boolean containsPiece;
 
     /**
-     * Constructor for a square in the board
-     * @param col - The column position of the square in the board
-     * @param row - The row position of the square in the board
+     *
+     * @param x
+     * @param y
      */
-    public BoardSquare(int col, int row){
-        this.colPos = col;
-        this.rowPos = row;
+    public BoardSquare(int x, int y){
+        this.coordinates = new Coordinates(x, y);
         this.containsPiece = false;
     }
 
@@ -27,7 +23,7 @@ public class BoardSquare extends StackPane {
      * @return the column position
      */
     public int getColPos(){
-        return colPos;
+        return this.coordinates.getCol();
     }
 
     /**
@@ -35,6 +31,6 @@ public class BoardSquare extends StackPane {
      * @return the row position
      */
     public int getRowPos(){
-        return rowPos;
+        return this.coordinates.getRow();
     }
 }
