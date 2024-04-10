@@ -4,10 +4,7 @@ import com.cis3296.virtualchess.Pieces.*;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-
-
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class Board {
     // In case we need to change these column/row/size values for any reason later on...
@@ -18,6 +15,7 @@ public class Board {
     private GridPane chessBoard;
     private ArrayList<BoardSquare> boardSquares = new ArrayList<>();
     private ArrayList<Pawn> pawns = new ArrayList<>();
+    private BoardSettings settings;
 
     //The border surround each of the board squares
     private final Border border = new Border(
@@ -33,10 +31,10 @@ public class Board {
      *  Constructor for the Chess Board
      * @param chessBoard - A gridpane representing the chessboard
      */
-    public Board(GridPane chessBoard){
+    public Board(GridPane chessBoard, BoardSettings settings){
 
         this.chessBoard = chessBoard;
-
+        this.settings = settings;
         init(this.chessBoard);
     }
 
@@ -64,14 +62,26 @@ public class Board {
      * @param square - The square that's color will be changed
      */
     private void setSquareColor(BoardSquare square){
-        // Could be easy to change the colors later here. Or load them from a settings file
-        Color black = Color.web("#e4c16f");
-        Color white = Color.web("#b88b4a");
-
         if((square.getxPos()+square.getyPos())%2==0){
-            square.setBackground(new Background(new BackgroundFill(black, CornerRadii.EMPTY, Insets.EMPTY)));
+            square.setBackground(
+                    new Background(
+                            new BackgroundFill(
+                                    settings.currentBoardStyle.squareColor1,
+                                    CornerRadii.EMPTY,
+                                    Insets.EMPTY
+                            )
+                    )
+            );
         }else{
-            square.setBackground(new Background(new BackgroundFill(white, CornerRadii.EMPTY, Insets.EMPTY)));
+            square.setBackground(
+                    new Background(
+                            new BackgroundFill(
+                                    settings.currentBoardStyle.squareColor2,
+                                    CornerRadii.EMPTY,
+                                    Insets.EMPTY
+                            )
+                    )
+            );
         }
     }
     private void addPieces(){
@@ -120,6 +130,12 @@ public class Board {
             }
         }
 
+    }
+
+    public void rerenderBoard() {
+        for (BoardSquare square : boardSquares) {
+            setSquareColor(square);
+        }
     }
 
     private void addPiece(BoardSquare square, Piece piece){

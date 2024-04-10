@@ -20,11 +20,38 @@ public class Controller {
     @FXML
     GridPane chessBoard = new GridPane();
 
+    Game game;
+
     /**
      * Creates the chess board
      */
     public void initialize() throws IOException {
-        Game game = new Game(chessBoard);
+        this.game = new Game(chessBoard);
+    }
+
+    private void changeBoardStyle(BoardStyle style){
+        this.game.boardSettings.currentBoardStyle = style;
+        game.chessBoard.rerenderBoard();
+    }
+
+    public void changeStyleToSandcastle(){
+        changeBoardStyle(BoardSettings.SANDCASTLE);
+    }
+
+    public void changeStyleToCoral(){
+        changeBoardStyle(BoardSettings.CORAL);
+    }
+    public void changeStyleToDusk(){
+        changeBoardStyle(BoardSettings.DUSK);
+    }
+    public void changeStyleToWheat(){
+        changeBoardStyle(BoardSettings.WHEAT);
+    }
+    public void changeStyleToMarine(){
+        changeBoardStyle(BoardSettings.MARINE);
+    }
+    public void changeStyleToEmerald(){
+        changeBoardStyle(BoardSettings.EMERALD);
     }
 
 }
