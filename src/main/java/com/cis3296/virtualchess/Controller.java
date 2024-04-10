@@ -29,14 +29,17 @@ public class Controller {
         this.game = new Game(chessBoard);
     }
 
-    public void changeStyleToSandcastle(){
-        this.game.boardSettings.currentBoardStyle = BoardSettings.SANDCASTLE;
+    private void changeBoardStyle(BoardStyle style){
+        this.game.boardSettings.currentBoardStyle = style;
         game.chessBoard.rerenderBoard();
     }
 
+    public void changeStyleToSandcastle(){
+        changeBoardStyle(BoardSettings.SANDCASTLE);
+    }
+
     public void changeStyleToDusk(){
-        this.game.boardSettings.currentBoardStyle = BoardSettings.DUSK;
-        game.chessBoard.rerenderBoard();
+        changeBoardStyle(BoardSettings.DUSK);
     }
 
 }

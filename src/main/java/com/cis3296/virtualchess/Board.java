@@ -4,10 +4,7 @@ import com.cis3296.virtualchess.Pieces.*;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-
-
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class Board {
     // In case we need to change these column/row/size values for any reason later on...
