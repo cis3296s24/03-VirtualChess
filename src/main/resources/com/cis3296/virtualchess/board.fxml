@@ -2,19 +2,43 @@
 
 <?import javafx.scene.layout.*?>
 
-<GridPane
-        fx:id="chessBoard"
-        maxHeight="-Infinity"
-        maxWidth="-Infinity"
-        minHeight="-Infinity"
-        minWidth="-Infinity"
-        prefHeight="400.0"
-        prefWidth="600.0"
-        xmlns="http://javafx.com/javafx/16"
-        xmlns:fx="http://javafx.com/fxml/1"
-        fx:controller="com.cis3296.virtualchess.Controller">
-    <columnConstraints>
-    </columnConstraints>
-    <rowConstraints>
-    </rowConstraints>
-</GridPane>
+<?import com.almasb.fxgl.app.scene.FXGLDefaultMenu.MenuButton?>
+<?import javafx.scene.control.Button?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.cis3296.virtualchess.Controller">
+    <GridPane fx:id="chessBoard"
+              maxHeight="-Infinity"
+              maxWidth="-Infinity"
+              minHeight="-Infinity"
+              minWidth="-Infinity"
+              prefHeight="800.0"
+              prefWidth="810.0">
+        <columnConstraints>
+        </columnConstraints>
+        <rowConstraints>
+        </rowConstraints>
+    </GridPane>
+    <HBox>
+        <Button
+                text="Sandcastle"
+                onAction="#changeStyleToSandcastle"/>
+        <Button
+                text="Coral"
+                onAction="#changeStyleToCoral"/>
+        <Button
+                text="Dusk"
+                onAction="#changeStyleToDusk"/>
+        <Button
+                text="Wheat"
+                onAction="#changeStyleToWheat"/>
+        <Button
+                text="Marine"
+                onAction="#changeStyleToMarine"/>
+        <Button
+                text="Emerald"
+                onAction="#changeStyleToEmerald"/>
+    </HBox>
+
+
+</VBox>
