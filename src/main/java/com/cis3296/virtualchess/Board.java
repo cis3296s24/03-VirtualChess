@@ -135,6 +135,12 @@ public class Board {
 
     }
 
+    public void rerenderBoard() {
+        for (BoardSquare square : boardSquares) {
+            setSquareColor(square);
+        }
+    }
+
     private void addPiece(BoardSquare square, Piece piece){
         square.getChildren().add(piece);
         square.containsPiece = true;
