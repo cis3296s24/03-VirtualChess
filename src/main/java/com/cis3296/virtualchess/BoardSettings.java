@@ -40,8 +40,10 @@ public class BoardSettings {
             Color.web("#6e8f72")
     );
 
-    public BoardSettings(){
+    public BoardStyle currentBoardStyle;
 
+    public BoardSettings(BoardStyle currentStyle){
+        this.currentBoardStyle = currentStyle;
     }
 
 }
