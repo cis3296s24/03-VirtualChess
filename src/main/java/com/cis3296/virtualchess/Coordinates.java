@@ -1,9 +1,10 @@
 package com.cis3296.virtualchess;
 
+import static com.cis3296.virtualchess.Board.SQUARE_SIZE;
+
 public class Coordinates {
     private int col, row; // The column and row of each location on the chessboard
     private int x, y; // The specific pixel location of each col and row
-    private static final int DEFAULT_PIXEL_FACTOR = 100;
 
     /**
      * Constructor for a Coordinates object
@@ -13,42 +14,41 @@ public class Coordinates {
     public Coordinates(int col, int row) {
         this.col = col;
         this.row = row;
-        this.x = DEFAULT_PIXEL_FACTOR * col;
-        this.y = DEFAULT_PIXEL_FACTOR * row;
+        this.x = SQUARE_SIZE * col;
+        this.y = SQUARE_SIZE * row;
     }
 
     /**
-     * Setter for column coordinate
-     * @param col is the desired new column-coordinate to be set
-     */
-    public void setCol(int col) {
-        this.col = col;
-        this.x = DEFAULT_PIXEL_FACTOR * col;
-    }
-
-    /**
-     * Setter for row coordinate
+     * Sets all 4 coordinate values
+     * @param col is the desired new row-coordinate to be set
      * @param row is the desired new row-coordinate to be set
+     * @param x is the desired new y-coordinate to be set
+     * @param y is the desired new y-coordinate to be set
      */
-    public void setRow(int row) {
+    public void setCoordinates(int col, int row, int x, int y) {
+        this.col = col;
         this.row = row;
-        this.x = DEFAULT_PIXEL_FACTOR * row;
+        this.x = x;
+        this.y = y;
     }
 
-
     /**
-     * Setter for the x-coordinate
-     * @param x is the desired pixel coordinate
+     * Setter for column and x coordinates
+     * @param col is the desired new row-coordinate to be set
+     * @param x is the desired new y-coordinate to be set
      */
-    public void setX(int x) {
+    public void setColX(int col, int x) {
+        this.col = col;
         this.x = x;
     }
 
     /**
-     * Setter for the y-coordinate
-     * @param y is the desired pixel coordinate
+     * Setter for row and y coordinates
+     * @param row is the desired new row-coordinate to be set
+     * @param y is the desired new y-coordinate to be set
      */
-    public void setY(int y) {
+    public void setRowY(int row, int y) {
+        this.row = row;
         this.y = y;
     }
 
