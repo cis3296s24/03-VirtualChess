@@ -1,6 +1,7 @@
 package com.cis3296.virtualchess.Pieces;
 
 import com.cis3296.virtualchess.Board;
+import com.cis3296.virtualchess.BoardSquare;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -10,6 +11,7 @@ public class Piece extends ImageView {
     public int x, y; // Pixel coordinates for the pieces
     public int col, row, prevCol, prevRow; // We want to track previous location in addition to current location
 
+    public boolean userPiece = false;
     public String color;
     public String type;
     /**
@@ -20,11 +22,22 @@ public class Piece extends ImageView {
     public Piece(int col, int row, String color) {
         this.col = col;
         this.row = row;
+        if(row == 6 || row == 7){
+            userPiece = true;
+        }
         this.color = color;
         x = getX(col);
         y = getY(row);
         prevCol = col;
         prevRow = row;
+    }
+
+    /**
+     * Getter method to return whether the piece is a user's piece
+     * @return if the current piece belongs to a user
+     */
+    public boolean isUserPiece(){
+        return userPiece;
     }
 
     /**

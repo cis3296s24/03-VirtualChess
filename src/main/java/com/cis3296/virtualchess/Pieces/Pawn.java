@@ -15,5 +15,4 @@ public class Pawn extends Piece {
         this.type = "pawn";
         setImage();
     }
-
 }

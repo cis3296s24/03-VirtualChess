@@ -25,6 +25,9 @@ public class Controller {
      */
     public void initialize() throws IOException {
         Game game = new Game(chessBoard);
+
+        Board gameBoard = game.getChessBoard();
+        gameBoard.mouseClick();
     }
 
 }

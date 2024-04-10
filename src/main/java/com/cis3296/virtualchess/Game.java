@@ -3,7 +3,7 @@ package com.cis3296.virtualchess;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
-public class Game {
+public class Game{
 
     // Not in use for now
     private Board chessBoard;
@@ -16,4 +16,7 @@ public class Game {
         this.chessBoard = new Board(chessBoard);
     }
 
+    public Board getChessBoard() {
+        return chessBoard;
+    }
 }
