@@ -10,11 +10,11 @@ public class BoardSquare extends StackPane {
 
     /**
      *
-     * @param x
-     * @param y
+     * @param col
+     * @param row
      */
-    public BoardSquare(int x, int y){
-        this.coordinates = new Coordinates(x, y);
+    public BoardSquare(int col, int row){
+        this.coordinates = new Coordinates(col, row);
         this.containsPiece = false;
     }
 }

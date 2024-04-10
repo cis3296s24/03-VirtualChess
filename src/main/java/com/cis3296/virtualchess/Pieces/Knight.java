@@ -5,9 +5,9 @@ import com.cis3296.virtualchess.Coordinates;
 public class Knight extends Piece {
 
     /**
-     *
-     * @param coordinates
-     * @param color
+     * Constructor for a Knight type piece
+     * @param coordinates are the coordinates of the Knight on the board
+     * @param color chooses the color of the piece
      */
     public Knight(Coordinates coordinates, String color){
         super(coordinates, color);

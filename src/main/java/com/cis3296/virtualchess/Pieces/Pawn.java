@@ -7,9 +7,9 @@ import javafx.scene.layout.StackPane;
 public class Pawn extends Piece {
 
     /**
-     *
-     * @param coordinates
-     * @param color
+     * Constructor for a Pawn type piece
+     * @param coordinates are the coordinates of the Pawn on the board
+     * @param color chooses the color of the piece
      */
     public Pawn(Coordinates coordinates, String color){
         super(coordinates, color);

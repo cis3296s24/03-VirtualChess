@@ -13,9 +13,9 @@ public class Piece extends ImageView {
     public String type;
 
     /**
-     *
-     * @param coordinates
-     * @param color
+     * Constructor for a standard Piece
+     * @param coordinates are the coordinates of the Piece on the board
+     * @param color chooses the color of the piece
      */
     public Piece(Coordinates coordinates, String color) {
         this.coordinates = coordinates;

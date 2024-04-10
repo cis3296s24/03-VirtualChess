@@ -6,9 +6,9 @@ public class Bishop extends Piece {
 
 
     /**
-     *
-     * @param coordinates
-     * @param color
+     * Constructor for a Bishop type piece
+     * @param coordinates are the coordinates of the Bishop on the board
+     * @param color chooses the color of the piece
      */
     public Bishop(Coordinates coordinates, String color){
         super(coordinates, color);
