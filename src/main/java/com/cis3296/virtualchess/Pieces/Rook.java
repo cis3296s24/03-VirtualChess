@@ -1,14 +1,16 @@
 package com.cis3296.virtualchess.Pieces;
 
+import com.cis3296.virtualchess.Coordinates;
+
 public class Rook extends Piece {
 
     /**
-     * Constructor for a piece in the board
-     * @param x - The X position of the square in the board
-     * @param y - The X position of the square in the board
+     *
+     * @param coordinates
+     * @param color
      */
-    public Rook(int x, int y, String color){
-        super(x, y, color);
+    public Rook(Coordinates coordinates, String color){
+        super(coordinates, color);
         this.type = "rook";
         setImage();
     }

@@ -17,20 +17,4 @@ public class BoardSquare extends StackPane {
         this.coordinates = new Coordinates(x, y);
         this.containsPiece = false;
     }
-
-    /**
-     * Getter for the column position
-     * @return the column position
-     */
-    public int getColPos(){
-        return this.coordinates.getCol();
-    }
-
-    /**
-     * Getter for the row position
-     * @return the row position
-     */
-    public int getRowPos(){
-        return this.coordinates.getRow();
-    }
 }
