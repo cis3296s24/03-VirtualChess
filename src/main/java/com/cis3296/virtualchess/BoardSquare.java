@@ -4,37 +4,16 @@ import javafx.scene.layout.StackPane;
 
 public class BoardSquare extends StackPane {
 
-    // The X position of the square
-    private int xPos;
-    // The Y position of the square
-    private int yPos;
+    Coordinates coordinates;
     // Not used now but can later be used when pieces are added
     boolean containsPiece;
 
     /**
-     * Constructor for a square in the board
-     * @param x - The X position of the square in the board
-     * @param y - The X position of the square in the board
+     * Constructor for the squares on the board
+     * @param coordinates is a set of values that represent the column and row of each square in the GridPane
      */
-    public BoardSquare(int x, int y){
-        this.xPos = x;
-        this.yPos = y;
+    public BoardSquare(Coordinates coordinates){
+        this.coordinates = coordinates;
         this.containsPiece = false;
-    }
-
-    /**
-     * Getter for the X position
-     * @return the X position
-     */
-    public int getxPos(){
-        return xPos;
-    }
-
-    /**
-     * Getter for the Y position
-     * @return the Y position
-     */
-    public int getyPos(){
-        return yPos;
     }
 }
