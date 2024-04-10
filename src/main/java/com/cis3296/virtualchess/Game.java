@@ -15,6 +15,7 @@ public class Game {
      */
     public Game(GridPane chessBoard){
         this.chessBoard = new Board(chessBoard, boardSettings);
+        this.chessBoard.mouseClick();
     }
 
 }

@@ -5,6 +5,7 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Board {
     // In case we need to change these column/row/size values for any reason later on...
@@ -14,7 +15,7 @@ public class Board {
 
     private GridPane chessBoard;
     private ArrayList<BoardSquare> boardSquares = new ArrayList<>();
-    private ArrayList<Pawn> pawns = new ArrayList<>();
+    private HashMap<BoardSquare, Piece> pieceToSquare = new HashMap();
     private BoardSettings settings;
 
     //The border surround each of the board squares
@@ -89,44 +90,80 @@ public class Board {
         for(BoardSquare square : boardSquares){
             if(square.coordinates.getRow() == 0){
                 if(square.coordinates.getCol() == 0 || square.coordinates.getCol() == 7){
-                    addPiece(square, new Rook(square.coordinates, "white"));
+                    Piece rookW = new Rook(square.coordinates, "white");
+                    addPiece(square, rookW);
+                    // associate the piece with the square
+                    pieceToSquare.put(square, rookW);
                 }
                 if(square.coordinates.getCol() == 1 || square.coordinates.getCol() == 6){
-                    addPiece(square, new Knight(square.coordinates, "white"));
+                    Piece knightW = new Knight(square.coordinates, "white");
+                    addPiece(square, knightW);
+                    // associate the piece with the square
+                    pieceToSquare.put(square, knightW);
                 }
                 if(square.coordinates.getCol() == 2 || square.coordinates.getCol() == 5){
-                    addPiece(square, new Bishop(square.coordinates, "white"));
+                    Piece bishopW = new Bishop(square.coordinates, "white");
+                    addPiece(square, bishopW);
+                    // associate the piece with the square
+                    pieceToSquare.put(square, bishopW);
                 }
                 if(square.coordinates.getCol() == 3){
-                    addPiece(square, new Queen(square.coordinates, "white"));
+                    Piece queenW = new Queen(square.coordinates, "white");
+                    addPiece(square, queenW);
+                    // associate the piece with the square
+                    pieceToSquare.put(square, queenW);
                 }
                 if(square.coordinates.getCol() == 4){
-                    addPiece(square, new King(square.coordinates, "white"));
+                    Piece kingW = new King(square.coordinates, "white");
+                    addPiece(square, kingW);
+                    // associate the piece with the square
+                    pieceToSquare.put(square, kingW);
                 }
 
             }
             if(square.coordinates.getRow() == 1){
-                addPiece(square, new Pawn(square.coordinates, "white"));
+                Piece pawnW = new Pawn(square.coordinates, "white");
+                addPiece(square, pawnW);
+                // associate the piece with the square
+                pieceToSquare.put(square, pawnW);
             }
             if(square.coordinates.getRow() == 6){
-                addPiece(square, new Pawn(square.coordinates, "black"));
+                Piece pawnB = new Pawn(square.coordinates, "black");
+                addPiece(square, pawnB);
+                // associate the piece with the square
+                pieceToSquare.put(square, pawnB);
             }
 
             if(square.coordinates.getRow() == 7){
                 if(square.coordinates.getCol() == 0 || square.coordinates.getCol() == 7){
-                    addPiece(square, new Rook(square.coordinates, "black"));
+                    Piece rookB = new Rook(square.coordinates, "black");
+                    addPiece(square, rookB);
+                    // associate the piece with the square
+                    pieceToSquare.put(square, rookB);
                 }
                 if(square.coordinates.getCol() == 1 || square.coordinates.getCol() == 6){
-                    addPiece(square, new Knight(square.coordinates, "black"));
+                    Piece knightB = new Knight(square.coordinates, "black");
+                    addPiece(square, knightB);
+                    // associate the piece with the square
+                    pieceToSquare.put(square, knightB);
                 }
                 if(square.coordinates.getCol() == 2 || square.coordinates.getCol() == 5){
-                    addPiece(square, new Bishop(square.coordinates, "black"));
+                    Piece bishopB = new Bishop(square.coordinates, "black");
+                    addPiece(square, bishopB);
+                    // associate the piece with the square
+                    pieceToSquare.put(square, bishopB);
                 }
                 if(square.coordinates.getCol() == 3){
-                    addPiece(square, new King(square.coordinates, "black"));
+                    Piece kingB = new King(square.coordinates, "black");
+                    addPiece(square, kingB);
+                    // associate the piece with the square
+                    pieceToSquare.put(square, kingB);
                 }
                 if(square.coordinates.getCol() == 4){
-                    addPiece(square, new Queen(square.coordinates, "black"));
+                    Piece queenB = new Queen(square.coordinates, "black");
+                    addPiece(square, queenB);
+                    // associate the piece with the square
+                    pieceToSquare.put(square, queenB);
                 }
             }
         }
@@ -144,4 +181,29 @@ public class Board {
         square.containsPiece = true;
     }
 
+    /**
+     * This method recognizes when a user clicks on a square and calls the movePiece() method
+     */
+    public void mouseClick(){
+        for(BoardSquare square: boardSquares) {
+            square.setOnMouseClicked(event -> {movePiece(square);});
+        }
+    }
+
+    private void movePiece(BoardSquare startSquare){
+        Piece piece = pieceToSquare.get(startSquare);
+        startSquare.getChildren().remove(piece);
+        pieceToSquare.remove(startSquare);
+        for(BoardSquare destinationSquare: boardSquares) {
+            destinationSquare.setOnMouseClicked(event -> {pieceDestination(destinationSquare, piece);});
+        }
+    }
+
+    private void pieceDestination(BoardSquare destinationSquare, Piece piece){
+        if(pieceToSquare.containsKey(destinationSquare)){
+            pieceToSquare.remove(destinationSquare, pieceToSquare.get(destinationSquare));
+        }
+        addPiece(destinationSquare, piece);
+        pieceToSquare.put(destinationSquare, piece);
+    }
 }
