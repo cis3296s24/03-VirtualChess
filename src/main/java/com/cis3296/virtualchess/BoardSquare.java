@@ -9,12 +9,11 @@ public class BoardSquare extends StackPane {
     boolean containsPiece;
 
     /**
-     *
-     * @param col
-     * @param row
+     * Constructor for the squares on the board
+     * @param coordinates is a set of values that represent the column and row of each square in the GridPane
      */
-    public BoardSquare(int col, int row){
-        this.coordinates = new Coordinates(col, row);
+    public BoardSquare(Coordinates coordinates){
+        this.coordinates = coordinates;
         this.containsPiece = false;
     }
 }

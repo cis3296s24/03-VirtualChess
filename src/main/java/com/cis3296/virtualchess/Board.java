@@ -40,17 +40,18 @@ public class Board {
 
     /**
      * Goes through each of the tiles in the board and sets them up to be displayed
-     * @param chessBoard - A gridpane representing the chessboard
+     * @param chessBoard - A GridPane representing the chessboard
      */
     private void init(GridPane chessBoard){
-        for(int x = 0; x < MAX_COL; x++){
-            for(int y = 0; y < MAX_ROW; y++){
-                BoardSquare square = new BoardSquare(x, y);
+        for(int col = 0; col < MAX_COL; col++){
+            for(int row = 0; row < MAX_ROW; row++){
+                Coordinates coordinates = new Coordinates(col, row);
+                BoardSquare square = new BoardSquare(coordinates);
                 square.setPrefHeight(SQUARE_SIZE);
                 square.setPrefWidth(SQUARE_SIZE);
                 square.setBorder(border);
                 setSquareColor(square);
-                chessBoard.add(square, x, y, 1, 1);
+                chessBoard.add(square, col, row, 1, 1);
                 boardSquares.add(square);
             }
         }
