@@ -25,7 +25,19 @@
                 onAction="#changeStyleToSandcastle"/>
         <Button
                 text="Coral"
+                onAction="#changeStyleToCoral"/>
+        <Button
+                text="Dusk"
                 onAction="#changeStyleToDusk"/>
+        <Button
+                text="Wheat"
+                onAction="#changeStyleToWheat"/>
+        <Button
+                text="Marine"
+                onAction="#changeStyleToMarine"/>
+        <Button
+                text="Emerald"
+                onAction="#changeStyleToEmerald"/>
     </HBox>
 
 

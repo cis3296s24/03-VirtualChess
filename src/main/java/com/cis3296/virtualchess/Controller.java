@@ -38,8 +38,20 @@ public class Controller {
         changeBoardStyle(BoardSettings.SANDCASTLE);
     }
 
+    public void changeStyleToCoral(){
+        changeBoardStyle(BoardSettings.CORAL);
+    }
     public void changeStyleToDusk(){
         changeBoardStyle(BoardSettings.DUSK);
+    }
+    public void changeStyleToWheat(){
+        changeBoardStyle(BoardSettings.WHEAT);
+    }
+    public void changeStyleToMarine(){
+        changeBoardStyle(BoardSettings.MARINE);
+    }
+    public void changeStyleToEmerald(){
+        changeBoardStyle(BoardSettings.EMERALD);
     }
 
 }
