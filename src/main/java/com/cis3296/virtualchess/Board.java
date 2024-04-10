@@ -86,6 +86,11 @@ public class Board {
             );
         }
     }
+
+    /**
+     * This method associates the objects that extend the Piece class to the BoardSquare objects.
+     * It also sets the pieces to the correct chess start setup.
+     */
     private void addPieces(){
         for(BoardSquare square : boardSquares){
             if(square.coordinates.getRow() == 0){
@@ -192,18 +197,21 @@ public class Board {
 
     private void movePiece(BoardSquare startSquare){
         Piece piece = pieceToSquare.get(startSquare);
-        startSquare.getChildren().remove(piece);
-        pieceToSquare.remove(startSquare);
         for(BoardSquare destinationSquare: boardSquares) {
-            destinationSquare.setOnMouseClicked(event -> {pieceDestination(destinationSquare, piece);});
+            destinationSquare.setOnMouseClicked(event -> {pieceDestination(startSquare, destinationSquare, piece);});
         }
     }
 
-    private void pieceDestination(BoardSquare destinationSquare, Piece piece){
-        if(pieceToSquare.containsKey(destinationSquare)){
-            pieceToSquare.remove(destinationSquare, pieceToSquare.get(destinationSquare));
+    private void pieceDestination(BoardSquare startSquare, BoardSquare destinationSquare, Piece piece){
+//        if(pieceToSquare.containsKey(destinationSquare)){
+//            pieceToSquare.remove(destinationSquare, pieceToSquare.get(destinationSquare));
+//        }
+        if(!startSquare.equals(destinationSquare)){
+            addPiece(destinationSquare, piece);
+            pieceToSquare.put(destinationSquare, piece);
+            startSquare.getChildren().remove(piece);
+            pieceToSquare.remove(startSquare);
         }
-        addPiece(destinationSquare, piece);
-        pieceToSquare.put(destinationSquare, piece);
+
     }
 }
