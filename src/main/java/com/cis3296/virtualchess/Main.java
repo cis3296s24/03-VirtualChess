@@ -2,23 +2,26 @@ package com.cis3296.virtualchess;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        //Loads the board file
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("board.fxml"));
-        //800 by 800 because each tile is 100 and its 8 by 8
-        Scene scene = new Scene(fxmlLoader.load(), 800, 800);
-        stage.setTitle("VirtualChess");
-        stage.setScene(scene);
-        // Not resizable for now but that can be something we figure out later
-        stage.setResizable(false);
-        stage.show();
+       try{
+           Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainmenu.fxml")));
+           Scene scene = new Scene(root);
+           scene.getStylesheets().add(Objects.requireNonNull(Main.class.getResource("menuStyle.css")).toExternalForm());
+           stage.setScene(scene);
+           stage.show();
+       } catch(Exception e) {
+           e.printStackTrace();
+       }
     }
 
     public static void main(String[] args) {

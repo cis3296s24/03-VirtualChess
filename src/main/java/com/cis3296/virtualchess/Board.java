@@ -1,11 +1,9 @@
 package com.cis3296.virtualchess;
 
+import com.cis3296.virtualchess.Pieces.*;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.geometry.Pos;
-
-
 import java.util.ArrayList;
 
 public class Board {
@@ -17,6 +15,7 @@ public class Board {
     private GridPane chessBoard;
     private ArrayList<BoardSquare> boardSquares = new ArrayList<>();
     private ArrayList<Pawn> pawns = new ArrayList<>();
+    private BoardSettings settings;
 
     //The border surround each of the board squares
     private final Border border = new Border(
@@ -32,57 +31,31 @@ public class Board {
      *  Constructor for the Chess Board
      * @param chessBoard - A gridpane representing the chessboard
      */
-    public Board(GridPane chessBoard){
-        this.chessBoard = chessBoard;
+    public Board(GridPane chessBoard, BoardSettings settings){
 
+        this.chessBoard = chessBoard;
+        this.settings = settings;
         init(this.chessBoard);
     }
 
     /**
      * Goes through each of the tiles in the board and sets them up to be displayed
-     * @param chessBoard - A gridpane representing the chessboard
+     * @param chessBoard - A GridPane representing the chessboard
      */
     private void init(GridPane chessBoard){
-        for(int x = 0; x < MAX_COL; x++){
-            for(int y = 0; y < MAX_ROW; y++){
-                BoardSquare square = new BoardSquare(x, y);
+        for(int col = 0; col < MAX_COL; col++){
+            for(int row = 0; row < MAX_ROW; row++){
+                Coordinates coordinates = new Coordinates(col, row);
+                BoardSquare square = new BoardSquare(coordinates);
                 square.setPrefHeight(SQUARE_SIZE);
                 square.setPrefWidth(SQUARE_SIZE);
                 square.setBorder(border);
                 setSquareColor(square);
-                chessBoard.add(square, x, y, 1, 1);
+                chessBoard.add(square, col, row, 1, 1);
                 boardSquares.add(square);
-
-                if(y == 1 || y == 6){
-                    // Only shows a pawn node in the 2nd row of each side
-
-                    // radii of the corners of the circle
-                    CornerRadii radii = new CornerRadii(100);
-                    // border of the circle stuff
-                    BorderWidths pawnBW = new BorderWidths(2);
-                    BorderStroke pawnBS = new BorderStroke(Color.GREY, BorderStrokeStyle.SOLID,
-                           radii,pawnBW);
-                    Border pawnBorder = new Border(pawnBS);
-
-                    // make new "pawn" circle
-                    Pawn pawn = new Pawn(x, y);
-
-                    // set the height and width of the circle
-                    pawn.setMaxHeight(50);
-                    pawn.setMaxWidth(50);
-
-                    // set the border using border code on lines 56-61
-                    pawn.setBorder(pawnBorder);
-
-                    // set pawn color
-                    setPawnColor(pawn);
-                    // add it to the board
-                    chessBoard.add(pawn, x, y, 1, 1);
-                    // add it to the list of pawns
-                    pawns.add(pawn);
-                }
             }
         }
+        addPieces();
     }
 
     /**
@@ -90,23 +63,85 @@ public class Board {
      * @param square - The square that's color will be changed
      */
     private void setSquareColor(BoardSquare square){
-        // Could be easy to change the colors later here. Or load them from a settings file
-        Color black = Color.web("#000000");
-        Color white = Color.web("#ffffff");
-
-        if((square.getxPos()+square.getyPos())%2==0){
-            square.setBackground(new Background(new BackgroundFill(black, CornerRadii.EMPTY, Insets.EMPTY)));
+        if((square.coordinates.getCol()+square.coordinates.getRow())%2==0){
+            square.setBackground(
+                    new Background(
+                            new BackgroundFill(
+                                    settings.currentBoardStyle.squareColor1,
+                                    CornerRadii.EMPTY,
+                                    Insets.EMPTY
+                            )
+                    )
+            );
         }else{
-            square.setBackground(new Background(new BackgroundFill(white, CornerRadii.EMPTY, Insets.EMPTY)));
+            square.setBackground(
+                    new Background(
+                            new BackgroundFill(
+                                    settings.currentBoardStyle.squareColor2,
+                                    CornerRadii.EMPTY,
+                                    Insets.EMPTY
+                            )
+                    )
+            );
+        }
+    }
+    private void addPieces(){
+        for(BoardSquare square : boardSquares){
+            if(square.coordinates.getRow() == 0){
+                if(square.coordinates.getCol() == 0 || square.coordinates.getCol() == 7){
+                    addPiece(square, new Rook(square.coordinates, "white"));
+                }
+                if(square.coordinates.getCol() == 1 || square.coordinates.getCol() == 6){
+                    addPiece(square, new Knight(square.coordinates, "white"));
+                }
+                if(square.coordinates.getCol() == 2 || square.coordinates.getCol() == 5){
+                    addPiece(square, new Bishop(square.coordinates, "white"));
+                }
+                if(square.coordinates.getCol() == 3){
+                    addPiece(square, new Queen(square.coordinates, "white"));
+                }
+                if(square.coordinates.getCol() == 4){
+                    addPiece(square, new King(square.coordinates, "white"));
+                }
+
+            }
+            if(square.coordinates.getRow() == 1){
+                addPiece(square, new Pawn(square.coordinates, "white"));
+            }
+            if(square.coordinates.getRow() == 6){
+                addPiece(square, new Pawn(square.coordinates, "black"));
+            }
+
+            if(square.coordinates.getRow() == 7){
+                if(square.coordinates.getCol() == 0 || square.coordinates.getCol() == 7){
+                    addPiece(square, new Rook(square.coordinates, "black"));
+                }
+                if(square.coordinates.getCol() == 1 || square.coordinates.getCol() == 6){
+                    addPiece(square, new Knight(square.coordinates, "black"));
+                }
+                if(square.coordinates.getCol() == 2 || square.coordinates.getCol() == 5){
+                    addPiece(square, new Bishop(square.coordinates, "black"));
+                }
+                if(square.coordinates.getCol() == 3){
+                    addPiece(square, new King(square.coordinates, "black"));
+                }
+                if(square.coordinates.getCol() == 4){
+                    addPiece(square, new Queen(square.coordinates, "black"));
+                }
+            }
+        }
+
+    }
+
+    public void rerenderBoard() {
+        for (BoardSquare square : boardSquares) {
+            setSquareColor(square);
         }
     }
 
-    private void setPawnColor(Pawn pawn){
-        Color red = Color.web("F5F5DC");
-        CornerRadii radii = new CornerRadii(95);
-        BackgroundFill bgf = new BackgroundFill(red,  radii, Insets.EMPTY);
-        Background bg = new Background(bgf);
-        pawn.setBackground(bg);
+    private void addPiece(BoardSquare square, Piece piece){
+        square.getChildren().add(piece);
+        square.containsPiece = true;
     }
 
 }
