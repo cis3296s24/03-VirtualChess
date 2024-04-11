@@ -10,14 +10,10 @@
     <GridPane fx:id="chessBoard"
               maxHeight="-Infinity"
               maxWidth="-Infinity"
-              minHeight="-Infinity"
-              minWidth="-Infinity"
+              minHeight="800"
+              minWidth="900"
               prefHeight="800.0"
-              prefWidth="810.0">
-        <columnConstraints>
-        </columnConstraints>
-        <rowConstraints>
-        </rowConstraints>
+              prefWidth="900.0">
     </GridPane>
     <HBox>
         <Button

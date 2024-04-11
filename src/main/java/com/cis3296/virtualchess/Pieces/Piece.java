@@ -36,7 +36,7 @@ public abstract class Piece extends ImageView {
     }
 
     public void setImage() {
-        this.setPiece(new Image(getClass().getResourceAsStream("/assets/piecesNorm/" + this.color + "_" +  this.type + ".png"), 100, 100, false, false));
+        this.setPiece(new Image(getClass().getResourceAsStream("/assets/piecesNorm/" + this.color + "_" +  this.type + ".png"), 90, 90, true, true));
     }
     public void setPiece(Image image) {
         this.setImage(image);

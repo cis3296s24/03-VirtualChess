@@ -13,7 +13,6 @@ public class Board {
     // In case we need to change these column/row/size values for any reason later on...
     public final int MAX_COL = 8, MAX_ROW = 8;
     public static final int SQUARE_SIZE = 100;
-    public static final int HALF_SQUARE_SIZE = SQUARE_SIZE/2;
 
     private GridPane chessBoard;
 
@@ -59,6 +58,7 @@ public class Board {
                 square.setBorder(border);
                 setSquareColor(square);
                 chessBoard.add(square, col, row, 1, 1);
+
                 boardSquares.add(square);
                 square.setOnDragDropped(dragEvent ->{
                     movePiece(square);
