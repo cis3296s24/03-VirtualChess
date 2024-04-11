@@ -22,9 +22,7 @@ public class Board {
 
     private BoardSettings settings;
 
-    private BoardSquare previousSquare;
     private Piece draggingPiece;
-    private Coordinates hoverCoordinates;
 
     //The border surround each of the board squares
     private final Border border = new Border(
@@ -47,10 +45,6 @@ public class Board {
         init(this.chessBoard);
     }
 
-    public ArrayList<BoardSquare> getBoardSquares() {
-        return boardSquares;
-    }
-
     /**
      * Goes through each of the tiles in the board and sets them up to be displayed
      * @param chessBoard - A GridPane representing the chessboard
@@ -66,11 +60,9 @@ public class Board {
                 setSquareColor(square);
                 chessBoard.add(square, col, row, 1, 1);
                 boardSquares.add(square);
-                square.setOnMouseEntered(dragEvent -> {
-                        hoverCoordinates = square.coordinates;
-                        System.out.println("Hover coordinates: " + hoverCoordinates.toString());
-                    }
-                );
+                square.setOnDragDropped(dragEvent ->{
+                    square.getChildren().add(draggingPiece);
+                });
             }
         }
         addPieces();
@@ -204,26 +196,13 @@ public class Board {
     }
 
     /**
-     * Allows for the movement of the Piece objects
-     * @param draggingPiece the piece currently being dragged
-     */
-    public void movePiece(Piece draggingPiece) {
-        // Update the coordinates of the dragging piece
-        BoardSquare targetSquare;
-        targetSquare = boardSquares.get(hoverCoordinates.getCol() * hoverCoordinates.getRow());
-        System.out.println(targetSquare.coordinates.toString());
-        targetSquare.getChildren().add(draggingPiece);
-        draggingPiece.coordinates.setCoordinates(hoverCoordinates.getCol(), hoverCoordinates.getRow());
-    }
-
-    /**
      * Checks to see if teh move being made is valid
      * @param draggingPiece the piece currently being dragged
      * @return
      */
-    public boolean isValidMove(Piece draggingPiece) {
-        return draggingPiece.canMove(hoverCoordinates.getCol(), hoverCoordinates.getRow()) && isValidCoordinate(hoverCoordinates.getCol(), hoverCoordinates.getRow());
-    }
+//    public boolean isValidMove(Piece draggingPiece) {
+//        return draggingPiece.canMove(hoverCoordinates.getCol(), hoverCoordinates.getRow()) && isValidCoordinate(hoverCoordinates.getCol(), hoverCoordinates.getRow());
+//    }
 
     /**
      * Checks to see if the coordinates are valid coordinates on the GridPane

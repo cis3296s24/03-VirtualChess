@@ -27,7 +27,7 @@ public class Controller {
     /**
      * Creates the chess board and adds functionality for the drag handling
      */
-    public void initialize() throws IOException {
+    public void initialize(){
         this.game = new Game(chessBoard);
 
         // Add drag-and-drop event handlers to the chessboard GridPane
@@ -37,8 +37,6 @@ public class Controller {
         });
 
         chessBoard.setOnDragDropped(event -> {
-            game.handleDragDropped();
-
             event.setDropCompleted(true);
             event.consume();
         });
