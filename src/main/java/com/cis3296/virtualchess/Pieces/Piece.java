@@ -8,7 +8,6 @@ import javafx.scene.image.ImageView;
 public abstract class Piece extends ImageView {
 
     public Coordinates coordinates;
-    public Coordinates previousCoordinates;
     public String color;
     public String type;
 
@@ -20,7 +19,6 @@ public abstract class Piece extends ImageView {
     public Piece(Coordinates coordinates, String color) {
         this.coordinates = coordinates;
         this.color = color;
-        this.previousCoordinates = new Coordinates(coordinates.getCol(), coordinates.getRow());
         setDragHandlers();
     }
 
