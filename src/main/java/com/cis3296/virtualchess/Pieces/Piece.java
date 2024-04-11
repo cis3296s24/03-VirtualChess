@@ -58,11 +58,7 @@ public abstract class Piece extends ImageView {
         }
     }
 
-    public boolean canMoveBlack(int targetCol, int targetRow){
-        return false;
-    }
+    public abstract boolean canMoveBlack(int targetCol, int targetRow);
 
-    public boolean canMoveWhite(int targetCol, int targetRow){
-        return false;
-    }
+    public abstract boolean canMoveWhite(int targetCol, int targetRow);
 }

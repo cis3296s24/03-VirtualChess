@@ -1,39 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-
-<?import com.almasb.fxgl.app.scene.FXGLDefaultMenu.MenuButton?>
 <?import javafx.scene.control.Button?>
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.cis3296.virtualchess.Controller">
-    <GridPane fx:id="chessBoard"
-              maxHeight="-Infinity"
-              maxWidth="-Infinity"
-              minHeight="800"
-              minWidth="900"
-              prefHeight="800.0"
-              prefWidth="900.0">
-    </GridPane>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox fx:id="board" prefHeight="800.0" prefWidth="810.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cis3296.virtualchess.Controller">
     <HBox>
-        <Button
-                text="Sandcastle"
-                onAction="#changeStyleToSandcastle"/>
-        <Button
-                text="Coral"
-                onAction="#changeStyleToCoral"/>
-        <Button
-                text="Dusk"
-                onAction="#changeStyleToDusk"/>
-        <Button
-                text="Wheat"
-                onAction="#changeStyleToWheat"/>
-        <Button
-                text="Marine"
-                onAction="#changeStyleToMarine"/>
-        <Button
-                text="Emerald"
-                onAction="#changeStyleToEmerald"/>
+        <GridPane fx:id="chessBoard" />
+        <Text id="Timer" text="Test" textAlignment="CENTER" wrappingWidth="300.0">
+         <font>
+            <Font size="36.0" />
+         </font>
+        </Text>
+
+    </HBox>
+
+    <HBox>
+        <Button onAction="#changeStyleToSandcastle" text="Sandcastle" />
+        <Button onAction="#changeStyleToCoral" text="Coral" />
+        <Button onAction="#changeStyleToDusk" text="Dusk" />
+        <Button onAction="#changeStyleToWheat" text="Wheat" />
+        <Button onAction="#changeStyleToMarine" text="Marine" />
+        <Button onAction="#changeStyleToEmerald" text="Emerald" />
     </HBox>
 
 
