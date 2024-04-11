@@ -15,4 +15,8 @@ public class King extends Piece {
         setImage();
     }
 
+    public String type(){
+        return "King";
+    }
+
 }

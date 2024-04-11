@@ -17,4 +17,7 @@ public class Pawn extends Piece {
         setImage();
     }
 
+    public String type(){
+        return "Pawn";
+    }
 }

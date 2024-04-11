@@ -1,5 +1,6 @@
 package com.cis3296.virtualchess;
 
+import com.cis3296.virtualchess.Pieces.Piece;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -23,10 +25,34 @@ public class Controller {
     Game game;
 
     /**
-     * Creates the chess board
+     * Creates the chess board and adds functionality for the drag handling
      */
     public void initialize() throws IOException {
         this.game = new Game(chessBoard);
+
+        // Add drag-and-drop event handlers to the chessboard GridPane
+        chessBoard.setOnDragOver(event -> {
+            event.acceptTransferModes(TransferMode.MOVE);
+            event.consume();
+        });
+
+        chessBoard.setOnDragDropped(event -> {
+            // Retrieve the dragged piece from the event
+            Piece piece = (Piece) event.getGestureSource();
+
+            // Get the target square from the event
+            double x = event.getX();
+            double y = event.getY();
+            int col = (int) Math.floor(x / Board.SQUARE_SIZE);
+            int row = (int) Math.floor(y / Board.SQUARE_SIZE);
+
+            // Handles the action of dropping the piece into a BoardSquare object
+            game.handleDragDropped(col, row);
+
+            event.setDropCompleted(true);
+            event.consume();
+        });
+
     }
 
     private void changeBoardStyle(BoardStyle style){

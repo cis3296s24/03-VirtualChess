@@ -11,6 +11,8 @@ public class Piece extends ImageView {
     public Coordinates previousCoordinates;
     public String color;
     public String type;
+    private double dragStartX;
+    private double dragStartY;
 
     /**
      * Constructor for a standard Piece
@@ -21,6 +23,26 @@ public class Piece extends ImageView {
         this.coordinates = coordinates;
         this.color = color;
         this.previousCoordinates = new Coordinates(coordinates.getCol(), coordinates.getRow());
+        setDragHandlers();
+    }
+
+    /**
+     * This method allows the Piece objects to be dragged
+     */
+    private void setDragHandlers() {
+        // Set event handlers for drag-and-drop operations
+        setOnDragDetected(event -> {
+            // Detects the x and y of the starting position of the piece
+            dragStartX = event.getSceneX();
+            dragStartY = event.getSceneY();
+            startFullDrag();
+            event.consume();
+        });
+
+        setOnMouseDragged(event -> {
+            relocate(event.getSceneX() - dragStartX + getLayoutX(), event.getSceneY() - dragStartY + getLayoutY());
+            event.consume();
+        });
     }
 
     public void setImage() {

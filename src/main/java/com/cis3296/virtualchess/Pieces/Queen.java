@@ -15,4 +15,7 @@ public class Queen extends Piece {
         setImage();
     }
 
+    public String type(){
+        return "Queen";
+    }
 }

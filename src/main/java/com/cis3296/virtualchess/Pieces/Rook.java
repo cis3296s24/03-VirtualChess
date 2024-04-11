@@ -15,4 +15,8 @@ public class Rook extends Piece {
         setImage();
     }
 
+    public String type(){
+        return "Rook";
+    }
+
 }

@@ -22,14 +22,14 @@ public class Coordinates {
      * Sets all 4 coordinate values
      * @param col is the desired new row-coordinate to be set
      * @param row is the desired new row-coordinate to be set
-     * @param x is the desired new y-coordinate to be set
-     * @param y is the desired new y-coordinate to be set
+//     * @param x is the desired new y-coordinate to be set
+//     * @param y is the desired new y-coordinate to be set
      */
-    public void setCoordinates(int col, int row, int x, int y) {
+    public void setCoordinates(int col, int row) {
         this.col = col;
         this.row = row;
-        this.x = x;
-        this.y = y;
+        this.x = SQUARE_SIZE * col;
+        this.y = SQUARE_SIZE * row;
     }
 
     /**

@@ -15,4 +15,8 @@ public class Knight extends Piece {
         setImage();
     }
 
+    public String type(){
+        return "Knight";
+    }
+
 }
