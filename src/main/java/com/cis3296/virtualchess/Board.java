@@ -4,6 +4,7 @@ import com.cis3296.virtualchess.Pieces.*;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+
 import java.util.ArrayList;
 
 public class Board {

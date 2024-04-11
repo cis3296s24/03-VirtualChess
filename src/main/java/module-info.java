@@ -6,6 +6,7 @@ module com.cis3296.virtualchess {
     requires net.synedra.validatorfx;
     requires org.kordamp.bootstrapfx.core;
     requires com.almasb.fxgl.all;
+    requires java.sql;
 
     opens com.cis3296.virtualchess to javafx.fxml;
     exports com.cis3296.virtualchess;
