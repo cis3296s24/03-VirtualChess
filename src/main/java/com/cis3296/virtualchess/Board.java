@@ -61,7 +61,7 @@ public class Board {
                 chessBoard.add(square, col, row, 1, 1);
                 boardSquares.add(square);
                 square.setOnDragDropped(dragEvent ->{
-                    square.getChildren().add(draggingPiece);
+                    movePiece(square);
                 });
             }
         }
@@ -76,9 +76,6 @@ public class Board {
                 db.setContent(content);
                 event.consume();
             });
-
-            // Optionally, add other drag-and-drop event handlers (e.g., drag over, drag dropped)
-            // if needed for additional functionality.
         }
     }
 
@@ -188,21 +185,12 @@ public class Board {
     }
 
     /**
-     * Getter for the piece currently being dragged
-     * @return dragged piece
-     */
-    public Piece getDraggingPiece() {
-        return draggingPiece;
-    }
-
-    /**
      * Checks to see if teh move being made is valid
-     * @param draggingPiece the piece currently being dragged
      * @return
      */
-//    public boolean isValidMove(Piece draggingPiece) {
-//        return draggingPiece.canMove(hoverCoordinates.getCol(), hoverCoordinates.getRow()) && isValidCoordinate(hoverCoordinates.getCol(), hoverCoordinates.getRow());
-//    }
+    public boolean isValidMove(int col, int row) {
+        return draggingPiece.canMove(col, row) && isValidCoordinate(col, row);
+    }
 
     /**
      * Checks to see if the coordinates are valid coordinates on the GridPane
@@ -212,6 +200,14 @@ public class Board {
      */
     private boolean isValidCoordinate(int col, int row) {
         return col >= 0 && col < MAX_COL && row >= 0 && row < MAX_ROW;
+    }
+
+    private void movePiece(BoardSquare square){
+        if(isValidMove(square.coordinates.getCol(), square.coordinates.getRow())){
+            square.getChildren().add(draggingPiece);
+            draggingPiece.coordinates = square.coordinates;
+        }
+        System.out.println("Invalid Move");
     }
 
 }
