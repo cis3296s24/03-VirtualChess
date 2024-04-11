@@ -15,12 +15,28 @@ public class Rook extends Piece {
         setImage();
     }
 
-    public String type(){
-        return "Rook";
+    @Override
+    public boolean canMoveBlack(int targetCol, int targetRow) {
+        if(targetRow == coordinates.getRow()-1){
+            return true;
+        } else if(targetCol == coordinates.getCol()+1 && targetRow == coordinates.getRow()+1){
+            return true;
+        } else if(targetCol == coordinates.getCol()+1 && targetRow == coordinates.getRow()-1){
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public boolean canMove(int targetCol, int targetRow) {
-        return true;
+    public boolean canMoveWhite(int targetCol, int targetRow) {
+        if(targetRow == coordinates.getRow()+1){
+            return true;
+        } else if(targetCol == coordinates.getCol()+1 && targetRow == coordinates.getRow()+1){
+            return true;
+        } else if(targetCol == coordinates.getCol()+1 && targetRow == coordinates.getRow()-1){
+            return true;
+        }
+        return false;
     }
+
 }

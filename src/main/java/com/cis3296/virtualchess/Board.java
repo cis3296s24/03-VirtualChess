@@ -206,8 +206,9 @@ public class Board {
         if(isValidMove(square.coordinates.getCol(), square.coordinates.getRow())){
             square.getChildren().add(draggingPiece);
             draggingPiece.coordinates = square.coordinates;
+        } else{
+            System.out.println("Invalid Move");
         }
-        System.out.println("Invalid Move");
     }
 
 }

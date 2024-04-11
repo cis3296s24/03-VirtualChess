@@ -16,15 +16,27 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public boolean canMove(int targetCol, int targetRow) {
-        if(targetCol == coordinates.getCol()+1){
+    public boolean canMoveBlack(int targetCol, int targetRow) {
+        if(targetRow == coordinates.getRow()-1){
             return true;
         } else if(targetCol == coordinates.getCol()+1 && targetRow == coordinates.getRow()+1){
             return true;
         } else if(targetCol == coordinates.getCol()+1 && targetRow == coordinates.getRow()-1){
             return true;
         }
-
         return false;
     }
+
+    @Override
+    public boolean canMoveWhite(int targetCol, int targetRow) {
+        if(targetRow == coordinates.getRow()+1){
+            return true;
+        } else if(targetCol == coordinates.getCol()+1 && targetRow == coordinates.getRow()+1){
+            return true;
+        } else if(targetCol == coordinates.getCol()+1 && targetRow == coordinates.getRow()-1){
+            return true;
+        }
+        return false;
+    }
+
 }

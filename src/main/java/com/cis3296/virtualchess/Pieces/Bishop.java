@@ -15,5 +15,27 @@ public class Bishop extends Piece {
         setImage();
     }
 
+    @Override
+    public boolean canMoveBlack(int targetCol, int targetRow) {
+        if(targetRow == coordinates.getRow()-1){
+            return true;
+        } else if(targetCol == coordinates.getCol()+1 && targetRow == coordinates.getRow()+1){
+            return true;
+        } else if(targetCol == coordinates.getCol()+1 && targetRow == coordinates.getRow()-1){
+            return true;
+        }
+        return false;
+    }
 
+    @Override
+    public boolean canMoveWhite(int targetCol, int targetRow) {
+        if(targetRow == coordinates.getRow()+1){
+            return true;
+        } else if(targetCol == coordinates.getCol()+1 && targetRow == coordinates.getRow()+1){
+            return true;
+        } else if(targetCol == coordinates.getCol()+1 && targetRow == coordinates.getRow()-1){
+            return true;
+        }
+        return false;
+    }
 }
