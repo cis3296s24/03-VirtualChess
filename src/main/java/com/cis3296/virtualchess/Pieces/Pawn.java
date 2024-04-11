@@ -1,8 +1,6 @@
 package com.cis3296.virtualchess.Pieces;
 
 import com.cis3296.virtualchess.Coordinates;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
 
 public class Pawn extends Piece {
 
@@ -17,7 +15,16 @@ public class Pawn extends Piece {
         setImage();
     }
 
-    public String type(){
-        return "Pawn";
+    @Override
+    public boolean canMove(int targetCol, int targetRow) {
+        if(targetCol == coordinates.getCol()+1){
+            return true;
+        } else if(targetCol == coordinates.getCol()+1 && targetRow == coordinates.getRow()+1){
+            return true;
+        } else if(targetCol == coordinates.getCol()+1 && targetRow == coordinates.getRow()-1){
+            return true;
+        }
+
+        return false;
     }
 }

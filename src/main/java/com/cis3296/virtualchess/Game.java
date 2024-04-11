@@ -23,15 +23,15 @@ public class Game {
      * @param col The column where the piece is dropped
      * @param row The row where the piece is dropped
      */
-    public void handleDragDropped(int col, int row) {
+    public void handleDragDropped() {
         // Get the piece that is being dragged
         Piece draggingPiece = chessBoard.getDraggingPiece();
         // If we are not dragging an empty piece:
         if (draggingPiece != null) {
             // Check if the move is valid
-            if (chessBoard.isValidMove(draggingPiece, col, row)) {
+            if (chessBoard.isValidMove(draggingPiece)) {
                 // Move the piece to the new position on the board
-                chessBoard.movePiece(draggingPiece, col, row);
+                chessBoard.movePiece(draggingPiece);
             } else {
                 // Handle invalid move
                 System.out.println("Invalid move!");

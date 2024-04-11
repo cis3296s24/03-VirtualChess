@@ -19,4 +19,8 @@ public class Rook extends Piece {
         return "Rook";
     }
 
+    @Override
+    public boolean canMove(int targetCol, int targetRow) {
+        return true;
+    }
 }

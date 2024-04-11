@@ -15,8 +15,5 @@ public class Bishop extends Piece {
         setImage();
     }
 
-    public String type(){
-        return "Bishop";
-    }
 
 }

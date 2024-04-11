@@ -83,4 +83,9 @@ public class Coordinates {
     public int getY() {
         return this.y;
     }
+
+    @Override
+    public String toString() {
+        return "(Col:" + col + ", Row:" + row + ", X:" + x + ", Y:" + y + ")";
+    }
 }

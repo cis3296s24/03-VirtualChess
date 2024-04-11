@@ -37,17 +37,7 @@ public class Controller {
         });
 
         chessBoard.setOnDragDropped(event -> {
-            // Retrieve the dragged piece from the event
-            Piece piece = (Piece) event.getGestureSource();
-
-            // Get the target square from the event
-            double x = event.getX();
-            double y = event.getY();
-            int col = (int) Math.floor(x / Board.SQUARE_SIZE);
-            int row = (int) Math.floor(y / Board.SQUARE_SIZE);
-
-            // Handles the action of dropping the piece into a BoardSquare object
-            game.handleDragDropped(col, row);
+            game.handleDragDropped();
 
             event.setDropCompleted(true);
             event.consume();
@@ -63,7 +53,6 @@ public class Controller {
     public void changeStyleToSandcastle(){
         changeBoardStyle(BoardSettings.SANDCASTLE);
     }
-
     public void changeStyleToCoral(){
         changeBoardStyle(BoardSettings.CORAL);
     }
