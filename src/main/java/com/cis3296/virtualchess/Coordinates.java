@@ -1,6 +1,6 @@
 package com.cis3296.virtualchess;
 
-import static com.cis3296.virtualchess.Board.SQUARE_SIZE;
+import static com.cis3296.virtualchess.Board.Board.SQUARE_SIZE;
 
 public class Coordinates {
     private int col, row; // The column and row of each location on the chessboard

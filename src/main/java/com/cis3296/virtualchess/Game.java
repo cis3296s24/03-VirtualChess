@@ -1,6 +1,7 @@
 package com.cis3296.virtualchess;
 
-import com.cis3296.virtualchess.Pieces.Piece;
+import com.cis3296.virtualchess.Board.Board;
+import com.cis3296.virtualchess.Board.BoardSettings;
 import javafx.scene.layout.GridPane;
 
 

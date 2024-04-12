@@ -1,13 +1,12 @@
-package com.cis3296.virtualchess;
+package com.cis3296.virtualchess.Board;
 
+import com.cis3296.virtualchess.*;
 import com.cis3296.virtualchess.Pieces.*;
 import javafx.geometry.Insets;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
-import java.util.HashMap;
-import javafx.event.Event;
 
 public class Board {
     // In case we need to change these column/row/size values for any reason later on...

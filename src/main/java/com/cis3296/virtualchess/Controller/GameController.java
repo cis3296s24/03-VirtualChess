@@ -1,27 +1,17 @@
-package com.cis3296.virtualchess;
+package com.cis3296.virtualchess.Controller;
 
-import com.cis3296.virtualchess.Pieces.Piece;
+import com.cis3296.virtualchess.Board.BoardSettings;
+import com.cis3296.virtualchess.Board.BoardStyle;
+import com.cis3296.virtualchess.Game;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.IOException;
-import java.util.Objects;
-
-public class Controller {
+public class GameController {
 
     @FXML
     GridPane chessBoard = new GridPane();
