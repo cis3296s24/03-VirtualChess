@@ -1,7 +1,7 @@
 package com.cis3296.virtualchess.Pieces;
 
 import com.cis3296.virtualchess.Coordinates;
-
+import com.cis3296.virtualchess.Board.Board;
 import java.util.ArrayList;
 
 public class Queen extends Piece {
@@ -11,8 +11,8 @@ public class Queen extends Piece {
      * @param coordinates are the coordinates of the Queen on the board
      * @param color chooses the color of the piece
      */
-    public Queen(Coordinates coordinates, String color){
-        super(coordinates, color);
+    public Queen(Coordinates coordinates, String color, Board board){
+        super(coordinates, color, board);
         this.type = "queen";
         setImage();
     }

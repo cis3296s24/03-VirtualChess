@@ -13,15 +13,17 @@ public abstract class Piece extends ImageView {
     public Coordinates coordinates;
     public String color;
     public String type;
+    public Board board;
 
     /**
      * Constructor for a standard Piece
      * @param coordinates are the coordinates of the Piece on the board
      * @param color chooses the color of the piece
      */
-    public Piece(Coordinates coordinates, String color) {
+    public Piece(Coordinates coordinates, String color, Board board) {
         this.coordinates = coordinates;
         this.color = color;
+        this.board = board;
         setDragHandlers();
     }
 

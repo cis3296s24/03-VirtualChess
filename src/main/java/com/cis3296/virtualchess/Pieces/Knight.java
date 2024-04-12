@@ -3,6 +3,7 @@ package com.cis3296.virtualchess.Pieces;
 import com.cis3296.virtualchess.Coordinates;
 
 import java.util.ArrayList;
+import com.cis3296.virtualchess.Board.Board;
 
 public class Knight extends Piece {
 
@@ -11,8 +12,8 @@ public class Knight extends Piece {
      * @param coordinates are the coordinates of the Knight on the board
      * @param color chooses the color of the piece
      */
-    public Knight(Coordinates coordinates, String color){
-        super(coordinates, color);
+    public Knight(Coordinates coordinates, String color, Board board){
+        super(coordinates, color, board);
         this.type = "knight";
         setImage();
     }

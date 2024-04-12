@@ -1,5 +1,7 @@
 package com.cis3296.virtualchess.Pieces;
 
+import com.cis3296.virtualchess.Board.Board;
+import com.cis3296.virtualchess.Board.BoardSquare;
 import com.cis3296.virtualchess.Coordinates;
 
 import java.util.ArrayList;
@@ -11,8 +13,8 @@ public class Rook extends Piece {
      * @param coordinates are the coordinates of the Rook on the board
      * @param color chooses the color of the piece
      */
-    public Rook(Coordinates coordinates, String color){
-        super(coordinates, color);
+    public Rook(Coordinates coordinates, String color, Board board){
+        super(coordinates, color, board);
         this.type = "rook";
         setImage();
     }

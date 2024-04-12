@@ -117,55 +117,55 @@ public class Board {
         for(BoardSquare square : boardSquares){
             if(square.coordinates.getRow() == 0){
                 if(square.coordinates.getCol() == 0 || square.coordinates.getCol() == 7){
-                    Piece rookW = new Rook(square.coordinates, "white");
+                    Piece rookW = new Rook(square.coordinates, "white", this);
                     addPiece(square, rookW);
                 }
                 if(square.coordinates.getCol() == 1 || square.coordinates.getCol() == 6){
-                    Piece knightW = new Knight(square.coordinates, "white");
+                    Piece knightW = new Knight(square.coordinates, "white", this);
                     addPiece(square, knightW);
                 }
                 if(square.coordinates.getCol() == 2 || square.coordinates.getCol() == 5){
-                    Piece bishopW = new Bishop(square.coordinates, "white");
+                    Piece bishopW = new Bishop(square.coordinates, "white", this);
                     addPiece(square, bishopW);
                 }
                 if(square.coordinates.getCol() == 3){
-                    Piece queenW = new Queen(square.coordinates, "white");
+                    Piece queenW = new Queen(square.coordinates, "white", this);
                     addPiece(square, queenW);
                 }
                 if(square.coordinates.getCol() == 4){
-                    Piece kingW = new King(square.coordinates, "white");
+                    Piece kingW = new King(square.coordinates, "white", this);
                     addPiece(square, kingW);
                 }
 
             }
             if(square.coordinates.getRow() == 1){
-                Piece pawnW = new Pawn(square.coordinates, "white");
+                Piece pawnW = new Pawn(square.coordinates, "white", this);
                 addPiece(square, pawnW);
             }
             if(square.coordinates.getRow() == 6){
-                Piece pawnB = new Pawn(square.coordinates, "black");
+                Piece pawnB = new Pawn(square.coordinates, "black", this);
                 addPiece(square, pawnB);
             }
 
             if(square.coordinates.getRow() == 7){
                 if(square.coordinates.getCol() == 0 || square.coordinates.getCol() == 7){
-                    Piece rookB = new Rook(square.coordinates, "black");
+                    Piece rookB = new Rook(square.coordinates, "black", this);
                     addPiece(square, rookB);
                 }
                 if(square.coordinates.getCol() == 1 || square.coordinates.getCol() == 6){
-                    Piece knightB = new Knight(square.coordinates, "black");
+                    Piece knightB = new Knight(square.coordinates, "black", this);
                     addPiece(square, knightB);
                 }
                 if(square.coordinates.getCol() == 2 || square.coordinates.getCol() == 5){
-                    Piece bishopB = new Bishop(square.coordinates, "black");
+                    Piece bishopB = new Bishop(square.coordinates, "black", this);
                     addPiece(square, bishopB);
                 }
                 if(square.coordinates.getCol() == 3){
-                    Piece kingB = new King(square.coordinates, "black");
+                    Piece kingB = new King(square.coordinates, "black", this);
                     addPiece(square, kingB);
                 }
                 if(square.coordinates.getCol() == 4){
-                    Piece queenB = new Queen(square.coordinates, "black");
+                    Piece queenB = new Queen(square.coordinates, "black", this);
                     addPiece(square, queenB);
                 }
             }
@@ -213,6 +213,10 @@ public class Board {
         }
     }
 
+    /**
+     * This method takes the coordinates of the current piece being dragged and shows the
+     * @param coordinates
+     */
     public void showMoves(Coordinates coordinates){
         for(BoardSquare square : boardSquares){
             if(coordinates.equals(square.coordinates)){

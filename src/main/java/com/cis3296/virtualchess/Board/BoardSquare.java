@@ -5,7 +5,7 @@ import javafx.scene.layout.StackPane;
 
 public class BoardSquare extends StackPane {
 
-    Coordinates coordinates;
+    public Coordinates coordinates;
     // Not used now but can later be used when pieces are added
     boolean containsPiece;
 
