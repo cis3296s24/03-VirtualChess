@@ -88,4 +88,14 @@ public class Coordinates {
     public String toString() {
         return "(Col:" + col + ", Row:" + row + ", X:" + x + ", Y:" + y + ")";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Coordinates) {
+            if(((Coordinates) obj).col == this.col && ((Coordinates) obj).row == this.row){
+                return true;
+            }
+        }
+        return super.equals(obj);
+    }
 }
