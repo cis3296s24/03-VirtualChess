@@ -1,5 +1,6 @@
 package com.cis3296.virtualchess.Pieces;
 
+import com.cis3296.virtualchess.Board.Board;
 import com.cis3296.virtualchess.Coordinates;
 import javafx.event.Event;
 import javafx.scene.image.Image;
@@ -127,4 +128,5 @@ public abstract class Piece extends ImageView {
                 ));
     }
 
+    public abstract void showMoves(Board board);
 }

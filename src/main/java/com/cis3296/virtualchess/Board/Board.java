@@ -17,6 +17,7 @@ public class Board {
 
     public ArrayList<BoardSquare> boardSquares = new ArrayList<>();
     private ArrayList<Piece> pieces = new ArrayList<>();
+    private ArrayList<StackPane> moves = new ArrayList<>();
 
     private BoardSettings settings;
 
@@ -72,13 +73,14 @@ public class Board {
             piece.setOnDragDetected(event -> {
                 draggingPiece = piece;
                 Dragboard db = piece.startDragAndDrop(TransferMode.MOVE);
+                piece.showMoves(this);
                 ClipboardContent content = new ClipboardContent();
                 content.putString(""); // You can put any content here if needed
                 db.setContent(content);
                 event.consume();
             });
         }
-
+        showMoves(new Coordinates(1, 1));
         this.turnSystem = new TurnSystem(new Player(), new Player());
     }
 
@@ -212,6 +214,29 @@ public class Board {
         } else{
             System.out.println("Invalid Move");
         }
+    }
+
+    public void showMoves(Coordinates coordinates){
+        for(BoardSquare square : boardSquares){
+            if(coordinates.equals(square.coordinates)){
+                BorderStroke bs = new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, new CornerRadii(100), new BorderWidths(2));
+                Border circle = new Border(bs);
+                StackPane sp = new StackPane();
+                sp.setMaxHeight(50);
+                sp.setMinWidth(50);
+                sp.setBorder(circle);
+                square.getChildren().add(sp);
+                moves.add(sp);
+            }
+        }
+    }
+
+    public void removeShownMoves(){
+        for(StackPane sp : moves){
+            BoardSquare boardSquare = (BoardSquare) sp.getParent();
+            boardSquare.getChildren().remove(sp);
+        }
+        moves.clear();
     }
 
 }

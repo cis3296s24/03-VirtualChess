@@ -1,5 +1,6 @@
 package com.cis3296.virtualchess.Pieces;
 
+import com.cis3296.virtualchess.Board.Board;
 import com.cis3296.virtualchess.Coordinates;
 
 public class Pawn extends Piece {
@@ -23,6 +24,11 @@ public class Pawn extends Piece {
     @Override
     public boolean canMoveWhite(Coordinates targetCoordinates) {
         return compareBottomLeft(targetCoordinates) || compareBottomRight(targetCoordinates) || compareBottom(targetCoordinates);
+    }
+
+    @Override
+    public void showMoves(Board board) {
+        board.showMoves(this.coordinates);
     }
 
 }

@@ -41,6 +41,7 @@ public class GameController {
         });
 
         chessBoard.setOnDragDropped(event -> {
+            game.chessBoard.removeShownMoves();
             event.setDropCompleted(true);
             event.consume();
         });
