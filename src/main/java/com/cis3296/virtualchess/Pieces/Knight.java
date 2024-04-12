@@ -19,7 +19,18 @@ public class Knight extends Piece {
 
     @Override
     public ArrayList<Coordinates> getMoveSet() {
-        return null;
+        ArrayList<Coordinates> moveSet = new ArrayList<>();
+
+        moveSet.add(new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() + 2));
+        moveSet.add(new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() + 2));
+        moveSet.add(new Coordinates(this.coordinates.getCol() + 2, this.coordinates.getRow() + 1));
+        moveSet.add(new Coordinates(this.coordinates.getCol() + 2, this.coordinates.getRow() - 1));
+        moveSet.add(new Coordinates(this.coordinates.getCol() - 2, this.coordinates.getRow() - 1));
+        moveSet.add(new Coordinates(this.coordinates.getCol() - 2, this.coordinates.getRow() + 1));
+        moveSet.add(new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() - 2));
+        moveSet.add(new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() - 2));
+
+        return moveSet;
     }
 
 
