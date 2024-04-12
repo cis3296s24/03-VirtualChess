@@ -11,7 +11,7 @@
     <HBox>
         <GridPane fx:id="chessBoard" />
         <VBox>
-            <Text fx:id="currentTurnText" text="Current Turn:\n" textAlignment="CENTER">
+            <Text fx:id="currentTurnText" text="Current Turn:\n" textAlignment="CENTER" wrappingWidth="300.0">
                 <font>
                     <Font size="36.0" />
                 </font>

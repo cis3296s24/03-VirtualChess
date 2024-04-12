@@ -79,7 +79,6 @@ public class Board {
                 event.consume();
             });
         }
-        showMoves(new Coordinates(1, 1));
     }
 
     /**

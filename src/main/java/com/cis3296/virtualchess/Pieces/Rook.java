@@ -19,7 +19,33 @@ public class Rook extends Piece {
 
     @Override
     public ArrayList<Coordinates> getMoveSet() {
-        return null;
+        ArrayList<Coordinates> moveSet = new ArrayList<>();
+
+        // Top direction
+        for (int row = coordinates.getRow() + 1; row < 8; row++) {
+            Coordinates targetCoordinates = new Coordinates(coordinates.getCol(), row);
+            moveSet.add(targetCoordinates);
+        }
+
+        // Down direction
+        for (int row = coordinates.getRow() - 1; row >= 0; row--) {
+            Coordinates targetCoordinates = new Coordinates(coordinates.getCol(), row);
+            moveSet.add(targetCoordinates);
+        }
+
+        // Right direction
+        for (int col = coordinates.getCol() + 1; col < 8; col++) {
+            Coordinates targetCoordinates = new Coordinates(col, coordinates.getRow());
+            moveSet.add(targetCoordinates);
+        }
+
+        // Left direction
+        for (int col = coordinates.getCol() - 1; col >= 0; col--) {
+            Coordinates targetCoordinates = new Coordinates(col, coordinates.getRow());
+            moveSet.add(targetCoordinates);
+        }
+
+        return moveSet;
     }
 
 
