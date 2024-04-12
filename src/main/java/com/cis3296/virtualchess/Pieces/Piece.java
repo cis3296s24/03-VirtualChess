@@ -51,14 +51,80 @@ public abstract class Piece extends ImageView {
      * @return false by default, preventing erratic movement
      */
     public boolean canMove(int targetCol, int targetRow){
+        Coordinates target = new Coordinates(targetCol, targetRow);
         if(color.equals("white")){
-            return canMoveWhite(targetCol, targetRow);
+            return canMoveWhite(target);
         } else {
-            return canMoveBlack(targetCol, targetRow);
+            return canMoveBlack(target);
         }
     }
 
-    public abstract boolean canMoveBlack(int targetCol, int targetRow);
+    public abstract boolean canMoveBlack(Coordinates targetCoordinates);
 
-    public abstract boolean canMoveWhite(int targetCol, int targetRow);
+    public abstract boolean canMoveWhite(Coordinates targetCoordinates);
+
+    public boolean compareTopRight(Coordinates targetCoordinates){
+        return this.coordinates.equals(
+                new Coordinates(
+                        targetCoordinates.getCol() + 1,
+                        targetCoordinates.getRow() + 1
+                ));
+    }
+
+    public boolean compareTopLeft(Coordinates targetCoordinates){
+        return this.coordinates.equals(
+                new Coordinates(
+                        targetCoordinates.getCol() - 1,
+                        targetCoordinates.getRow() + 1
+                ));
+    }
+
+    public boolean compareTop(Coordinates targetCoordinates){
+        return this.coordinates.equals(
+                new Coordinates(
+                        targetCoordinates.getCol(),
+                        targetCoordinates.getRow() + 1
+                ));
+    }
+
+    public boolean compareBottomRight(Coordinates targetCoordinates){
+        return this.coordinates.equals(
+                new Coordinates(
+                        targetCoordinates.getCol() + 1,
+                        targetCoordinates.getRow() - 1
+                ));
+    }
+
+    public boolean compareBottomLeft(Coordinates targetCoordinates){
+        return this.coordinates.equals(
+                new Coordinates(
+                        targetCoordinates.getCol() - 1,
+                        targetCoordinates.getRow() - 1
+                ));
+    }
+
+    public boolean compareBottom(Coordinates targetCoordinates){
+        return this.coordinates.equals(
+                new Coordinates(
+                        targetCoordinates.getCol(),
+                        targetCoordinates.getRow() - 1
+                ));
+    }
+
+    public boolean compareLeft(Coordinates targetCoordinates){
+        return this.coordinates.equals(
+                new Coordinates(
+                        targetCoordinates.getCol() - 1,
+                        targetCoordinates.getRow()
+                ));
+    }
+
+    public boolean compareRight(Coordinates targetCoordinates){
+        return this.coordinates.equals(
+                new Coordinates(
+                        targetCoordinates.getCol() + 1,
+                        targetCoordinates.getRow()
+                ));
+    }
+
 }
