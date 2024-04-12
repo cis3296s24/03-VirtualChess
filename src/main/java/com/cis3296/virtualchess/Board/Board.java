@@ -7,6 +7,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Board {
     // In case we need to change these column/row/size values for any reason later on...
@@ -16,8 +17,9 @@ public class Board {
     private GridPane chessBoard;
 
     public ArrayList<BoardSquare> boardSquares = new ArrayList<>();
-    private ArrayList<Piece> pieces = new ArrayList<>();
+    public ArrayList<Piece> pieces = new ArrayList<>();
     private ArrayList<StackPane> moves = new ArrayList<>();
+    public HashMap<BoardSquare, Piece> pieceToSquare = new HashMap<>();
 
     private BoardSettings settings;
 
@@ -183,6 +185,7 @@ public class Board {
     private void addPiece(BoardSquare square, Piece piece){
         pieces.add(piece);
         square.getChildren().add(piece);
+        pieceToSquare.put(square, piece);
         square.containsPiece = true;
     }
 
@@ -204,12 +207,27 @@ public class Board {
         return col >= 0 && col < MAX_COL && row >= 0 && row < MAX_ROW;
     }
 
-    private void movePiece(BoardSquare square){
-        if(isValidMove(square.coordinates.getCol(), square.coordinates.getRow())){
-            square.getChildren().add(draggingPiece);
-            draggingPiece.coordinates = square.coordinates;
-        } else{
-            System.out.println("Invalid Move");
+    /**
+     * This method ensures that the movement of a piece is valid,
+     * then calls mouse event handlers to allow for drag-and-drop of piece
+     * @param destSquare the square for the piece to be set on
+     */
+    private void movePiece(BoardSquare destSquare){
+        // Look through all board square and find the one that matches the piece's coordinates
+        for(BoardSquare prevSquare: boardSquares){
+            if(prevSquare.coordinates.equals(draggingPiece.coordinates)){
+                // Validate the movement
+                if(isValidMove(destSquare.coordinates.getCol(), destSquare.coordinates.getRow())){
+                    pieceToSquare.remove(prevSquare);
+                    pieceToSquare.put(destSquare, draggingPiece);
+                    prevSquare.getChildren().remove(draggingPiece);
+                    destSquare.getChildren().add(draggingPiece);
+                    // Set the new coordinates of the piece
+                    draggingPiece.coordinates = destSquare.coordinates;
+                } else{
+                    System.out.println("Invalid Move");
+                }
+            }
         }
     }
 

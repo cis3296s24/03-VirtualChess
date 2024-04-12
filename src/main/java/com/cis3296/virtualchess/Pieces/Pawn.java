@@ -20,14 +20,22 @@ public class Pawn extends Piece {
     @Override
     public ArrayList<Coordinates> getMoveSet(){
         ArrayList<Coordinates> moveSet = new ArrayList<>();
+        Coordinates targetCoordinates;
+
         if(this.color.equals("white")){
-            moveSet.add(new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() + 1));
-            moveSet.add(new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() + 1));
-            moveSet.add(new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() + 1));
+            targetCoordinates = new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() + 1);
+            addCoordinates(moveSet, targetCoordinates);
+            targetCoordinates = new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() + 1);
+            addCoordinates(moveSet, targetCoordinates);
+            targetCoordinates = new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() + 1);
+            addCoordinates(moveSet, targetCoordinates);
         } else{
-            moveSet.add(new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() - 1));
-            moveSet.add(new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() - 1));
-            moveSet.add(new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() - 1));
+            targetCoordinates = new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() - 1);
+            addCoordinates(moveSet, targetCoordinates);
+            targetCoordinates = new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() - 1);
+            addCoordinates(moveSet, targetCoordinates);
+            targetCoordinates = new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() - 1);
+            addCoordinates(moveSet, targetCoordinates);
         }
         return moveSet;
     }

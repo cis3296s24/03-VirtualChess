@@ -26,29 +26,28 @@ public class Rook extends Piece {
         // Top direction
         for (int row = coordinates.getRow() + 1; row < 8; row++) {
             Coordinates targetCoordinates = new Coordinates(coordinates.getCol(), row);
-            moveSet.add(targetCoordinates);
+            addCoordinates(moveSet, targetCoordinates);
         }
 
         // Down direction
         for (int row = coordinates.getRow() - 1; row >= 0; row--) {
             Coordinates targetCoordinates = new Coordinates(coordinates.getCol(), row);
-            moveSet.add(targetCoordinates);
+            addCoordinates(moveSet, targetCoordinates);
         }
 
         // Right direction
         for (int col = coordinates.getCol() + 1; col < 8; col++) {
             Coordinates targetCoordinates = new Coordinates(col, coordinates.getRow());
-            moveSet.add(targetCoordinates);
+            addCoordinates(moveSet, targetCoordinates);
         }
 
         // Left direction
         for (int col = coordinates.getCol() - 1; col >= 0; col--) {
             Coordinates targetCoordinates = new Coordinates(col, coordinates.getRow());
-            moveSet.add(targetCoordinates);
+            addCoordinates(moveSet, targetCoordinates);
         }
 
         return moveSet;
     }
-
 
 }
