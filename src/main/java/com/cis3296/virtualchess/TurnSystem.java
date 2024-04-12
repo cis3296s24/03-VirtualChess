@@ -3,10 +3,10 @@ package com.cis3296.virtualchess;
 public class TurnSystem {
 
     private Player whitePlayer;
-    private Timer whiteTimer;
+    public Timer whiteTimer;
 
     private Player blackPlayer;
-    private Timer blackTimer;
+    public Timer blackTimer;
 
     private Player currentPlayer;
 

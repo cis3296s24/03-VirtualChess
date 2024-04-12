@@ -11,7 +11,12 @@
     <HBox>
         <GridPane fx:id="chessBoard" />
         <VBox>
-            <Text id="Timer" text="Test" textAlignment="CENTER" wrappingWidth="300.0">
+            <Text fx:id="timerTextWhite" text="White Time:" textAlignment="CENTER" wrappingWidth="300.0">
+                <font>
+                    <Font size="36.0" />
+                </font>
+            </Text>
+            <Text fx:id="timerTextBlack" text="Black Time:" textAlignment="CENTER" wrappingWidth="300.0">
                 <font>
                     <Font size="36.0" />
                 </font>
