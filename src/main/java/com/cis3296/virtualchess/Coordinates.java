@@ -1,6 +1,6 @@
 package com.cis3296.virtualchess;
 
-import static com.cis3296.virtualchess.Board.SQUARE_SIZE;
+import static com.cis3296.virtualchess.Board.Board.SQUARE_SIZE;
 
 public class Coordinates {
     private int col, row; // The column and row of each location on the chessboard
@@ -22,14 +22,14 @@ public class Coordinates {
      * Sets all 4 coordinate values
      * @param col is the desired new row-coordinate to be set
      * @param row is the desired new row-coordinate to be set
-     * @param x is the desired new y-coordinate to be set
-     * @param y is the desired new y-coordinate to be set
+//     * @param x is the desired new y-coordinate to be set
+//     * @param y is the desired new y-coordinate to be set
      */
-    public void setCoordinates(int col, int row, int x, int y) {
+    public void setCoordinates(int col, int row) {
         this.col = col;
         this.row = row;
-        this.x = x;
-        this.y = y;
+        this.x = SQUARE_SIZE * col;
+        this.y = SQUARE_SIZE * row;
     }
 
     /**
@@ -82,5 +82,20 @@ public class Coordinates {
      */
     public int getY() {
         return this.y;
+    }
+
+    @Override
+    public String toString() {
+        return "(Col:" + col + ", Row:" + row + ", X:" + x + ", Y:" + y + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Coordinates) {
+            if(((Coordinates) obj).col == this.col && ((Coordinates) obj).row == this.row){
+                return true;
+            }
+        }
+        return super.equals(obj);
     }
 }
