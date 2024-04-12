@@ -37,11 +37,22 @@ public class MainMenuController {
         imageView.setImage(image);
     }
 
+    @FXML
+    public void switchToGameMode(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/com/cis3296/virtualchess/gamemode.fxml"));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css").toExternalForm());
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
+
+/*
     public void switchToChessBoard(ActionEvent event) throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("board.fxml")));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-    }
+    }*/
 }
