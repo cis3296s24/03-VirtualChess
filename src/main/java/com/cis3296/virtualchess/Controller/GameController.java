@@ -20,6 +20,8 @@ public class GameController {
     private Text timerTextWhite;
     @FXML
     private Text timerTextBlack;
+    @FXML
+    private Text currentTurnText;
 
     private Timeline timeline;
 
@@ -33,6 +35,7 @@ public class GameController {
         timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), event -> updateTime()));
         timeline.setCycleCount(Timeline.INDEFINITE); // Repeat indefinitely
         timeline.play();
+        currentTurnText.setText("Current Turn:\n" + game.chessBoard.turnSystem.getCurrentPlayer().name);
 
         // Add drag-and-drop event handlers to the chessboard GridPane
         chessBoard.setOnDragOver(event -> {
@@ -62,6 +65,7 @@ public class GameController {
 
     public void changeTurnButton(){
         game.chessBoard.turnSystem.changeTurn();
+        currentTurnText.setText("Current Turn:\n" + game.chessBoard.turnSystem.getCurrentPlayer().name);
     }
 
     private void changeBoardStyle(BoardStyle style){

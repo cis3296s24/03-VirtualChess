@@ -81,7 +81,7 @@ public class Board {
             });
         }
         showMoves(new Coordinates(1, 1));
-        this.turnSystem = new TurnSystem(new Player(), new Player());
+        this.turnSystem = new TurnSystem(new Player("Test1"), new Player("Test2"));
     }
 
     /**
@@ -219,6 +219,7 @@ public class Board {
     public void showMoves(Coordinates coordinates){
         for(BoardSquare square : boardSquares){
             if(coordinates.equals(square.coordinates)){
+                //All of this for drawing the move hints
                 BorderStroke bs = new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, new CornerRadii(100), new BorderWidths(2));
                 Border circle = new Border(bs);
                 StackPane sp = new StackPane();

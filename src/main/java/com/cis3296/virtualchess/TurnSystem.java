@@ -34,4 +34,8 @@ public class TurnSystem {
             whiteTimer.unpause();
         }
     }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
 }
