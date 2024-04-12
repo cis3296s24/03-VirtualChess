@@ -7,7 +7,6 @@ import javafx.scene.layout.GridPane;
 
 public class Game {
 
-    // Not in use for now
     public Board chessBoard;
     public BoardSettings boardSettings = new BoardSettings(BoardSettings.SANDCASTLE);
 

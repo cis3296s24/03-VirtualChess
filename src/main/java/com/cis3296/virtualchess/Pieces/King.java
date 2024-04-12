@@ -19,7 +19,16 @@ public class King extends Piece {
 
     @Override
     public ArrayList<Coordinates> getMoveSet() {
-        return null;
+        ArrayList<Coordinates> moveSet = new ArrayList<>();
+        moveSet.add(new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() + 1));
+        moveSet.add(new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() + 1));
+        moveSet.add(new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() + 1));
+        moveSet.add(new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow()));
+        moveSet.add(new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow()));
+        moveSet.add(new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() - 1));
+        moveSet.add(new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() - 1));
+        moveSet.add(new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() - 1));
+        return moveSet;
     }
 
 
