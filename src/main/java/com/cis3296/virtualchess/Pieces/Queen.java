@@ -1,7 +1,8 @@
 package com.cis3296.virtualchess.Pieces;
 
-import com.cis3296.virtualchess.Board.Board;
 import com.cis3296.virtualchess.Coordinates;
+
+import java.util.ArrayList;
 
 public class Queen extends Piece {
 
@@ -17,18 +18,8 @@ public class Queen extends Piece {
     }
 
     @Override
-    public boolean canMoveBlack(Coordinates targetCoordinates) {
-        return false;
-    }
-
-    @Override
-    public boolean canMoveWhite(Coordinates targetCoordinates) {
-        return false;
-    }
-
-    @Override
-    public void showMoves(Board board) {
-
+    public ArrayList<Coordinates> getMoveSet() {
+        return null;
     }
 
 

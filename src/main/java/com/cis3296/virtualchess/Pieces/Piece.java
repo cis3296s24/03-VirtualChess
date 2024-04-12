@@ -6,6 +6,8 @@ import javafx.event.Event;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.util.ArrayList;
+
 public abstract class Piece extends ImageView {
 
     public Coordinates coordinates;
@@ -52,17 +54,14 @@ public abstract class Piece extends ImageView {
      * @return false by default, preventing erratic movement
      */
     public boolean canMove(int targetCol, int targetRow){
-        Coordinates target = new Coordinates(targetCol, targetRow);
-        if(color.equals("white")){
-            return canMoveWhite(target);
-        } else {
-            return canMoveBlack(target);
+        Coordinates targetCoordinates = new Coordinates(targetCol, targetRow);
+        for(Coordinates coordinates : getMoveSet()){
+            if(coordinates.equals(targetCoordinates)){
+                return true;
+            }
         }
+        return false;
     }
-
-    public abstract boolean canMoveBlack(Coordinates targetCoordinates);
-
-    public abstract boolean canMoveWhite(Coordinates targetCoordinates);
 
     public boolean compareTopRight(Coordinates targetCoordinates){
         return this.coordinates.equals(
@@ -128,5 +127,10 @@ public abstract class Piece extends ImageView {
                 ));
     }
 
-    public abstract void showMoves(Board board);
+    public void showMoves(Board board){
+        for(Coordinates coordinates : getMoveSet()){
+            board.showMoves(coordinates);
+        }
+    }
+    public abstract ArrayList<Coordinates> getMoveSet();
 }

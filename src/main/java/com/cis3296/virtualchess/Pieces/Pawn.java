@@ -1,7 +1,8 @@
 package com.cis3296.virtualchess.Pieces;
 
-import com.cis3296.virtualchess.Board.Board;
 import com.cis3296.virtualchess.Coordinates;
+
+import java.util.ArrayList;
 
 public class Pawn extends Piece {
 
@@ -17,18 +18,19 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public boolean canMoveBlack(Coordinates targetCoordinates) {
-        return compareTopRight(targetCoordinates) || compareTopLeft(targetCoordinates) || compareTop(targetCoordinates);
+    public ArrayList<Coordinates> getMoveSet(){
+        ArrayList<Coordinates> moveSet = new ArrayList<>();
+        if(this.color.equals("white")){
+            moveSet.add(new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() + 1));
+            moveSet.add(new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() + 1));
+            moveSet.add(new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() + 1));
+        } else{
+            moveSet.add(new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() - 1));
+            moveSet.add(new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() - 1));
+            moveSet.add(new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() - 1));
+        }
+        return moveSet;
     }
 
-    @Override
-    public boolean canMoveWhite(Coordinates targetCoordinates) {
-        return compareBottomLeft(targetCoordinates) || compareBottomRight(targetCoordinates) || compareBottom(targetCoordinates);
-    }
-
-    @Override
-    public void showMoves(Board board) {
-        board.showMoves(this.coordinates);
-    }
 
 }
