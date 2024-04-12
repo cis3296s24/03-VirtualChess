@@ -23,6 +23,8 @@ public class Board {
 
     private Piece draggingPiece;
 
+    public TurnSystem turnSystem;
+
     //The border surround each of the board squares
     private final Border border = new Border(
                                 new BorderStroke(
@@ -77,6 +79,8 @@ public class Board {
                 event.consume();
             });
         }
+
+        this.turnSystem = new TurnSystem(new Player(), new Player());
     }
 
     /**

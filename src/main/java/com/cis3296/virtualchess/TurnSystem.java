@@ -14,19 +14,24 @@ public class TurnSystem {
         this.whitePlayer = whitePlayer;
         this.blackPlayer = blackPlayer;
         currentPlayer = blackPlayer;
-        whiteTimer = new Timer();
-        blackTimer = new Timer();
+        whiteTimer = new Timer(5);
+        blackTimer = new Timer(5);
+        whiteTimer.start();
+        blackTimer.start();
+        blackTimer.pause();
     }
 
     public void changeTurn(){
         if(currentPlayer == whitePlayer){
             currentPlayer = blackPlayer;
 
-            whiteTimer.stop();
+            whiteTimer.pause();
+            blackTimer.unpause();
         } else {
             currentPlayer = whitePlayer;
 
-            blackTimer.stop();
+            blackTimer.pause();
+            whiteTimer.unpause();
         }
     }
 }

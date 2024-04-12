@@ -43,6 +43,10 @@ public class Controller {
 
     }
 
+    public void changeTurnButton(){
+        game.chessBoard.turnSystem.changeTurn();
+    }
+
     private void changeBoardStyle(BoardStyle style){
         this.game.boardSettings.currentBoardStyle = style;
         game.chessBoard.rerenderBoard();
