@@ -23,7 +23,6 @@ public class Board {
 
     private Piece draggingPiece;
 
-    public TurnSystem turnSystem;
 
     //The border surround each of the board squares
     private final Border border = new Border(
@@ -81,7 +80,6 @@ public class Board {
             });
         }
         showMoves(new Coordinates(1, 1));
-        this.turnSystem = new TurnSystem(new Player("Test1"), new Player("Test2"));
     }
 
     /**

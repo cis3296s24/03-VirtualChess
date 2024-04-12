@@ -35,7 +35,7 @@ public class GameController {
         timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), event -> updateTime()));
         timeline.setCycleCount(Timeline.INDEFINITE); // Repeat indefinitely
         timeline.play();
-        currentTurnText.setText("Current Turn:\n" + game.chessBoard.turnSystem.getCurrentPlayer().name);
+        currentTurnText.setText("Current Turn:\n" + game.turnSystem.getCurrentPlayer().name);
 
         // Add drag-and-drop event handlers to the chessboard GridPane
         chessBoard.setOnDragOver(event -> {
@@ -52,20 +52,20 @@ public class GameController {
     }
 
     public void updateTime(){
-        int minutesW = game.chessBoard.turnSystem.whiteTimer.getRemainingTimeMinutes();
-        int secondsW = game.chessBoard.turnSystem.whiteTimer.getRemainingTimeSeconds();
+        int minutesW = game.turnSystem.whiteTimer.getRemainingTimeMinutes();
+        int secondsW = game.turnSystem.whiteTimer.getRemainingTimeSeconds();
 
         timerTextWhite.setText(String.format("White Time: %02d:%02d", minutesW, secondsW));
 
-        int minutesB = game.chessBoard.turnSystem.blackTimer.getRemainingTimeMinutes();
-        int secondsB = game.chessBoard.turnSystem.blackTimer.getRemainingTimeSeconds();
+        int minutesB = game.turnSystem.blackTimer.getRemainingTimeMinutes();
+        int secondsB = game.turnSystem.blackTimer.getRemainingTimeSeconds();
 
         timerTextBlack.setText(String.format("Black Time: %02d:%02d", minutesB, secondsB));
     }
 
     public void changeTurnButton(){
-        game.chessBoard.turnSystem.changeTurn();
-        currentTurnText.setText("Current Turn:\n" + game.chessBoard.turnSystem.getCurrentPlayer().name);
+        game.turnSystem.changeTurn();
+        currentTurnText.setText("Current Turn:\n" + game.turnSystem.getCurrentPlayer().name);
     }
 
     private void changeBoardStyle(BoardStyle style){
