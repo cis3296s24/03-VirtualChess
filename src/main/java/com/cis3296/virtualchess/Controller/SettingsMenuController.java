@@ -2,6 +2,7 @@ package com.cis3296.virtualchess.Controller;
 
 import com.almasb.fxgl.profile.DataFile;
 import com.cis3296.virtualchess.Board.BoardSettings;
+import com.cis3296.virtualchess.Board.BoardStyle;
 import com.cis3296.virtualchess.Main;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -32,12 +33,12 @@ public class SettingsMenuController {
 
     public void initialize(){
         String[] themes = {
-                BoardSettings.SANDCASTLE.styleName,
-                BoardSettings.CORAL.styleName,
-                BoardSettings.DUSK.styleName,
-                BoardSettings.WHEAT.styleName,
-                BoardSettings.MARINE.styleName,
-                BoardSettings.EMERALD.styleName,
+                BoardStyle.SANDCASTLE.styleName,
+                BoardStyle.CORAL.styleName,
+                BoardStyle.DUSK.styleName,
+                BoardStyle.WHEAT.styleName,
+                BoardStyle.MARINE.styleName,
+                BoardStyle.EMERALD.styleName,
         };
         ThemeDropDown.getItems().addAll(FXCollections.observableArrayList(themes));
     }

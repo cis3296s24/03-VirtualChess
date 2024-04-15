@@ -14,7 +14,7 @@ import java.util.Properties;
 public class Game {
 
     public Board chessBoard;
-    public BoardSettings boardSettings = new BoardSettings(BoardSettings.SANDCASTLE);
+    public BoardSettings boardSettings = new BoardSettings(BoardStyle.SANDCASTLE);
     public TurnSystem turnSystem;
 
     /**
