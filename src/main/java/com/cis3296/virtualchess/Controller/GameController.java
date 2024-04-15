@@ -1,7 +1,5 @@
 package com.cis3296.virtualchess.Controller;
 
-import com.cis3296.virtualchess.Board.BoardSettings;
-import com.cis3296.virtualchess.Board.BoardStyle;
 import com.cis3296.virtualchess.Game;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -66,11 +64,6 @@ public class GameController {
     public void changeTurnButton(){
         game.turnSystem.changeTurn();
         currentTurnText.setText("Current Turn:\n" + game.turnSystem.getCurrentPlayer().name);
-    }
-
-    private void changeBoardStyle(BoardStyle style){
-        this.game.boardSettings.currentBoardStyle = style;
-        game.chessBoard.rerenderBoard();
     }
 
 }
