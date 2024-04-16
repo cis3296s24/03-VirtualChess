@@ -15,6 +15,7 @@ public abstract class Piece extends ImageView {
     public String color;
     public String type;
     public Board board;
+    public boolean isTurn;
 
     /**
      * Constructor for a standard Piece
@@ -25,6 +26,11 @@ public abstract class Piece extends ImageView {
         this.coordinates = coordinates;
         this.color = color;
         this.board = board;
+        if(this.color.equals("black")){
+            isTurn = true;
+        } else {
+            isTurn = false;
+        }
         setDragHandlers();
     }
 
@@ -37,6 +43,7 @@ public abstract class Piece extends ImageView {
             startFullDrag();
             event.consume();
         });
+
 
         setOnMouseDragged(Event::consume);
     }

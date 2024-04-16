@@ -16,8 +16,8 @@ public class Game {
      * @param chessBoard
      */
     public Game(GridPane chessBoard) {
-        this.turnSystem = new TurnSystem(new Player("Test1"), new Player("Test2"));
-        this.chessBoard = new Board(chessBoard, boardSettings);
+        this.chessBoard = new Board(chessBoard, boardSettings, new Player("Test1"), new Player("Test2"));
+        this.turnSystem = this.chessBoard.getTurnSystem();
     }
 
 
