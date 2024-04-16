@@ -1,5 +1,8 @@
 package com.cis3296.virtualchess;
 
+import com.cis3296.virtualchess.Board.Board;
+import com.cis3296.virtualchess.Pieces.Piece;
+
 public class TurnSystem {
 
     private Player whitePlayer;
@@ -10,15 +13,19 @@ public class TurnSystem {
 
     private Player currentPlayer;
 
-    public TurnSystem(Player whitePlayer, Player blackPlayer) {
+    private Board board;
+
+    public TurnSystem(Player whitePlayer, Player blackPlayer, Board board) {
         this.whitePlayer = whitePlayer;
         this.blackPlayer = blackPlayer;
-        currentPlayer = whitePlayer;
+        currentPlayer = blackPlayer;
         whiteTimer = new Timer(5);
         blackTimer = new Timer(5);
         whiteTimer.start();
         blackTimer.start();
         blackTimer.pause();
+        this.board = board;
+
     }
 
     public void changeTurn(){
@@ -27,11 +34,28 @@ public class TurnSystem {
 
             whiteTimer.pause();
             blackTimer.unpause();
+
+            for(Piece piece: board.pieces){
+                if(piece.color.equals("white")){
+                    piece.isTurn = false;
+                } else {
+                    piece.isTurn = true;
+                }
+            }
+
         } else {
             currentPlayer = whitePlayer;
 
             blackTimer.pause();
             whiteTimer.unpause();
+
+            for(Piece piece: board.pieces){
+                if(piece.color.equals("black")){
+                    piece.isTurn = false;
+                } else {
+                    piece.isTurn = true;
+                }
+            }
         }
     }
 
