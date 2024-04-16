@@ -27,19 +27,8 @@
                 </font>
             </Text>
             <Button text="ChangeTurn" onAction="#changeTurnButton"/>
+            <Button text="Settings" onAction="#settings"/>
+            <Button text="End Game" onAction="#leaveGame"/>
         </VBox>
-
-
     </HBox>
-
-    <HBox>
-        <Button onAction="#changeStyleToSandcastle" text="Sandcastle" />
-        <Button onAction="#changeStyleToCoral" text="Coral" />
-        <Button onAction="#changeStyleToDusk" text="Dusk" />
-        <Button onAction="#changeStyleToWheat" text="Wheat" />
-        <Button onAction="#changeStyleToMarine" text="Marine" />
-        <Button onAction="#changeStyleToEmerald" text="Emerald" />
-    </HBox>
-
-
 </VBox>

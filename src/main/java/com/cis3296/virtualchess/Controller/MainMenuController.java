@@ -30,8 +30,7 @@ public class MainMenuController {
      * Creates the chess board
      */
     public void initialize(){
-        File file = new File("src/main/resources/assets/menuImages/VirtualChess!.gif");
-        Image image = new Image(file.toURI().toString());
+        Image image = new Image(String.valueOf(getClass().getResource("/assets/menuImages/VirtualChess!.gif")));
         imageView.setImage(image);
     }
 
