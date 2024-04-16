@@ -27,7 +27,7 @@ public class Bishop extends Piece {
              col < 8 && row < 8;
              col++, row++) {
             Coordinates targetCoordinates = new Coordinates(col, row);
-            moveSet.add(targetCoordinates);
+            addCoordinates(moveSet, targetCoordinates);
         }
 
         // Top-left direction
@@ -35,7 +35,7 @@ public class Bishop extends Piece {
              col >= 0 && row < 8;
              col--, row++) {
             Coordinates targetCoordinates = new Coordinates(col, row);
-            moveSet.add(targetCoordinates);
+            addCoordinates(moveSet, targetCoordinates);
         }
 
         // Bottom-right direction
@@ -43,7 +43,7 @@ public class Bishop extends Piece {
              col < 8 && row >= 0;
              col++, row--) {
             Coordinates targetCoordinates = new Coordinates(col, row);
-            moveSet.add(targetCoordinates);
+            addCoordinates(moveSet, targetCoordinates);
         }
 
         // Bottom-left direction
@@ -51,7 +51,7 @@ public class Bishop extends Piece {
              col >= 0 && row >= 0;
              col--, row--) {
             Coordinates targetCoordinates = new Coordinates(col, row);
-            moveSet.add(targetCoordinates);
+            addCoordinates(moveSet, targetCoordinates);
         }
         return moveSet;
     }

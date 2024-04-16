@@ -2,13 +2,7 @@ package com.cis3296.virtualchess;
 
 import com.cis3296.virtualchess.Board.Board;
 import com.cis3296.virtualchess.Board.BoardSettings;
-import com.cis3296.virtualchess.Board.BoardStyle;
 import javafx.scene.layout.GridPane;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
 
 
 public class Game {
@@ -25,6 +19,8 @@ public class Game {
         getTheme();
         this.turnSystem = new TurnSystem(new Player("Test1"), new Player("Test2"));
         this.chessBoard = new Board(chessBoard, boardSettings);
+        this.chessBoard = new Board(chessBoard, boardSettings, new Player("Test1"), new Player("Test2"));
+        this.turnSystem = this.chessBoard.getTurnSystem();
     }
 
     public void getTheme() {

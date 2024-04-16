@@ -1,6 +1,7 @@
 package com.cis3296.virtualchess.Pieces;
 
 import com.cis3296.virtualchess.Board.Board;
+import com.cis3296.virtualchess.Board.BoardSquare;
 import com.cis3296.virtualchess.Coordinates;
 import javafx.event.Event;
 import javafx.scene.image.Image;
@@ -14,6 +15,7 @@ public abstract class Piece extends ImageView {
     public String color;
     public String type;
     public Board board;
+    public boolean isTurn;
 
     /**
      * Constructor for a standard Piece
@@ -24,6 +26,11 @@ public abstract class Piece extends ImageView {
         this.coordinates = coordinates;
         this.color = color;
         this.board = board;
+        if(this.color.equals("black")){
+            isTurn = true;
+        } else {
+            isTurn = false;
+        }
         setDragHandlers();
     }
 
@@ -36,6 +43,7 @@ public abstract class Piece extends ImageView {
             startFullDrag();
             event.consume();
         });
+
 
         setOnMouseDragged(Event::consume);
     }
@@ -71,4 +79,31 @@ public abstract class Piece extends ImageView {
         }
     }
     public abstract ArrayList<Coordinates> getMoveSet();
+
+    /**
+     * This method confirms adds the coordinates to the piece move set if the moves
+     * do not conflict with other pieces
+     * @param moveSet the ObservableList the coordinates get added to
+     * @param targetCoordinates the coordinates of the move being made
+     */
+    public void addCoordinates(ArrayList<Coordinates> moveSet, Coordinates targetCoordinates){
+        // Go through all board squares and find the square the piece is supposed to move to
+        for(BoardSquare destinationSquare: board.boardSquares){
+            if(destinationSquare.coordinates.equals(targetCoordinates)){
+                // Check to see if the square has a piece on it
+                if(board.pieceToSquare.containsKey(destinationSquare)){
+                    // Check to see if the piece is not of the same color
+                    Piece opponentPiece = board.pieceToSquare.get(destinationSquare);
+                    String opponentColor = opponentPiece.color;
+                    if(!this.color.equals(opponentColor)){
+                        // Add the coordinate as a possible move
+                        moveSet.add(targetCoordinates);
+                    }
+                } else {
+                    // Add the coordinate as a possible move
+                    moveSet.add(targetCoordinates);
+                }
+            }
+        }
+    }
 }
