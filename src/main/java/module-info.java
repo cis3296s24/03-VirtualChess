@@ -7,6 +7,7 @@ module com.cis3296.virtualchess {
     requires org.kordamp.bootstrapfx.core;
     requires com.almasb.fxgl.all;
     requires java.sql;
+    requires org.xerial.sqlitejdbc;
 
     opens com.cis3296.virtualchess to javafx.fxml;
     exports com.cis3296.virtualchess;
