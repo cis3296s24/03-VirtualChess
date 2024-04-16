@@ -123,7 +123,7 @@ public class Board {
      */
     private void addPieces(){
         for(BoardSquare square : boardSquares){
-            if(square.coordinates.getRow() == 0){
+            if(square.coordinates.getRow() == 7){
                 if(square.coordinates.getCol() == 0 || square.coordinates.getCol() == 7){
                     Piece rookW = new Rook(square.coordinates, "white", this);
                     addPiece(square, rookW);
@@ -146,16 +146,16 @@ public class Board {
                 }
 
             }
-            if(square.coordinates.getRow() == 1){
+            if(square.coordinates.getRow() == 6){
                 Piece pawnW = new Pawn(square.coordinates, "white", this);
                 addPiece(square, pawnW);
             }
-            if(square.coordinates.getRow() == 6){
+            if(square.coordinates.getRow() == 1){
                 Piece pawnB = new Pawn(square.coordinates, "black", this);
                 addPiece(square, pawnB);
             }
 
-            if(square.coordinates.getRow() == 7){
+            if(square.coordinates.getRow() == 0){
                 if(square.coordinates.getCol() == 0 || square.coordinates.getCol() == 7){
                     Piece rookB = new Rook(square.coordinates, "black", this);
                     addPiece(square, rookB);
@@ -168,11 +168,11 @@ public class Board {
                     Piece bishopB = new Bishop(square.coordinates, "black", this);
                     addPiece(square, bishopB);
                 }
-                if(square.coordinates.getCol() == 3){
+                if(square.coordinates.getCol() == 4){
                     Piece kingB = new King(square.coordinates, "black", this);
                     addPiece(square, kingB);
                 }
-                if(square.coordinates.getCol() == 4){
+                if(square.coordinates.getCol() == 3){
                     Piece queenB = new Queen(square.coordinates, "black", this);
                     addPiece(square, queenB);
                 }
