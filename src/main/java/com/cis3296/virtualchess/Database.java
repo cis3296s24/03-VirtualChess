@@ -16,7 +16,7 @@ public class Database {
             System.out.println("Opened database successfully");
 
             stmt = c.createStatement();
-            String sql = "CREATE TABLE COMPANY " +
+            String sql = "CREATE TABLE LEADERBOARD " +
                     "(ID INT PRIMARY KEY     NOT NULL," +
                     " PLAYER1           TEXT    NOT NULL, " +
                     " PLAYER1RESULT        CHAR(50), " +
