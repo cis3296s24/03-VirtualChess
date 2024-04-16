@@ -1,10 +1,11 @@
-package com.cis3296.virtualchess;
+package com.cis3296.virtualchess.Board;
 
+import com.cis3296.virtualchess.Coordinates;
 import javafx.scene.layout.StackPane;
 
 public class BoardSquare extends StackPane {
 
-    Coordinates coordinates;
+    public Coordinates coordinates;
     // Not used now but can later be used when pieces are added
     boolean containsPiece;
 
