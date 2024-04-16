@@ -3,11 +3,20 @@ package com.cis3296.virtualchess.Controller;
 import com.cis3296.virtualchess.Game;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.io.IOException;
+import java.util.Objects;
 
 public class GameController {
 
@@ -64,6 +73,19 @@ public class GameController {
     public void changeTurnButton(){
         game.turnSystem.changeTurn();
         currentTurnText.setText("Current Turn:\n" + game.turnSystem.getCurrentPlayer().name);
+    }
+
+    public void leaveGame(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/mainmenu.fxml")));
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css")).toExternalForm());
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void settings(){
+
     }
 
 }

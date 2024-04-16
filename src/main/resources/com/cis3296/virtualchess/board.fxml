@@ -27,6 +27,8 @@
                 </font>
             </Text>
             <Button text="ChangeTurn" onAction="#changeTurnButton"/>
+            <Button text="Settings" onAction="#settings"/>
+            <Button text="End Game" onAction="#leaveGame"/>
         </VBox>
     </HBox>
 </VBox>
