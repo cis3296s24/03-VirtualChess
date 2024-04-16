@@ -27,7 +27,7 @@ public class Game {
         this.chessBoard = new Board(chessBoard, boardSettings);
     }
 
-    private void getTheme() {
+    public void getTheme() {
         File configFile;
         Properties props = new Properties();
 

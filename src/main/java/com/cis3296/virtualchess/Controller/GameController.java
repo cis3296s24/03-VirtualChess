@@ -1,22 +1,30 @@
 package com.cis3296.virtualchess.Controller;
 
+import com.cis3296.virtualchess.Board.BoardSettings;
 import com.cis3296.virtualchess.Game;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Dialog;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Properties;
 
 public class GameController {
 
@@ -85,6 +93,46 @@ public class GameController {
     }
 
     public void settings(){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cis3296/virtualchess/settingsMenu.fxml"));
+            Parent settingsContent = loader.load();
+
+            Stage settingsPopup = new Stage();
+            Scene settingsScene = new Scene(settingsContent);
+            settingsPopup.setScene(settingsScene);
+
+            settingsPopup.setTitle("Settings");
+
+            settingsPopup.initModality(Modality.APPLICATION_MODAL);
+
+
+            SettingsMenuController controller = loader.getController();
+            controller.backButton.setOnAction(event -> {
+                Properties props = new Properties();
+
+                props.setProperty(BoardSettings.CONFIG_ACCESS_STRING, controller.ThemeDropDown.getValue().toString());
+
+                try {
+                    File configFile = new File("config.xml");
+                    FileOutputStream out = new FileOutputStream(configFile);
+                    props.storeToXML(out,"Configuration");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                game.getTheme();
+                game.chessBoard.rerenderBoard();
+
+                settingsPopup.close();
+            });
+
+            settingsPopup.setOnCloseRequest(event -> {
+                Platform.runLater(settingsPopup::close);
+            });
+
+            settingsPopup.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

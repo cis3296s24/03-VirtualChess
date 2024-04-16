@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cis3296.virtualchess.Controller.SettingsMenuController">
-    <Button layoutX="122.0" layoutY="523.0" mnemonicParsing="false" onAction="#backToMainMenu" prefHeight="58.0" prefWidth="355.0" text="Back" />
+    <Button fx:id="backButton" layoutX="122.0" layoutY="523.0" mnemonicParsing="false" onAction="#backToMainMenu" prefHeight="58.0" prefWidth="355.0" text="Back" />
    <Text layoutX="125.0" layoutY="147.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Themes" wrappingWidth="181.21153259277344">
       <font>
          <Font size="24.0" />
