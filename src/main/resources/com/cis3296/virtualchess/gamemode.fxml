@@ -15,13 +15,13 @@
     <Button layoutX="227.0" layoutY="706.0" mnemonicParsing="false" onAction="#switchToMainMenu" prefHeight="58.0" prefWidth="355.0" text="Back" />
    <VBox layoutX="255.0" layoutY="187.0" prefHeight="58.0" prefWidth="300.0">
       <children>
-         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Player 1 Name" />
+         <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Player 1 Name" />
          <TextField fx:id="player1name" />
       </children>
    </VBox>
    <VBox layoutX="255.0" layoutY="292.0" prefHeight="58.0" prefWidth="300.0">
       <children>
-         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Player 2 Name" />
+         <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Player 2 Name" />
          <TextField fx:id="player2name" />
       </children>
    </VBox>
