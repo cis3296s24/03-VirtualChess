@@ -1,9 +1,9 @@
-package com.cis3296.virtualchess.Pieces;
+package com.cis3296.virtualchess.Entities.Pieces;
 
-import com.cis3296.virtualchess.Data.Coordinates;
+import com.cis3296.virtualchess.Entities.Coordinates;
 
 import java.util.ArrayList;
-import com.cis3296.virtualchess.Board.Board;
+import com.cis3296.virtualchess.Components.Board;
 
 public class Knight extends Piece {
 

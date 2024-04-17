@@ -1,9 +1,9 @@
 package com.cis3296.virtualchess.Controller;
 
-import com.cis3296.virtualchess.Board.BoardSettings;
-import com.cis3296.virtualchess.Database;
+import com.cis3296.virtualchess.Components.BoardSettings;
+import com.cis3296.virtualchess.Systems.Database;
 import com.cis3296.virtualchess.Game;
-import com.cis3296.virtualchess.Data.Player;
+import com.cis3296.virtualchess.Entities.Player;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;

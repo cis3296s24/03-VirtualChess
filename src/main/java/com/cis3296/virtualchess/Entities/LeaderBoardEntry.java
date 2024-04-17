@@ -1,4 +1,4 @@
-package com.cis3296.virtualchess.Data;
+package com.cis3296.virtualchess.Entities;
 
 import javafx.beans.property.SimpleStringProperty;
 

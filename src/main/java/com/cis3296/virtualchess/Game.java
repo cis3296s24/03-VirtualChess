@@ -1,10 +1,11 @@
 package com.cis3296.virtualchess;
 
-import com.cis3296.virtualchess.Board.Board;
-import com.cis3296.virtualchess.Board.BoardSettings;
-import com.cis3296.virtualchess.Board.BoardStyle;
-import com.cis3296.virtualchess.Data.Player;
-import com.cis3296.virtualchess.Pieces.Piece;
+import com.cis3296.virtualchess.Components.Board;
+import com.cis3296.virtualchess.Components.BoardSettings;
+import com.cis3296.virtualchess.Components.BoardStyle;
+import com.cis3296.virtualchess.Entities.Player;
+import com.cis3296.virtualchess.Entities.Pieces.Piece;
+import com.cis3296.virtualchess.Systems.TurnSystem;
 import javafx.scene.layout.GridPane;
 
 import java.io.File;

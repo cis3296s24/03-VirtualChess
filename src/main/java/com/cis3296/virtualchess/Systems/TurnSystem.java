@@ -1,8 +1,8 @@
-package com.cis3296.virtualchess;
+package com.cis3296.virtualchess.Systems;
 
-import com.cis3296.virtualchess.Board.Board;
-import com.cis3296.virtualchess.Data.Player;
-import com.cis3296.virtualchess.Pieces.Piece;
+import com.cis3296.virtualchess.Components.Board;
+import com.cis3296.virtualchess.Entities.Player;
+import com.cis3296.virtualchess.Game;
 
 public class TurnSystem {
 

@@ -1,7 +1,6 @@
 package com.cis3296.virtualchess.Controller;
 
-import com.cis3296.virtualchess.Database;
-import com.cis3296.virtualchess.Data.LeaderBoardEntry;
+import com.cis3296.virtualchess.Systems.Database;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

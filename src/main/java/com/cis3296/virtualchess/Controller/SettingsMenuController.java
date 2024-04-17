@@ -1,9 +1,7 @@
 package com.cis3296.virtualchess.Controller;
 
-import com.almasb.fxgl.profile.DataFile;
-import com.cis3296.virtualchess.Board.BoardSettings;
-import com.cis3296.virtualchess.Board.BoardStyle;
-import com.cis3296.virtualchess.Main;
+import com.cis3296.virtualchess.Components.BoardSettings;
+import com.cis3296.virtualchess.Components.BoardStyle;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

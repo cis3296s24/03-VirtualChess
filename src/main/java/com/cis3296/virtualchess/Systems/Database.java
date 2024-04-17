@@ -1,7 +1,7 @@
-package com.cis3296.virtualchess;
+package com.cis3296.virtualchess.Systems;
 
-import com.cis3296.virtualchess.Data.LeaderBoardEntry;
-import com.cis3296.virtualchess.Data.Player;
+import com.cis3296.virtualchess.Entities.LeaderBoardEntry;
+import com.cis3296.virtualchess.Entities.Player;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
