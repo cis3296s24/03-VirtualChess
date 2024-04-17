@@ -10,5 +10,14 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.cis3296.virtualchess.Controller.LeaderBoardController"
             prefHeight="800.0" prefWidth="800.0">
+    <Button
+            fx:id="backButton"
+            layoutX="122.0"
+            layoutY="523.0"
+            mnemonicParsing="false"
+            onAction="#backToMainMenu"
+            prefHeight="58.0"
+            prefWidth="355.0"
+            text="Back" />
 
 </AnchorPane>
