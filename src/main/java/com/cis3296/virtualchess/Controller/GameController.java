@@ -3,6 +3,7 @@ package com.cis3296.virtualchess.Controller;
 import com.cis3296.virtualchess.Board.BoardSettings;
 import com.cis3296.virtualchess.Database;
 import com.cis3296.virtualchess.Game;
+import com.cis3296.virtualchess.Player;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -65,6 +66,9 @@ public class GameController {
             event.consume();
         });
 
+        Database.insert(new Player("Nick"), new Player("Ken"), "Lose", "Win");
+
+
     }
 
     public void updateTime(){
@@ -85,7 +89,6 @@ public class GameController {
     }
 
     public void leaveGame(ActionEvent event) throws IOException {
-        Database.closeDatabase();
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/mainmenu.fxml")));
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);

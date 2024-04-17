@@ -12,6 +12,7 @@ import java.util.Objects;
 public class ChessApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
+        Database.getInstance();
         try{
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainmenu.fxml")));
             Scene scene = new Scene(root);
@@ -21,6 +22,11 @@ public class ChessApp extends Application {
         } catch(Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void stop() {
+        Database.closeDatabase();
     }
 
     public static void main(String[] args) {

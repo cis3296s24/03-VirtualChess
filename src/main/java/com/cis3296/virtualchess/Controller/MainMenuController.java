@@ -1,5 +1,7 @@
 package com.cis3296.virtualchess.Controller;
 
+import com.cis3296.virtualchess.Database;
+import com.cis3296.virtualchess.LeaderBoardEntry;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class MainMenuController {
@@ -32,6 +35,10 @@ public class MainMenuController {
     public void initialize(){
         Image image = new Image(String.valueOf(getClass().getResource("/assets/menuImages/VirtualChess!.gif")));
         imageView.setImage(image);
+        Database.getInstance();
+        for(LeaderBoardEntry lbe : Database.getAllEntries()){
+            System.out.println(lbe.toString());
+        }
     }
 
     public void switchToChessBoard(ActionEvent event) throws IOException {

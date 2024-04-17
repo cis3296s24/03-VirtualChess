@@ -44,7 +44,7 @@ public class Database {
 
         try {
             stmt = con.createStatement();
-            String sql = "CREATE TABLE LEADERBOARD " +
+            String sql = "CREATE TABLE IF NOT EXISTS LEADERBOARD " +
                     "(ID INTEGER PRIMARY KEY AUTOINCREMENT    NOT NULL," +
                     " PLAYER1           TEXT    NOT NULL, " +
                     " PLAYER1RESULT        CHAR(50), " +
@@ -58,41 +58,40 @@ public class Database {
     }
 
     public static void insert(Player p1, Player p2, String resultP1, String resultP2){
-        Statement stmt;
+        String query = "INSERT INTO LEADERBOARD (PLAYER1, PLAYER1RESULT, PLAYER2, PLAYER2RESULT) " +
+                "VALUES (?, ?, ?, ?)";
+        try (PreparedStatement pstmt = con.prepareStatement(query)) {
+            pstmt.setString(1, p1.name);
+            pstmt.setString(2, resultP1);
+            pstmt.setString(3, p2.name);
+            pstmt.setString(4, resultP2);
 
-        try{
-            stmt = con.createStatement();
+            pstmt.executeUpdate();
 
-            String insert = "INSERT INTO LEADERBOARD (PLAYER1,PLAYER1RESULT,PLAYER2,PLAYER2RESULT) " +
-                    "VALUES (" + p1.name + ", " + resultP1 + ", " + p2.name + ", " + resultP2 + " );";
-            stmt.executeUpdate(insert);
-
-            stmt.close();
             con.commit();
-        } catch (Exception e){
-
+            System.out.println("Inserted into Leaderboard");
+        } catch (SQLException e) {
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
+        System.out.println("Inserted into Leaderboard");
     }
 
-    public static ArrayList<String> getAllEntries(){
+    public static ArrayList<LeaderBoardEntry> getAllEntries(){
         Statement stmt;
+        ArrayList<LeaderBoardEntry> resultList = new ArrayList<>();
         try {
             stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery( "SELECT * FROM COMPANY;" );
+            ResultSet rs = stmt.executeQuery( "SELECT * FROM LEADERBOARD;" );
 
             while ( rs.next() ) {
-                int id = rs.getInt("id");
-                String  name = rs.getString("name");
-                int age  = rs.getInt("age");
-                String  address = rs.getString("address");
-                float salary = rs.getFloat("salary");
-
-                System.out.println( "ID = " + id );
-                System.out.println( "NAME = " + name );
-                System.out.println( "AGE = " + age );
-                System.out.println( "ADDRESS = " + address );
-                System.out.println( "SALARY = " + salary );
-                System.out.println();
+                LeaderBoardEntry lbe = new LeaderBoardEntry(
+                        rs.getInt("ID"),
+                        rs.getString("PLAYER1"),
+                        rs.getString("PLAYER1RESULT"),
+                        rs.getString("PLAYER2"),
+                        rs.getString("PLAYER2RESULT")
+                );
+                resultList.add(lbe);
             }
 
             rs.close();
@@ -101,6 +100,7 @@ public class Database {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
         }
         System.out.println("Operation done successfully");
+        return resultList;
     }
 
     public static void closeDatabase(){
