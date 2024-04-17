@@ -20,13 +20,9 @@ public class GameModeController {
     private Scene scene;
     private Parent root;
 
-    @FXML
-    ImageView imageView;
 
     public void initialize(){
-        File file = new File("src/main/resources/assets/menuImages/VirtualChess!.gif");
-        Image image = new Image(file.toURI().toString());
-        imageView.setImage(image);
+
     }
 
     @FXML
@@ -34,6 +30,16 @@ public class GameModeController {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/board.fxml")));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    public void switchToMainMenu(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/mainmenu.fxml")));
+        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css")).toExternalForm());
         stage.setScene(scene);
         stage.show();
     }
