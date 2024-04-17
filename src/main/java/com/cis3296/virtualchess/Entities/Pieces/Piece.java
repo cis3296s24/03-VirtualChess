@@ -16,6 +16,8 @@ public abstract class Piece extends ImageView {
     public String type;
     public Board board;
     public boolean isTurn;
+    public boolean blackPawnFirstMove = true;
+    public boolean whitePawnFirstMove = true;
 
     /**
      * Constructor for a standard Piece
