@@ -22,7 +22,7 @@ public class Knight extends Piece {
     public ArrayList<Coordinates> getMoveSet() {
         ArrayList<Coordinates> moveSet = new ArrayList<>();
 
-        Coordinates targetCoordinates = new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() + 1);
+        Coordinates targetCoordinates = new Coordinates(this.coordinates.getCol(), this.coordinates.getRow());
         addCoordinates(moveSet, targetCoordinates);
 
         targetCoordinates = new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() + 2);
