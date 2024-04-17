@@ -1,6 +1,6 @@
 package com.cis3296.virtualchess.Pieces;
 
-import com.cis3296.virtualchess.Coordinates;
+import com.cis3296.virtualchess.Data.Coordinates;
 import com.cis3296.virtualchess.Board.Board;
 import java.util.ArrayList;
 

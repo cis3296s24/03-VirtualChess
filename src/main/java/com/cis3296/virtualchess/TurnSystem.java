@@ -1,6 +1,7 @@
 package com.cis3296.virtualchess;
 
 import com.cis3296.virtualchess.Board.Board;
+import com.cis3296.virtualchess.Data.Player;
 import com.cis3296.virtualchess.Pieces.Piece;
 
 public class TurnSystem {

@@ -1,4 +1,4 @@
-package com.cis3296.virtualchess;
+package com.cis3296.virtualchess.Data;
 
 public class LeaderBoardEntry {
 

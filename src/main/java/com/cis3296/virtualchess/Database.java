@@ -1,5 +1,8 @@
 package com.cis3296.virtualchess;
 
+import com.cis3296.virtualchess.Data.LeaderBoardEntry;
+import com.cis3296.virtualchess.Data.Player;
+
 import java.sql.*;
 import java.util.ArrayList;
 

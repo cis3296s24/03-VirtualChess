@@ -1,6 +1,8 @@
 package com.cis3296.virtualchess.Board;
 
 import com.cis3296.virtualchess.*;
+import com.cis3296.virtualchess.Data.Coordinates;
+import com.cis3296.virtualchess.Data.Player;
 import com.cis3296.virtualchess.Pieces.*;
 import javafx.geometry.Insets;
 import javafx.scene.input.*;

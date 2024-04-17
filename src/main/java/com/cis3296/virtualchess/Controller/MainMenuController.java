@@ -1,7 +1,7 @@
 package com.cis3296.virtualchess.Controller;
 
 import com.cis3296.virtualchess.Database;
-import com.cis3296.virtualchess.LeaderBoardEntry;
+import com.cis3296.virtualchess.Data.LeaderBoardEntry;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,9 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class MainMenuController {
