@@ -4,6 +4,7 @@ import com.cis3296.virtualchess.Board.Board;
 import com.cis3296.virtualchess.Board.BoardSettings;
 import com.cis3296.virtualchess.Board.BoardStyle;
 import com.cis3296.virtualchess.Data.Player;
+import com.cis3296.virtualchess.Pieces.Piece;
 import javafx.scene.layout.GridPane;
 
 import java.io.File;
@@ -24,8 +25,8 @@ public class Game {
      */
     public Game(GridPane chessBoard) {
         getTheme();
-        this.chessBoard = new Board(chessBoard, boardSettings, new Player("Test1"), new Player("Test2"));
-        this.turnSystem = this.chessBoard.getTurnSystem();
+        this.turnSystem = new TurnSystem(new Player("Player1"), new Player("Player2"), this);
+        this.chessBoard = new Board(chessBoard, boardSettings, this);
     }
 
     public void getTheme() {
@@ -46,4 +47,17 @@ public class Game {
     }
 
 
+    public void handleTurn() {
+
+        turnSystem.changeTurn();
+
+        for(Piece piece: this.chessBoard.pieces){
+            if(piece.color.equals("white")){
+                piece.isTurn = !piece.isTurn;
+            }
+            if(piece.color.equals("black")){
+                piece.isTurn = !piece.isTurn;
+            }
+        }
+    }
 }

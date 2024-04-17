@@ -16,7 +16,9 @@ public class TurnSystem {
 
     private Board board;
 
-    public TurnSystem(Player whitePlayer, Player blackPlayer, Board board) {
+    private Game game;
+
+    public TurnSystem(Player whitePlayer, Player blackPlayer, Game game) {
         this.whitePlayer = whitePlayer;
         this.blackPlayer = blackPlayer;
         currentPlayer = blackPlayer;
@@ -25,7 +27,7 @@ public class TurnSystem {
         whiteTimer.start();
         blackTimer.start();
         blackTimer.pause();
-        this.board = board;
+        this.game = game;
 
     }
 
@@ -35,28 +37,11 @@ public class TurnSystem {
 
             whiteTimer.pause();
             blackTimer.unpause();
-
-            for(Piece piece: board.pieces){
-                if(piece.color.equals("white")){
-                    piece.isTurn = false;
-                } else {
-                    piece.isTurn = true;
-                }
-            }
-
         } else {
             currentPlayer = whitePlayer;
 
             blackTimer.pause();
             whiteTimer.unpause();
-
-            for(Piece piece: board.pieces){
-                if(piece.color.equals("black")){
-                    piece.isTurn = false;
-                } else {
-                    piece.isTurn = true;
-                }
-            }
         }
     }
 

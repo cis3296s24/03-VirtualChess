@@ -25,7 +25,8 @@ public class Board {
     public ArrayList<Piece> pieces = new ArrayList<>();
     private ArrayList<StackPane> moves = new ArrayList<>();
     public HashMap<BoardSquare, Piece> pieceToSquare = new HashMap<>();
-    private TurnSystem turnSystem;
+
+    private Game game;
     private BoardSettings settings;
 
     private Piece draggingPiece;
@@ -45,12 +46,12 @@ public class Board {
      *  Constructor for the Chess Board
      * @param chessBoard - A gridpane representing the chessboard
      */
-    public Board(GridPane chessBoard, BoardSettings settings, Player whitePlayer, Player blackPlayer){
+    public Board(GridPane chessBoard, BoardSettings settings, Game game){
 
         this.chessBoard = chessBoard;
         this.settings = settings;
         init(this.chessBoard);
-        this.turnSystem = new TurnSystem(whitePlayer, blackPlayer, this);
+        this.game = game;
     }
 
     /**
@@ -243,7 +244,7 @@ public class Board {
                     // Set the new coordinates of the piece
                     draggingPiece.coordinates = destSquare.coordinates;
 
-                    turnSystem.changeTurn();
+                    game.handleTurn();
                 } else{
                     System.out.println("Invalid Move");
                 }
@@ -277,9 +278,5 @@ public class Board {
             boardSquare.getChildren().remove(sp);
         }
         moves.clear();
-    }
-
-    public TurnSystem getTurnSystem() {
-        return turnSystem;
     }
 }
