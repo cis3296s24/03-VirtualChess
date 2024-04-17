@@ -1,6 +1,7 @@
 package com.cis3296.virtualchess.Controller;
 
 import com.cis3296.virtualchess.Board.BoardSettings;
+import com.cis3296.virtualchess.Database;
 import com.cis3296.virtualchess.Game;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -84,6 +85,7 @@ public class GameController {
     }
 
     public void leaveGame(ActionEvent event) throws IOException {
+        Database.closeDatabase();
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/mainmenu.fxml")));
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
