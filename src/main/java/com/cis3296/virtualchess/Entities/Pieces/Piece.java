@@ -26,7 +26,7 @@ public abstract class Piece extends ImageView {
         this.coordinates = coordinates;
         this.color = color;
         this.board = board;
-        if(this.color.equals("black")){
+        if(this.color.equals("white")){
             isTurn = true;
         } else {
             isTurn = false;

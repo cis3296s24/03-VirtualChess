@@ -6,6 +6,11 @@ import java.util.ArrayList;
 
 public class Pawn extends Piece {
 
+    private final int UP = -1;
+    private final int DOWN = 1;
+
+    private int direction = DOWN;
+
     /**
      * Constructor for a Pawn type piece
      * @param coordinates are the coordinates of the Pawn on the board
@@ -15,6 +20,11 @@ public class Pawn extends Piece {
         super(coordinates, color, board);
         this.type = "pawn";
         setImage();
+        if(color.equals("white")){
+            direction = UP;
+        } else {
+            direction = DOWN;
+        }
     }
 
     @Override
@@ -22,21 +32,12 @@ public class Pawn extends Piece {
         ArrayList<Coordinates> moveSet = new ArrayList<>();
         Coordinates targetCoordinates;
 
-        if(this.color.equals("white")){
-            targetCoordinates = new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() + 1);
+            targetCoordinates = new Coordinates(this.coordinates.getCol() - direction, this.coordinates.getRow() + direction);
             addCoordinates(moveSet, targetCoordinates);
-            targetCoordinates = new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() + 1);
+            targetCoordinates = new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() + direction);
             addCoordinates(moveSet, targetCoordinates);
-            targetCoordinates = new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() + 1);
+            targetCoordinates = new Coordinates(this.coordinates.getCol() + direction, this.coordinates.getRow() + direction);
             addCoordinates(moveSet, targetCoordinates);
-        } else{
-            targetCoordinates = new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() - 1);
-            addCoordinates(moveSet, targetCoordinates);
-            targetCoordinates = new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() - 1);
-            addCoordinates(moveSet, targetCoordinates);
-            targetCoordinates = new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() - 1);
-            addCoordinates(moveSet, targetCoordinates);
-        }
         return moveSet;
     }
 

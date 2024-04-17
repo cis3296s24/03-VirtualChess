@@ -19,7 +19,7 @@ public class TurnSystem {
     public TurnSystem(Player whitePlayer, Player blackPlayer, Game game) {
         this.whitePlayer = whitePlayer;
         this.blackPlayer = blackPlayer;
-        currentPlayer = blackPlayer;
+        currentPlayer = whitePlayer;
         whiteTimer = new Timer(5);
         blackTimer = new Timer(5);
         whiteTimer.start();
