@@ -7,46 +7,22 @@ import java.sql.Statement;
 
 public class Database {
 
-    Connection con;
+    private static Database instance = null;
 
-    public Database(){
+    private static Connection con;
+
+    private Database(){
         con = openDatabase();
         if(con != null){
-
-            closeDatabase();
+            createOrOpenTable();
         }
     }
 
-    void databaseTest(){
-        Connection c = null;
-        Statement stmt = null;
-
-        try {
-            Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:leaderboard.db");
-
-        } catch ( Exception e ) {
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+    public static synchronized Database getInstance(){
+        if(instance == null){
+            instance = new Database();
         }
-        System.out.println("Opened database successfully");
-
-
-        try {
-            stmt = c.createStatement();
-            String sql = "CREATE TABLE LEADERBOARD " +
-                    "(ID INT PRIMARY KEY     NOT NULL," +
-                    " PLAYER1           TEXT    NOT NULL, " +
-                    " PLAYER1RESULT        CHAR(50), " +
-                    " PLAYER2           TEXT    NOT NULL, " +
-                    " PLAYER2RESULT        CHAR(50))";
-            stmt.executeUpdate(sql);
-            stmt.close();
-            c.close();
-        } catch (Exception e){
-            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-
-        }
-        System.out.println("Table created successfully");
+        return instance;
     }
 
     private Connection openDatabase(){
@@ -61,6 +37,28 @@ public class Database {
         }
         System.out.println("Opened database successfully");
         return c;
+    }
+
+    private void createOrOpenTable(){
+        Statement stmt;
+
+        try {
+            stmt = con.createStatement();
+            String sql = "CREATE TABLE LEADERBOARD " +
+                    "(ID INT PRIMARY KEY     NOT NULL," +
+                    " PLAYER1           TEXT    NOT NULL, " +
+                    " PLAYER1RESULT        CHAR(50), " +
+                    " PLAYER2           TEXT    NOT NULL, " +
+                    " PLAYER2RESULT        CHAR(50))";
+            stmt.executeUpdate(sql);
+            stmt.close();
+        } catch (Exception e){
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+        }
+    }
+
+    private static void insert(){
+
     }
 
     private void closeDatabase(){

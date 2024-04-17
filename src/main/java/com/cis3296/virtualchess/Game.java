@@ -25,8 +25,6 @@ public class Game {
         getTheme();
         this.chessBoard = new Board(chessBoard, boardSettings, new Player("Test1"), new Player("Test2"));
         this.turnSystem = this.chessBoard.getTurnSystem();
-        Database db = new Database();
-        db.databaseTest();
     }
 
     public void getTheme() {
