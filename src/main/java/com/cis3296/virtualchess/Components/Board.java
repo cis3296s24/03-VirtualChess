@@ -284,6 +284,9 @@ public class Board {
         moves.clear();
     }
 
+    /**
+     * Handles the a boolean value after a pawn makes its first move
+     */
     public void caseOfPawnMove(){
         if(draggingPiece.color.equals("white")){
             if(draggingPiece.whitePawnFirstMove){
