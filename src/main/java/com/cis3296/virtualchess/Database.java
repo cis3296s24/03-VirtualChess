@@ -2,6 +2,9 @@ package com.cis3296.virtualchess;
 
 import com.cis3296.virtualchess.Data.LeaderBoardEntry;
 import com.cis3296.virtualchess.Data.Player;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
+import javafx.collections.ObservableList;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -79,9 +82,9 @@ public class Database {
         System.out.println("Inserted into Leaderboard");
     }
 
-    public static ArrayList<LeaderBoardEntry> getAllEntries(){
+    public static ObservableList<LeaderBoardEntry> getAllEntries(){
         Statement stmt;
-        ArrayList<LeaderBoardEntry> resultList = new ArrayList<>();
+        ObservableList<LeaderBoardEntry> resultList = FXCollections.observableArrayList();
         try {
             stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery( "SELECT * FROM LEADERBOARD;" );
