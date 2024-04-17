@@ -1,8 +1,12 @@
-package com.cis3296.virtualchess.Board;
+package com.cis3296.virtualchess.Components;
 
 import javafx.scene.paint.Color;
 
-public class BoardSettings {
+public class BoardStyle {
+
+    public String styleName;
+    public Color squareColor1;
+    public Color squareColor2;
 
     public static final BoardStyle SANDCASTLE = new BoardStyle(
             "Sandcastle",
@@ -40,10 +44,10 @@ public class BoardSettings {
             Color.web("#6e8f72")
     );
 
-    public BoardStyle currentBoardStyle;
 
-    public BoardSettings(BoardStyle currentStyle){
-        this.currentBoardStyle = currentStyle;
+    public BoardStyle(String name, Color color1, Color color2){
+        this.styleName = name;
+        this.squareColor1 = color1;
+        this.squareColor2 = color2;
     }
-
 }

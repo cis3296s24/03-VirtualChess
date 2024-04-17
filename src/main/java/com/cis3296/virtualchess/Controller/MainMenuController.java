@@ -1,5 +1,6 @@
 package com.cis3296.virtualchess.Controller;
 
+import com.cis3296.virtualchess.Systems.Database;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +12,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -30,9 +30,9 @@ public class MainMenuController {
      * Creates the chess board
      */
     public void initialize(){
-        File file = new File("src/main/resources/assets/menuImages/VirtualChess!.gif");
-        Image image = new Image(file.toURI().toString());
+        Image image = new Image(String.valueOf(getClass().getResource("/assets/menuImages/VirtualChess!.gif")));
         imageView.setImage(image);
+        Database.getInstance();
     }
 
     public void switchToGameMode(ActionEvent event) throws IOException {
@@ -44,6 +44,13 @@ public class MainMenuController {
         stage.show();
     }
 
+    public void switchToLeaderboard(ActionEvent event) throws IOException {
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/leaderboard.fxml")));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }
 
     public void switchToSettingsMenu(ActionEvent event) throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/settingsMenu.fxml")));

@@ -1,7 +1,7 @@
-package com.cis3296.virtualchess.Pieces;
+package com.cis3296.virtualchess.Entities.Pieces;
 
-import com.cis3296.virtualchess.Coordinates;
-import com.cis3296.virtualchess.Board.Board;
+import com.cis3296.virtualchess.Entities.Coordinates;
+import com.cis3296.virtualchess.Components.Board;
 import java.util.ArrayList;
 
 public class Queen extends Piece {
@@ -24,25 +24,25 @@ public class Queen extends Piece {
         // Up direction
         for (int row = coordinates.getRow() + 1; row < 8; row++) {
             Coordinates targetCoordinates = new Coordinates(coordinates.getCol(), row);
-            moveSet.add(targetCoordinates);
+            addCoordinates(moveSet, targetCoordinates);
         }
 
         // Down direction
         for (int row = coordinates.getRow() - 1; row >= 0; row--) {
             Coordinates targetCoordinates = new Coordinates(coordinates.getCol(), row);
-            moveSet.add(targetCoordinates);
+            addCoordinates(moveSet, targetCoordinates);
         }
 
         // Right direction
         for (int col = coordinates.getCol() + 1; col < 8; col++) {
             Coordinates targetCoordinates = new Coordinates(col, coordinates.getRow());
-            moveSet.add(targetCoordinates);
+            addCoordinates(moveSet, targetCoordinates);
         }
 
         // Left direction
         for (int col = coordinates.getCol() - 1; col >= 0; col--) {
             Coordinates targetCoordinates = new Coordinates(col, coordinates.getRow());
-            moveSet.add(targetCoordinates);
+            addCoordinates(moveSet, targetCoordinates);
         }
 
         // Top-right direction
@@ -50,7 +50,7 @@ public class Queen extends Piece {
              col < 8 && row < 8;
              col++, row++) {
             Coordinates targetCoordinates = new Coordinates(col, row);
-            moveSet.add(targetCoordinates);
+            addCoordinates(moveSet, targetCoordinates);
         }
 
         // Top-left direction
@@ -58,7 +58,7 @@ public class Queen extends Piece {
              col >= 0 && row < 8;
              col--, row++) {
             Coordinates targetCoordinates = new Coordinates(col, row);
-            moveSet.add(targetCoordinates);
+            addCoordinates(moveSet, targetCoordinates);
         }
 
         // Bottom-right direction
@@ -66,7 +66,7 @@ public class Queen extends Piece {
              col < 8 && row >= 0;
              col++, row--) {
             Coordinates targetCoordinates = new Coordinates(col, row);
-            moveSet.add(targetCoordinates);
+            addCoordinates(moveSet, targetCoordinates);
         }
 
         // Bottom-left direction
@@ -74,7 +74,7 @@ public class Queen extends Piece {
              col >= 0 && row >= 0;
              col--, row--) {
             Coordinates targetCoordinates = new Coordinates(col, row);
-            moveSet.add(targetCoordinates);
+            addCoordinates(moveSet, targetCoordinates);
         }
 
         return moveSet;

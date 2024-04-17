@@ -1,7 +1,7 @@
-package com.cis3296.virtualchess.Pieces;
+package com.cis3296.virtualchess.Entities.Pieces;
 
-import com.cis3296.virtualchess.Coordinates;
-import com.cis3296.virtualchess.Board.Board;
+import com.cis3296.virtualchess.Entities.Coordinates;
+import com.cis3296.virtualchess.Components.Board;
 import java.util.ArrayList;
 
 public class Bishop extends Piece {
@@ -27,7 +27,7 @@ public class Bishop extends Piece {
              col < 8 && row < 8;
              col++, row++) {
             Coordinates targetCoordinates = new Coordinates(col, row);
-            moveSet.add(targetCoordinates);
+            addCoordinates(moveSet, targetCoordinates);
         }
 
         // Top-left direction
@@ -35,7 +35,7 @@ public class Bishop extends Piece {
              col >= 0 && row < 8;
              col--, row++) {
             Coordinates targetCoordinates = new Coordinates(col, row);
-            moveSet.add(targetCoordinates);
+            addCoordinates(moveSet, targetCoordinates);
         }
 
         // Bottom-right direction
@@ -43,7 +43,7 @@ public class Bishop extends Piece {
              col < 8 && row >= 0;
              col++, row--) {
             Coordinates targetCoordinates = new Coordinates(col, row);
-            moveSet.add(targetCoordinates);
+            addCoordinates(moveSet, targetCoordinates);
         }
 
         // Bottom-left direction
@@ -51,7 +51,7 @@ public class Bishop extends Piece {
              col >= 0 && row >= 0;
              col--, row--) {
             Coordinates targetCoordinates = new Coordinates(col, row);
-            moveSet.add(targetCoordinates);
+            addCoordinates(moveSet, targetCoordinates);
         }
         return moveSet;
     }

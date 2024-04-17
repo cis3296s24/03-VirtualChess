@@ -1,12 +1,17 @@
-package com.cis3296.virtualchess.Board;
+package com.cis3296.virtualchess.Components;
 
 import com.cis3296.virtualchess.*;
-import com.cis3296.virtualchess.Pieces.*;
+import com.cis3296.virtualchess.Entities.Coordinates;
+import com.cis3296.virtualchess.Entities.Pieces.*;
 import javafx.geometry.Insets;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Sphere;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Board {
     // In case we need to change these column/row/size values for any reason later on...
@@ -16,9 +21,11 @@ public class Board {
     private GridPane chessBoard;
 
     public ArrayList<BoardSquare> boardSquares = new ArrayList<>();
-    private ArrayList<Piece> pieces = new ArrayList<>();
+    public ArrayList<Piece> pieces = new ArrayList<>();
     private ArrayList<StackPane> moves = new ArrayList<>();
+    public HashMap<BoardSquare, Piece> pieceToSquare = new HashMap<>();
 
+    private Game game;
     private BoardSettings settings;
 
     private Piece draggingPiece;
@@ -38,11 +45,12 @@ public class Board {
      *  Constructor for the Chess Board
      * @param chessBoard - A gridpane representing the chessboard
      */
-    public Board(GridPane chessBoard, BoardSettings settings){
+    public Board(GridPane chessBoard, BoardSettings settings, Game game){
 
         this.chessBoard = chessBoard;
         this.settings = settings;
         init(this.chessBoard);
+        this.game = game;
     }
 
     /**
@@ -70,13 +78,15 @@ public class Board {
         // Add drag-and-drop event handlers for each Piece object
         for (Piece piece : pieces) {
             piece.setOnDragDetected(event -> {
-                draggingPiece = piece;
-                Dragboard db = piece.startDragAndDrop(TransferMode.MOVE);
-                piece.showMoves(this);
-                ClipboardContent content = new ClipboardContent();
-                content.putString(""); // You can put any content here if needed
-                db.setContent(content);
-                event.consume();
+                if(piece.isTurn){
+                    draggingPiece = piece;
+                    Dragboard db = piece.startDragAndDrop(TransferMode.MOVE);
+                    piece.showMoves(this);
+                    ClipboardContent content = new ClipboardContent();
+                    content.putString(""); // You can put any content here if needed
+                    db.setContent(content);
+                    event.consume();
+                }
             });
         }
     }
@@ -115,7 +125,7 @@ public class Board {
      */
     private void addPieces(){
         for(BoardSquare square : boardSquares){
-            if(square.coordinates.getRow() == 0){
+            if(square.coordinates.getRow() == 7){
                 if(square.coordinates.getCol() == 0 || square.coordinates.getCol() == 7){
                     Piece rookW = new Rook(square.coordinates, "white", this);
                     addPiece(square, rookW);
@@ -138,16 +148,16 @@ public class Board {
                 }
 
             }
-            if(square.coordinates.getRow() == 1){
+            if(square.coordinates.getRow() == 6){
                 Piece pawnW = new Pawn(square.coordinates, "white", this);
                 addPiece(square, pawnW);
             }
-            if(square.coordinates.getRow() == 6){
+            if(square.coordinates.getRow() == 1){
                 Piece pawnB = new Pawn(square.coordinates, "black", this);
                 addPiece(square, pawnB);
             }
 
-            if(square.coordinates.getRow() == 7){
+            if(square.coordinates.getRow() == 0){
                 if(square.coordinates.getCol() == 0 || square.coordinates.getCol() == 7){
                     Piece rookB = new Rook(square.coordinates, "black", this);
                     addPiece(square, rookB);
@@ -160,11 +170,11 @@ public class Board {
                     Piece bishopB = new Bishop(square.coordinates, "black", this);
                     addPiece(square, bishopB);
                 }
-                if(square.coordinates.getCol() == 3){
+                if(square.coordinates.getCol() == 4){
                     Piece kingB = new King(square.coordinates, "black", this);
                     addPiece(square, kingB);
                 }
-                if(square.coordinates.getCol() == 4){
+                if(square.coordinates.getCol() == 3){
                     Piece queenB = new Queen(square.coordinates, "black", this);
                     addPiece(square, queenB);
                 }
@@ -183,6 +193,7 @@ public class Board {
     private void addPiece(BoardSquare square, Piece piece){
         pieces.add(piece);
         square.getChildren().add(piece);
+        pieceToSquare.put(square, piece);
         square.containsPiece = true;
     }
 
@@ -204,12 +215,39 @@ public class Board {
         return col >= 0 && col < MAX_COL && row >= 0 && row < MAX_ROW;
     }
 
-    private void movePiece(BoardSquare square){
-        if(isValidMove(square.coordinates.getCol(), square.coordinates.getRow())){
-            square.getChildren().add(draggingPiece);
-            draggingPiece.coordinates = square.coordinates;
-        } else{
-            System.out.println("Invalid Move");
+    /**
+     * This method ensures that the movement of a piece is valid,
+     * then calls mouse event handlers to allow for drag-and-drop of piece
+     * @param destSquare the square for the piece to be set on
+     */
+    private void movePiece(BoardSquare destSquare){
+        // Look through all board square and find the one that matches the piece's coordinates
+        for(BoardSquare prevSquare: boardSquares){
+            if(prevSquare.coordinates.equals(draggingPiece.coordinates)){
+                // Validate the movement
+                if(isValidMove(destSquare.coordinates.getCol(), destSquare.coordinates.getRow())){
+                    // Remove the piece from the square
+                    pieceToSquare.remove(prevSquare);
+                    prevSquare.getChildren().remove(draggingPiece);
+                    // If the destination square has an opponent piece, remove it
+                    if(destSquare.containsPiece){
+                        Piece destPiece = pieceToSquare.get(destSquare);
+                        destSquare.getChildren().remove(destPiece);
+                        pieceToSquare.remove(destSquare, destPiece);
+                    }
+                    // Add the piece to the new square
+                    destSquare.containsPiece = true;
+                    destSquare.getChildren().add(draggingPiece);
+                    pieceToSquare.put(destSquare, draggingPiece);
+
+                    // Set the new coordinates of the piece
+                    draggingPiece.coordinates = destSquare.coordinates;
+
+                    game.handleTurn();
+                } else{
+                    System.out.println("Invalid Move");
+                }
+            }
         }
     }
 
@@ -221,14 +259,14 @@ public class Board {
         for(BoardSquare square : boardSquares){
             if(coordinates.equals(square.coordinates)){
                 //All of this for drawing the move hints
-                BorderStroke bs = new BorderStroke(Color.GRAY, BorderStrokeStyle.SOLID, new CornerRadii(100), new BorderWidths(2));
-                Border circle = new Border(bs);
-                StackPane sp = new StackPane();
-                sp.setMaxHeight(50);
-                sp.setMinWidth(50);
-                sp.setBorder(circle);
-                square.getChildren().add(sp);
-                moves.add(sp);
+                Circle circle1 = new Circle(10, 10, 10);
+                circle1.setFill(Color.BLACK);
+                Sphere sphere = new Sphere(8);
+                StackPane stackPane = new StackPane();
+                StackPane.setMargin(circle1, new Insets(5, 5, 5, 5));
+                stackPane.getChildren().addAll(circle1, sphere);
+                square.getChildren().add(stackPane);
+                moves.add(stackPane);
             }
         }
     }
@@ -240,5 +278,4 @@ public class Board {
         }
         moves.clear();
     }
-
 }

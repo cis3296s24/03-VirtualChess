@@ -4,41 +4,15 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane
-        fx:id="menu"
-        maxHeight="-Infinity"
-        maxWidth="-Infinity"
-        minHeight="-Infinity"
-        minWidth="-Infinity"
-        prefHeight="800.0"
-        prefWidth="810.0"
-        xmlns="http://javafx.com/javafx/21"
-        xmlns:fx="http://javafx.com/fxml/1"
-        fx:controller="com.cis3296.virtualchess.Controller.MainMenuController">
-   <children>
-      <Button
-              layoutX="227.0"
-              layoutY="497.0"
-              mnemonicParsing="false"
-              onAction="#switchToGameMode"
-              prefHeight="58.0"
-              prefWidth="355.0"
-              text="Play!" />
-      <Button
-              layoutX="227.0"
-              layoutY="590.0"
-              mnemonicParsing="false"
-              onAction="#switchToSettingsMenu"
-              prefHeight="58.0"
-              prefWidth="355.0"
-              text="Settings" />
-      <ImageView
-              fx:id="imageView"
-              fitHeight="413.0"
-              fitWidth="699.0"
-              layoutX="55.0"
-              layoutY="43.0"
-              pickOnBounds="true">
-      </ImageView>
-   </children>
+<AnchorPane fx:id="menu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="800.0" prefWidth="810.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.cis3296.virtualchess.Controller.MainMenuController">
+    <Button layoutX="227.0" layoutY="500.0" mnemonicParsing="false" onAction="#switchToGameMode" prefHeight="58.0"
+            prefWidth="355.0" text="Play!"/>
+    <Button layoutX="227.0" layoutY="600.0" mnemonicParsing="false" onAction="#switchToLeaderboard" prefHeight="58.0"
+            prefWidth="355.0" text="Leaderboard"/>
+    <Button layoutX="227.0" layoutY="700.0" mnemonicParsing="false" onAction="#switchToSettingsMenu" prefHeight="58.0"
+            prefWidth="355.0" text="Settings"/>
+    <ImageView fx:id="imageView" fitHeight="413.0" fitWidth="699.0" layoutX="55.0" layoutY="43.0" pickOnBounds="true">
+    </ImageView>
 </AnchorPane>

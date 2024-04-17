@@ -1,16 +1,14 @@
-package com.cis3296.virtualchess;
+package com.cis3296.virtualchess.Systems;
 
 public class Timer {
 
 
     private int timeSeconds;
-    private int initialTimeMinutes; // Initial time in minutes
     private boolean running;
     private boolean paused;
     private Thread timerThread;
 
     public Timer(int timeMinutes) {
-        this.initialTimeMinutes = timeMinutes;
         this.timeSeconds = timeMinutes * 60;
         this.running = false;
         this.paused = false;
