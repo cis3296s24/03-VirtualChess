@@ -4,6 +4,7 @@ import com.cis3296.virtualchess.Components.BoardSettings;
 import com.cis3296.virtualchess.Systems.Database;
 import com.cis3296.virtualchess.Game;
 import com.cis3296.virtualchess.Entities.Player;
+import com.cis3296.virtualchess.Systems.TurnSystem;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -46,11 +47,14 @@ public class GameController {
      * Creates the chess board and adds functionality for the drag handling
      */
     public void initialize(){
+        TurnSystem.getInstance();
+        TurnSystem.setBlackPlayer(new Player("BP"));
+        TurnSystem.setWhitePlayer(new Player("WP"));
         this.game = new Game(chessBoard);
         timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), event -> updateTime()));
         timeline.setCycleCount(Timeline.INDEFINITE); // Repeat indefinitely
         timeline.play();
-        currentTurnText.setText("Current Turn:\n" + game.turnSystem.getCurrentPlayer().name);
+        currentTurnText.setText("Current Turn:\n" + TurnSystem.getCurrentPlayer().name);
 
         // Add drag-and-drop event handlers to the chessboard GridPane
         chessBoard.setOnDragOver(event -> {
@@ -70,19 +74,19 @@ public class GameController {
     }
 
     public void updateTime(){
-        int minutesW = game.turnSystem.whiteTimer.getRemainingTimeMinutes();
-        int secondsW = game.turnSystem.whiteTimer.getRemainingTimeSeconds();
+        int minutesW = TurnSystem.whiteTimer.getRemainingTimeMinutes();
+        int secondsW = TurnSystem.whiteTimer.getRemainingTimeSeconds();
 
         timerTextWhite.setText(String.format("White Time: %02d:%02d", minutesW, secondsW));
 
-        int minutesB = game.turnSystem.blackTimer.getRemainingTimeMinutes();
-        int secondsB = game.turnSystem.blackTimer.getRemainingTimeSeconds();
+        int minutesB = TurnSystem.blackTimer.getRemainingTimeMinutes();
+        int secondsB = TurnSystem.blackTimer.getRemainingTimeSeconds();
 
         timerTextBlack.setText(String.format("Black Time: %02d:%02d", minutesB, secondsB));
     }
 
     public void changeTurnButton(){
-        game.turnSystem.changeTurn();
+        TurnSystem.changeTurn();
         currentTurnText.setText("Current Turn:\n" + game.turnSystem.getCurrentPlayer().name);
     }
 

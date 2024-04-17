@@ -27,8 +27,6 @@ public class GameModeController {
     private Scene scene;
     private Parent root;
 
-    private Player player1;
-    private Player player2;
 
 
     public void initialize(){

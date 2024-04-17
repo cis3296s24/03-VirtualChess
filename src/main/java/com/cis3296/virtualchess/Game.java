@@ -26,7 +26,9 @@ public class Game {
      */
     public Game(GridPane chessBoard) {
         getTheme();
-        this.turnSystem = new TurnSystem(new Player("Player1"), new Player("Player2"), this);
+        this.turnSystem = TurnSystem.getInstance();
+        this.turnSystem.start();
+
         this.chessBoard = new Board(chessBoard, boardSettings, this);
     }
 
