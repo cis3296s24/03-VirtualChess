@@ -253,6 +253,11 @@ public class Board {
                     // Set the new coordinates of the piece
                     draggingPiece.coordinates = destSquare.coordinates;
 
+                    // handle any rules after first movement of pawn
+                    if(draggingPiece.type.equals("pawn")){
+                        caseOfPawnMove();
+                    }
+
                     game.handleTurn();
                 } else{
                     System.out.println("Invalid Move");
@@ -287,5 +292,20 @@ public class Board {
             boardSquare.getChildren().remove(sp);
         }
         moves.clear();
+    }
+
+    /**
+     * Handles the a boolean value after a pawn makes its first move
+     */
+    public void caseOfPawnMove(){
+        if(draggingPiece.color.equals("white")){
+            if(draggingPiece.whitePawnFirstMove){
+                draggingPiece.whitePawnFirstMove = false;
+            }
+        } else {
+            if(draggingPiece.blackPawnFirstMove){
+                draggingPiece.blackPawnFirstMove = false;
+            }
+        }
     }
 }
