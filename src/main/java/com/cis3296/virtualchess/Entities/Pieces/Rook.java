@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Rook extends Piece {
 
-    public boolean hasRookMoved;
+    public boolean rookMoved;
 
     /**
      * Constructor for a Rook type piece
@@ -16,7 +16,7 @@ public class Rook extends Piece {
      */
     public Rook(Coordinates coordinates, String color, Board board){
         super(coordinates, color, board);
-        hasRookMoved = false;
+        rookMoved = false;
         this.type = "rook";
         setImage();
     }
@@ -52,4 +52,7 @@ public class Rook extends Piece {
         return moveSet;
     }
 
+    public boolean hasRookMoved() {
+        return rookMoved;
+    }
 }

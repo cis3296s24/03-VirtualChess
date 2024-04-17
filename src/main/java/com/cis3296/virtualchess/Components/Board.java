@@ -198,11 +198,21 @@ public class Board {
     }
 
     /**
-     * Checks to see if teh move being made is valid
+     * Checks to see if the move being made is valid
      * @return
      */
     public boolean isValidMove(int col, int row) {
         return draggingPiece.canMove(col, row) && isValidCoordinate(col, row);
+    }
+
+    /**
+     * Checks to see if the selected castle is valid
+     * @param king is the king piece that wants to castle
+     * @param rook is the rook to be castled with the king
+     * @return true if neither the rook or the king have been moved at all. Return false if either one has moved
+     */
+    public boolean isValidCastle(King king, Rook rook) {
+        return !king.hasKingMoved() && !rook.hasRookMoved();
     }
 
     /**
