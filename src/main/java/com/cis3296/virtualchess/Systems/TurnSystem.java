@@ -14,22 +14,20 @@ public class TurnSystem {
 
     private static Player currentPlayer;
 
-    private Game game;
-
     private static TurnSystem instance = null;
 
     private TurnSystem() {
     }
 
-    public static void setWhitePlayer(Player whitePlayer){
+    public static synchronized void setWhitePlayer(Player whitePlayer){
         TurnSystem.whitePlayer = whitePlayer;
     }
 
-    public static void setBlackPlayer(Player blackPlayer){
+    public static synchronized void setBlackPlayer(Player blackPlayer){
         TurnSystem.blackPlayer = blackPlayer;
     }
 
-    public void start(){
+    public static synchronized void start(){
         currentPlayer = whitePlayer;
         whiteTimer = new Timer(5);
         blackTimer = new Timer(5);
@@ -45,26 +43,28 @@ public class TurnSystem {
         return instance;
     }
 
-    public static void changeTurn(){
+    public static synchronized String changeTurn(){
         if(currentPlayer == whitePlayer){
-            currentPlayer = blackPlayer;
+//            currentPlayer = blackPlayer;
 
             whiteTimer.pause();
             blackTimer.unpause();
+            return blackPlayer.name;
         } else {
             currentPlayer = whitePlayer;
 
             blackTimer.pause();
             whiteTimer.unpause();
+            return whitePlayer.name;
         }
     }
 
-    public void stop(){
+    public static synchronized void stop(){
         whiteTimer.stop();
         blackTimer.stop();
     }
 
-    public static Player getCurrentPlayer() {
+    public static synchronized Player getCurrentPlayer() {
         return currentPlayer;
     }
 }

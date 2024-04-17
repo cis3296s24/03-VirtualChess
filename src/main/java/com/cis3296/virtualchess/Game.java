@@ -18,7 +18,6 @@ public class Game {
 
     public Board chessBoard;
     public BoardSettings boardSettings = new BoardSettings(BoardStyle.SANDCASTLE);
-    public TurnSystem turnSystem;
 
     /**
      * Constructor for the game
@@ -26,8 +25,7 @@ public class Game {
      */
     public Game(GridPane chessBoard) {
         getTheme();
-        this.turnSystem = TurnSystem.getInstance();
-        this.turnSystem.start();
+        TurnSystem.start();
 
         this.chessBoard = new Board(chessBoard, boardSettings, this);
     }
@@ -52,7 +50,7 @@ public class Game {
 
     public void handleTurn() {
 
-        turnSystem.changeTurn();
+        TurnSystem.changeTurn();
 
         for(Piece piece: this.chessBoard.pieces){
             if(piece.color.equals("white")){
@@ -65,6 +63,6 @@ public class Game {
     }
 
     public void endGame(){
-        turnSystem.stop();
+        TurnSystem.stop();
     }
 }

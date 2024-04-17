@@ -26,7 +26,6 @@
                     <Font size="36.0" />
                 </font>
             </Text>
-            <Button text="ChangeTurn" onAction="#changeTurnButton"/>
             <Button text="Settings" onAction="#settings"/>
             <Button text="End Game" onAction="#leaveGame"/>
         </VBox>

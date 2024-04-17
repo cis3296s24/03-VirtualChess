@@ -47,9 +47,6 @@ public class GameController {
      * Creates the chess board and adds functionality for the drag handling
      */
     public void initialize(){
-        TurnSystem.getInstance();
-        TurnSystem.setBlackPlayer(new Player("BP"));
-        TurnSystem.setWhitePlayer(new Player("WP"));
         this.game = new Game(chessBoard);
         timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), event -> updateTime()));
         timeline.setCycleCount(Timeline.INDEFINITE); // Repeat indefinitely
@@ -83,11 +80,6 @@ public class GameController {
         int secondsB = TurnSystem.blackTimer.getRemainingTimeSeconds();
 
         timerTextBlack.setText(String.format("Black Time: %02d:%02d", minutesB, secondsB));
-    }
-
-    public void changeTurnButton(){
-        TurnSystem.changeTurn();
-        currentTurnText.setText("Current Turn:\n" + game.turnSystem.getCurrentPlayer().name);
     }
 
     public void leaveGame(ActionEvent event) throws IOException {
