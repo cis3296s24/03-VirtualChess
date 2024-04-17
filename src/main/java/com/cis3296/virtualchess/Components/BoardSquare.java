@@ -1,6 +1,6 @@
-package com.cis3296.virtualchess.Board;
+package com.cis3296.virtualchess.Components;
 
-import com.cis3296.virtualchess.Coordinates;
+import com.cis3296.virtualchess.Entities.Coordinates;
 import javafx.scene.layout.StackPane;
 
 public class BoardSquare extends StackPane {

@@ -1,7 +1,9 @@
 package com.cis3296.virtualchess.Controller;
 
-import com.cis3296.virtualchess.Board.BoardSettings;
+import com.cis3296.virtualchess.Components.BoardSettings;
+import com.cis3296.virtualchess.Systems.Database;
 import com.cis3296.virtualchess.Game;
+import com.cis3296.virtualchess.Entities.Player;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -11,12 +13,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Dialog;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -64,6 +64,9 @@ public class GameController {
             event.consume();
         });
 
+        Database.insert(new Player("Nick"), new Player("Ken"), "Lose", "Win");
+
+
     }
 
     public void updateTime(){
@@ -90,6 +93,7 @@ public class GameController {
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css")).toExternalForm());
         stage.setScene(scene);
         stage.show();
+        game.endGame();
     }
 
     public void settings(){

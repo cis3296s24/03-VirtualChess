@@ -1,8 +1,8 @@
-package com.cis3296.virtualchess.Pieces;
+package com.cis3296.virtualchess.Entities.Pieces;
 
-import com.cis3296.virtualchess.Board.Board;
-import com.cis3296.virtualchess.Board.BoardSquare;
-import com.cis3296.virtualchess.Coordinates;
+import com.cis3296.virtualchess.Components.Board;
+import com.cis3296.virtualchess.Components.BoardSquare;
+import com.cis3296.virtualchess.Entities.Coordinates;
 import javafx.event.Event;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

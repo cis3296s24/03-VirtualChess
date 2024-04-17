@@ -1,7 +1,7 @@
-package com.cis3296.virtualchess.Board;
+package com.cis3296.virtualchess.Components;
 
 
-import static com.cis3296.virtualchess.Board.BoardStyle.*;
+import static com.cis3296.virtualchess.Components.BoardStyle.*;
 
 public class BoardSettings {
 

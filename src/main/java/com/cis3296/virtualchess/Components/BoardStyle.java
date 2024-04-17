@@ -1,4 +1,4 @@
-package com.cis3296.virtualchess.Board;
+package com.cis3296.virtualchess.Components;
 
 import javafx.scene.paint.Color;
 
