@@ -93,6 +93,7 @@ public class GameController {
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css")).toExternalForm());
         stage.setScene(scene);
         stage.show();
+        game.endGame();
     }
 
     public void settings(){

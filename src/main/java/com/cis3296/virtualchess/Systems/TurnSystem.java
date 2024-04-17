@@ -14,8 +14,6 @@ public class TurnSystem {
 
     private Player currentPlayer;
 
-    private Board board;
-
     private Game game;
 
     public TurnSystem(Player whitePlayer, Player blackPlayer, Game game) {
@@ -43,6 +41,11 @@ public class TurnSystem {
             blackTimer.pause();
             whiteTimer.unpause();
         }
+    }
+
+    public void stop(){
+        whiteTimer.stop();
+        blackTimer.stop();
     }
 
     public Player getCurrentPlayer() {
