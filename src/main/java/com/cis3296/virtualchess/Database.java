@@ -3,11 +3,9 @@ package com.cis3296.virtualchess;
 import com.cis3296.virtualchess.Data.LeaderBoardEntry;
 import com.cis3296.virtualchess.Data.Player;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
-import java.util.ArrayList;
 
 public class Database {
 
@@ -37,11 +35,10 @@ public class Database {
             c = DriverManager.getConnection("jdbc:sqlite:leaderboard.db");
             c.setAutoCommit(false);
 
+            System.out.println("Opened database successfully");
         } catch ( Exception e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
         }
-        System.out.println("Opened database successfully");
-
         return c;
     }
 
@@ -79,7 +76,6 @@ public class Database {
         } catch (SQLException e) {
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
         }
-        System.out.println("Inserted into Leaderboard");
     }
 
     public static ObservableList<LeaderBoardEntry> getAllEntries(){
@@ -102,10 +98,10 @@ public class Database {
 
             rs.close();
             stmt.close();
+            System.out.println("Operation done successfully");
         } catch ( Exception e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
         }
-        System.out.println("Operation done successfully");
         return resultList;
     }
 

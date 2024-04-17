@@ -34,9 +34,6 @@ public class MainMenuController {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/menuImages/VirtualChess!.gif")));
         imageView.setImage(image);
         Database.getInstance();
-        for(LeaderBoardEntry lbe : Database.getAllEntries()){
-            System.out.println(lbe.toString());
-        }
     }
 
     public void switchToChessBoard(ActionEvent event) throws IOException {
