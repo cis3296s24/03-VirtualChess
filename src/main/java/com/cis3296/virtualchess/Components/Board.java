@@ -43,7 +43,6 @@ public class Board {
      * @param chessBoard - A gridPane representing the chessboard
      */
     public Board(GridPane chessBoard, BoardSettings settings, Game game){
-
         this.settings = settings;
         init(chessBoard);
         this.game = game;

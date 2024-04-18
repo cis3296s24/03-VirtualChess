@@ -7,15 +7,7 @@ import com.cis3296.virtualchess.Entities.Player;
 import com.cis3296.virtualchess.Entities.Pieces.Piece;
 import com.cis3296.virtualchess.Systems.Database;
 import com.cis3296.virtualchess.Systems.TurnSystem;
-import javafx.application.Platform;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Text;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
-
 
 public class Game {
 
