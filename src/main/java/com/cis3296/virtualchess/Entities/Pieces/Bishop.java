@@ -23,8 +23,8 @@ public class Bishop extends Piece {
      * @param color chooses the color of the piece
      * @param board current board the piece is on
      */
-    public Bishop(Coordinates coordinates, String color, Board board){
-        super(coordinates, color, board);
+    public Bishop(Coordinates coordinates, String color, Board board, boolean isTurn){
+        super(coordinates, color, board, isTurn);
         this.type = "bishop";
         setImage();
     }
