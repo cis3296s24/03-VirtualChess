@@ -351,8 +351,4 @@ public class Board {
         }
 
     }
-
-    public Game getGame(){
-        return game;
-    }
 }
