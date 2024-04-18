@@ -12,7 +12,6 @@ public class Pawn extends Piece {
     private final int direction;
     // directions are in respect to the pawn's location
     // i.e. black pawn's forward goes up, white pawn's "forward" goes down
-    private boolean blockedForward;
 
     /**
      * Constructor for a Pawn type piece
@@ -28,7 +27,6 @@ public class Pawn extends Piece {
         } else {
             direction = DOWN;
         }
-        blockedForward = false;
     }
 
     /**
@@ -61,8 +59,6 @@ public class Pawn extends Piece {
         if(checkForDiagPiece(targetCoordinates)){
             addCoordinates(moveSet, targetCoordinates);
         }
-
-
         return moveSet;
     }
 
@@ -79,13 +75,11 @@ public class Pawn extends Piece {
                 // If the square does not have a piece then the pawn can move there
                 if(!board.pieceToSquare.containsKey(square)){
                     // Ensure the piece is not blocked
-                    blockedForward = false;
                     return true;
                 }
             }
         }
         // Pawn is blocked and cannot move forward
-        blockedForward = true;
         return false;
     }
 
