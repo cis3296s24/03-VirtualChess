@@ -237,8 +237,8 @@ public class Board {
                     draggingPiece.coordinates = destSquare.coordinates;
 
                     // handle any rules after first movement of pawn
-                    if(draggingPiece.type.equals("pawn")){
-                        caseOfPawnMove();
+                    if(draggingPiece.type.equals("pawn") || draggingPiece.type.equals("king") || draggingPiece.type.equals("rook")){
+                        caseOfMove();
                     }
 
                     game.handleTurn();
@@ -280,7 +280,7 @@ public class Board {
     /**
      * Handles a boolean value after a pawn makes its first move
      */
-    public void caseOfPawnMove(){
+    public void caseOfMove(){
         if(!draggingPiece.moved){
             draggingPiece.moved = true;
         }

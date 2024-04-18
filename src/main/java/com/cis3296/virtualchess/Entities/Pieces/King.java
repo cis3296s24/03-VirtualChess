@@ -31,7 +31,6 @@ public class King extends Piece {
         // Coordinates to be added in the move set
         Coordinates targetCoordinates;
 
-
         // Move to the North
         targetCoordinates = new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow());
         addCoordinates(moveSet, targetCoordinates);
@@ -56,6 +55,16 @@ public class King extends Piece {
         addCoordinates(moveSet, targetCoordinates); // Move to the South-West
         targetCoordinates = new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() - 1);
         addCoordinates(moveSet, targetCoordinates);
+
+        // Castling
+        if (!moved) {
+            // Left Castle
+            targetCoordinates = new Coordinates(this.coordinates.getCol() - 2, this.coordinates.getRow());
+            addCoordinates(moveSet, targetCoordinates);
+            // Right Castle
+            targetCoordinates = new Coordinates(this.coordinates.getCol() + 2, this.coordinates.getRow());
+            addCoordinates(moveSet, targetCoordinates);
+        }
 
         return moveSet;
     }
