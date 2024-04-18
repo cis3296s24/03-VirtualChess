@@ -18,15 +18,13 @@ public class Board {
     public final int MAX_COL = 8, MAX_ROW = 8;
     public static final int SQUARE_SIZE = 100;
 
-    private GridPane chessBoard;
-
     public ArrayList<BoardSquare> boardSquares = new ArrayList<>();
     public ArrayList<Piece> pieces = new ArrayList<>();
-    private ArrayList<StackPane> moves = new ArrayList<>();
+    private final ArrayList<StackPane> moves = new ArrayList<>();
     public HashMap<BoardSquare, Piece> pieceToSquare = new HashMap<>();
 
-    private Game game;
-    private BoardSettings settings;
+    private final Game game;
+    private final BoardSettings settings;
 
     private Piece draggingPiece;
 
@@ -43,13 +41,12 @@ public class Board {
 
     /**
      *  Constructor for the Chess Board
-     * @param chessBoard - A gridpane representing the chessboard
+     * @param chessBoard - A gridPane representing the chessboard
      */
     public Board(GridPane chessBoard, BoardSettings settings, Game game){
 
-        this.chessBoard = chessBoard;
         this.settings = settings;
-        init(this.chessBoard);
+        init(chessBoard);
         this.game = game;
     }
 
@@ -69,9 +66,7 @@ public class Board {
                 chessBoard.add(square, col, row, 1, 1);
 
                 boardSquares.add(square);
-                square.setOnDragDropped(dragEvent ->{
-                    movePiece(square);
-                });
+                square.setOnDragDropped(dragEvent -> movePiece(square));
             }
         }
         addPieces();
@@ -199,24 +194,17 @@ public class Board {
 
     /**
      * Checks to see if the move being made is valid
-     * @return
+     * @return true if the move is valid, false if not
      */
     public boolean isValidMove(int col, int row) {
         return draggingPiece.canMove(col, row) && isValidCoordinate(col, row);
     }
 
     /**
-     * Checks to see if the selected castle is valid
-     * @param king is the king piece that wants to castle
-     * @param rook is the rook to be castled with the king
-     * @return true if neither the rook or the king have been moved at all. Return false if either one has moved
-     */
-
-    /**
      * Checks to see if the coordinates are valid coordinates on the GridPane
      * @param col column the piece is being dragged over
      * @param row row the piece is being dragged over
-     * @return
+     * @return true if valid, false if not valid
      */
     private boolean isValidCoordinate(int col, int row) {
         return col >= 0 && col < MAX_COL && row >= 0 && row < MAX_ROW;
@@ -265,7 +253,7 @@ public class Board {
 
     /**
      * This method takes the coordinates of the current piece being dragged and shows the
-     * @param coordinates
+     * @param coordinates on the board
      */
     public void showMoves(Coordinates coordinates){
         for(BoardSquare square : boardSquares){
