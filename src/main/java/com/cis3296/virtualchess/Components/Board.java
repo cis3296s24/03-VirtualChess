@@ -211,9 +211,6 @@ public class Board {
      * @param rook is the rook to be castled with the king
      * @return true if neither the rook or the king have been moved at all. Return false if either one has moved
      */
-    public boolean isValidCastle(King king, Rook rook) {
-        return !king.hasKingMoved() && !rook.hasRookMoved();
-    }
 
     /**
      * Checks to see if the coordinates are valid coordinates on the GridPane

@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 public class King extends Piece {
 
-    public boolean kingMoved;
 
     /**
      * Constructor for a King type piece
@@ -17,7 +16,6 @@ public class King extends Piece {
      */
     public King(Coordinates coordinates, String color, Board board){
         super(coordinates, color, board);
-        kingMoved = false;
         this.type = "king";
         setImage();
     }
