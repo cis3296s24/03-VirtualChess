@@ -106,4 +106,12 @@ public class TurnSystem {
     public void setBlackTimer(int startingMinutes){
         blackTimer = new Timer(startingMinutes);
     }
+
+    public Player getWhitePlayer() {
+        return whitePlayer;
+    }
+
+    public Player getBlackPlayer() {
+        return blackPlayer;
+    }
 }

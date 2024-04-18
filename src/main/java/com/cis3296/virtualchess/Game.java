@@ -47,7 +47,7 @@ public class Game {
     }
 
     public void endGame(){
-        Database.insert(new Player("Nick"), new Player("Ken"), "Lose", "Win");
+        Database.insert(turnSystem.getWhitePlayer(), turnSystem.getBlackPlayer(), "Lose", "Win");
         turnSystem.stop();
     }
 }
