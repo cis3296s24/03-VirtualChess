@@ -43,10 +43,10 @@ public class Pawn extends Piece {
         Coordinates targetCoordinates;
 
         // Allows for pawns to move twice on their first move
-        if(color.equals("white") && whitePawnFirstMove){
+        if(color.equals("white") && !moved){
             targetCoordinates = new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() + (direction-1));
             addCoordinates(moveSet, targetCoordinates);
-        } else if (color.equals("black") && blackPawnFirstMove){
+        } else if (color.equals("black") && !moved){
             targetCoordinates = new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() + (direction+1));
             addCoordinates(moveSet, targetCoordinates);
         }

@@ -295,14 +295,8 @@ public class Board {
      * Handles a boolean value after a pawn makes its first move
      */
     public void caseOfPawnMove(){
-        if(draggingPiece.color.equals("white")){
-            if(draggingPiece.whitePawnFirstMove){
-                draggingPiece.whitePawnFirstMove = false;
-            }
-        } else {
-            if(draggingPiece.blackPawnFirstMove){
-                draggingPiece.blackPawnFirstMove = false;
-            }
+        if(!draggingPiece.moved){
+            draggingPiece.moved = true;
         }
     }
 }

@@ -16,8 +16,7 @@ public abstract class Piece extends ImageView {
     public String type;
     public Board board;
     public boolean isTurn;
-    public boolean blackPawnFirstMove = true;
-    public boolean whitePawnFirstMove = true;
+    public boolean moved;
 
     /**
      * Constructor for a standard Piece
@@ -28,11 +27,8 @@ public abstract class Piece extends ImageView {
         this.coordinates = coordinates;
         this.color = color;
         this.board = board;
-        if(this.color.equals("white")){
-            isTurn = true;
-        } else {
-            isTurn = false;
-        }
+        isTurn = this.color.equals("white");
+        moved = false;
         setDragHandlers();
     }
 
