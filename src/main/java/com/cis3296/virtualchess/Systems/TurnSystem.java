@@ -1,32 +1,55 @@
 package com.cis3296.virtualchess.Systems;
 
-import com.cis3296.virtualchess.Components.Board;
 import com.cis3296.virtualchess.Entities.Player;
-import com.cis3296.virtualchess.Game;
+import javafx.scene.text.Text;
 
 public class TurnSystem {
 
     private Player whitePlayer;
-    public Timer whiteTimer;
+    private Timer whiteTimer = null;
 
     private Player blackPlayer;
-    public Timer blackTimer;
+    private Timer blackTimer = null;
 
     private Player currentPlayer;
 
-    private Game game;
+    private Text currentPlayerText;
 
-    public TurnSystem(Player whitePlayer, Player blackPlayer, Game game) {
+    private static TurnSystem instance = null;
+
+    public static final int DEFAULT_TIMER_AMOUNT = 5;
+
+    private TurnSystem() {
+    }
+
+    public void setWhitePlayer(Player whitePlayer){
         this.whitePlayer = whitePlayer;
+    }
+
+    public void setBlackPlayer(Player blackPlayer){
         this.blackPlayer = blackPlayer;
+    }
+
+    public void start(){
         currentPlayer = whitePlayer;
-        whiteTimer = new Timer(5);
-        blackTimer = new Timer(5);
+        if(whiteTimer == null || blackTimer == null){
+            whiteTimer = new Timer(DEFAULT_TIMER_AMOUNT);
+            blackTimer = new Timer(DEFAULT_TIMER_AMOUNT);
+        }
         whiteTimer.start();
         blackTimer.start();
         blackTimer.pause();
-        this.game = game;
+    }
 
+    public static synchronized TurnSystem getInstance() {
+        if(instance == null){
+            instance = new TurnSystem();
+        }
+        return instance;
+    }
+
+    public void setCurrentPlayerText(Text text){
+        currentPlayerText = text;
     }
 
     public void changeTurn(){
@@ -41,7 +64,31 @@ public class TurnSystem {
             blackTimer.pause();
             whiteTimer.unpause();
         }
+        currentPlayerText.setText("Current Turn:\n" + this.currentPlayer.name);
     }
+
+    public void getWhiteTime(Text timerTextWhite){
+        int minutes = whiteTimer.getRemainingTimeMinutes();
+        int seconds = whiteTimer.getRemainingTimeSeconds();
+        timerTextWhite.setText(String.format(
+                        "White Time: %02d:%02d",
+                        minutes,
+                        seconds
+                )
+        );
+    }
+
+    public void getBlackTime(Text timerTextBlack){
+        int minutes = blackTimer.getRemainingTimeMinutes();
+        int seconds = blackTimer.getRemainingTimeSeconds();
+        timerTextBlack.setText(String.format(
+                "Black Time: %02d:%02d",
+                minutes,
+                seconds
+            )
+        );
+    }
+
 
     public void stop(){
         whiteTimer.stop();
@@ -50,5 +97,21 @@ public class TurnSystem {
 
     public Player getCurrentPlayer() {
         return currentPlayer;
+    }
+
+    public void setWhiteTimer(int startingMinutes){
+        whiteTimer = new Timer(startingMinutes);
+    }
+
+    public void setBlackTimer(int startingMinutes){
+        blackTimer = new Timer(startingMinutes);
+    }
+
+    public Player getWhitePlayer() {
+        return whitePlayer;
+    }
+
+    public Player getBlackPlayer() {
+        return blackPlayer;
     }
 }

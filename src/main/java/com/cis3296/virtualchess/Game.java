@@ -5,20 +5,15 @@ import com.cis3296.virtualchess.Components.BoardSettings;
 import com.cis3296.virtualchess.Components.BoardStyle;
 import com.cis3296.virtualchess.Entities.Player;
 import com.cis3296.virtualchess.Entities.Pieces.Piece;
+import com.cis3296.virtualchess.Systems.Database;
 import com.cis3296.virtualchess.Systems.TurnSystem;
 import javafx.scene.layout.GridPane;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
-
-
 public class Game {
 
+    private TurnSystem turnSystem;
     public Board chessBoard;
     public BoardSettings boardSettings = new BoardSettings(BoardStyle.SANDCASTLE);
-    public TurnSystem turnSystem;
 
     /**
      * Constructor for the game
@@ -26,30 +21,19 @@ public class Game {
      */
     public Game(GridPane chessBoard) {
         getTheme();
-        this.turnSystem = new TurnSystem(new Player("Player1"), new Player("Player2"), this);
+        this.turnSystem = TurnSystem.getInstance();
+        this.turnSystem.start();
         this.chessBoard = new Board(chessBoard, boardSettings, this);
     }
 
     public void getTheme() {
-        File configFile;
-        Properties props = new Properties();
-
-        try {
-            configFile = new File("config.xml");
-            FileInputStream in = new FileInputStream(configFile);
-            props.loadFromXML(in);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String theme = props.get(BoardSettings.CONFIG_ACCESS_STRING).toString();
+        String theme = BoardSettings.getConfig(BoardSettings.THEME_CONFIG_ACCESS_STRING);
         BoardStyle style = BoardSettings.getStyleFromString(theme);
         boardSettings.currentBoardStyle = style;
     }
 
 
     public void handleTurn() {
-
         turnSystem.changeTurn();
 
         for(Piece piece: this.chessBoard.pieces){
@@ -63,6 +47,7 @@ public class Game {
     }
 
     public void endGame(){
+        Database.insert(turnSystem.getWhitePlayer(), turnSystem.getBlackPlayer(), "Lose", "Win");
         turnSystem.stop();
     }
 }
