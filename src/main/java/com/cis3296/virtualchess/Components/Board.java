@@ -295,7 +295,7 @@ public class Board {
     }
 
     /**
-     * Handles the a boolean value after a pawn makes its first move
+     * Handles a boolean value after a pawn makes its first move
      */
     public void caseOfPawnMove(){
         if(draggingPiece.color.equals("white")){
