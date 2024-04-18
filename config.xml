@@ -2,7 +2,5 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Configuration</comment>
-<entry key="undo">false</entry>
-<entry key="hints">false</entry>
-<entry key="theme">Emerald</entry>
+<entry key="theme">Coral</entry>
 </properties>

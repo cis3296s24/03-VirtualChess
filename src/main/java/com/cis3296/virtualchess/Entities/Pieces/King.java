@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 public class King extends Piece {
 
+
     /**
      * Constructor for a King type piece
      * @param coordinates are the coordinates of the King on the board
@@ -19,33 +20,51 @@ public class King extends Piece {
         setImage();
     }
 
+    /**
+     * This method determines the possible moves that a king can move based on their current position
+     * @return a set with possible coordinates to move
+     */
     @Override
     public ArrayList<Coordinates> getMoveSet() {
+        // Set to return with all possible coordinates based on current position
         ArrayList<Coordinates> moveSet = new ArrayList<>();
+        // Coordinates to be added in the move set
+        Coordinates targetCoordinates;
 
-        Coordinates targetCoordinates = new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() + 1);
+        // Move to the North
+        targetCoordinates = new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow());
         addCoordinates(moveSet, targetCoordinates);
-
+        // Move to the South
+        targetCoordinates = new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow());
+        addCoordinates(moveSet, targetCoordinates);
+        // Move to the West
+        targetCoordinates = new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() - 1);
+        addCoordinates(moveSet, targetCoordinates);
+        // Move to the East
         targetCoordinates = new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() + 1);
         addCoordinates(moveSet, targetCoordinates);
 
-        targetCoordinates = new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() + 1);
+        // Move to the North-East
+        targetCoordinates = new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() + 1);
         addCoordinates(moveSet, targetCoordinates);
-
-        targetCoordinates = new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow());
-        addCoordinates(moveSet, targetCoordinates);
-
-        targetCoordinates = new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow());
-        addCoordinates(moveSet, targetCoordinates);
-
+        // Move to the North-West
         targetCoordinates = new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() - 1);
         addCoordinates(moveSet, targetCoordinates);
-
-        targetCoordinates = new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() - 1);
-        addCoordinates(moveSet, targetCoordinates);
-
+        // Move to the South-East
+        targetCoordinates = new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() + 1);
+        addCoordinates(moveSet, targetCoordinates); // Move to the South-West
         targetCoordinates = new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() - 1);
         addCoordinates(moveSet, targetCoordinates);
+
+        // Castling
+        if (!moved) {
+            // Left Castle
+            targetCoordinates = new Coordinates(this.coordinates.getCol() - 2, this.coordinates.getRow());
+            addCoordinates(moveSet, targetCoordinates);
+            // Right Castle
+            targetCoordinates = new Coordinates(this.coordinates.getCol() + 2, this.coordinates.getRow());
+            addCoordinates(moveSet, targetCoordinates);
+        }
 
         return moveSet;
     }

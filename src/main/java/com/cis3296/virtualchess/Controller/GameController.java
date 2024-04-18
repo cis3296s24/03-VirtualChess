@@ -16,6 +16,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -29,6 +30,7 @@ import java.util.Properties;
 
 public class GameController {
 
+    public VBox board;
     @FXML
     GridPane chessBoard = new GridPane();
 
@@ -51,6 +53,7 @@ public class GameController {
         this.game = new Game(chessBoard);
         this.turnSystem = TurnSystem.getInstance();
         timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), event -> updateTime()));
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), event -> updateTime()));
         timeline.setCycleCount(Timeline.INDEFINITE); // Repeat indefinitely
         timeline.play();
         currentTurnText.setText("Current Turn:\n" + turnSystem.getCurrentPlayer().name);
@@ -68,6 +71,7 @@ public class GameController {
             event.consume();
         });
 
+        Database.insert(new Player("Nick"), new Player("Ken"), "Lose", "Win");
 
 
     }
