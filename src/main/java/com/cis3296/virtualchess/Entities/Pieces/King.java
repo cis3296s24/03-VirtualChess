@@ -60,8 +60,5 @@ public class King extends Piece {
         return moveSet;
     }
 
-    public boolean hasKingMoved() {
-        return kingMoved;
-    }
 
 }
