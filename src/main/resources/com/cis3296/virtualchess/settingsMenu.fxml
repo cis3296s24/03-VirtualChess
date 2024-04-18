@@ -14,14 +14,14 @@
          <Font size="24.0" />
       </font>
    </Text>
-   <ComboBox fx:id="ThemeDropDown" layoutX="125.0" layoutY="165.0" onAction="#setTheme" />
-   <CheckBox layoutX="122.0" layoutY="290.0" mnemonicParsing="false" text="Enable Hints" />
    <Text layoutX="122.0" layoutY="267.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Help" wrappingWidth="181.21153259277344">
       <font>
          <Font size="24.0" />
       </font>
    </Text>
-   <CheckBox layoutX="122.0" layoutY="331.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="117.0" text="Allow Undos" />
+   <ComboBox fx:id="ThemeDropDown" layoutX="125.0" layoutY="165.0" onAction="#setTheme" />
+   <CheckBox fx:id="hints" layoutX="122.0" layoutY="290.0" mnemonicParsing="false" text="Enable Hints" onAction="#setHints"/>
+   <CheckBox fx:id="undo" layoutX="122.0" layoutY="331.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="117.0" text="Allow Undos" onAction="#setUndoButton"/>
 
 
 </AnchorPane>

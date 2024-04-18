@@ -35,18 +35,7 @@ public class Game {
     }
 
     public void getTheme() {
-        File configFile;
-        Properties props = new Properties();
-
-        try {
-            configFile = new File("config.xml");
-            FileInputStream in = new FileInputStream(configFile);
-            props.loadFromXML(in);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String theme = props.get(BoardSettings.CONFIG_ACCESS_STRING).toString();
+        String theme = BoardSettings.getConfig(BoardSettings.THEME_CONFIG_ACCESS_STRING);
         BoardStyle style = BoardSettings.getStyleFromString(theme);
         boardSettings.currentBoardStyle = style;
     }

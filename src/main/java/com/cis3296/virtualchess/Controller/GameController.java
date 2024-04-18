@@ -105,17 +105,8 @@ public class GameController {
 
             SettingsMenuController controller = loader.getController();
             controller.backButton.setOnAction(event -> {
-                Properties props = new Properties();
+                BoardSettings.setConfig(BoardSettings.THEME_CONFIG_ACCESS_STRING, controller.ThemeDropDown.getValue().toString());
 
-                props.setProperty(BoardSettings.CONFIG_ACCESS_STRING, controller.ThemeDropDown.getValue().toString());
-
-                try {
-                    File configFile = new File("config.xml");
-                    FileOutputStream out = new FileOutputStream(configFile);
-                    props.storeToXML(out,"Configuration");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
                 game.getTheme();
                 game.chessBoard.rerenderBoard();
 
