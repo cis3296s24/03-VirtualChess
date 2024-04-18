@@ -35,10 +35,11 @@ public class MainMenuController {
         Database.getInstance();
     }
 
-    public void switchToChessBoard(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/board.fxml")));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+    public void switchToGameMode(ActionEvent event) throws IOException {
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/gamemode.fxml")));
+        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }
