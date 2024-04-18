@@ -18,8 +18,8 @@ public class Pawn extends Piece {
      * @param coordinates are the coordinates of the Pawn on the board
      * @param color chooses the color of the piece
      */
-    public Pawn(Coordinates coordinates, String color, Board board){
-        super(coordinates, color, board);
+    public Pawn(Coordinates coordinates, String color, Board board, boolean isTurn){
+        super(coordinates, color, board, isTurn);
         this.type = "pawn";
         setImage();
         if(color.equals("white")){

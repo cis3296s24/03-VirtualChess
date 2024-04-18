@@ -9,8 +9,11 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Sphere;
+import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class Board {
     // In case we need to change these column/row/size values for any reason later on...
@@ -43,6 +46,7 @@ public class Board {
      * @param chessBoard - A gridPane representing the chessboard
      */
     public Board(GridPane chessBoard, BoardSettings settings, Game game){
+
         this.settings = settings;
         init(chessBoard);
         this.game = game;
@@ -68,22 +72,6 @@ public class Board {
             }
         }
         addPieces();
-        // Add drag-and-drop event handlers for each Piece object
-        for (Piece piece : pieces) {
-            piece.setOnDragDetected(event -> {
-                if(piece.isTurn){
-                    draggingPiece = piece;
-                    Dragboard db = piece.startDragAndDrop(TransferMode.MOVE);
-                    if(Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.HINTS_CONFIG_ACCESS_STRING))){
-                        piece.showMoves(this);
-                    }
-                    ClipboardContent content = new ClipboardContent();
-                    content.putString(""); // You can put any content here if needed
-                    db.setContent(content);
-                    event.consume();
-                }
-            });
-        }
     }
 
     /**
@@ -119,58 +107,60 @@ public class Board {
      * It also sets the pieces to the correct chess start setup.
      */
     private void addPieces(){
+        boolean blackTurn = false;
+        boolean whiteTurn = true;
         for(BoardSquare square : boardSquares){
             if(square.coordinates.getRow() == 7){
                 if(square.coordinates.getCol() == 0 || square.coordinates.getCol() == 7){
-                    Piece rookW = new Rook(square.coordinates, "white", this);
+                    Piece rookW = new Rook(square.coordinates, "white", this, whiteTurn);
                     addPiece(square, rookW);
                 }
                 if(square.coordinates.getCol() == 1 || square.coordinates.getCol() == 6){
-                    Piece knightW = new Knight(square.coordinates, "white", this);
+                    Piece knightW = new Knight(square.coordinates, "white", this, whiteTurn);
                     addPiece(square, knightW);
                 }
                 if(square.coordinates.getCol() == 2 || square.coordinates.getCol() == 5){
-                    Piece bishopW = new Bishop(square.coordinates, "white", this);
+                    Piece bishopW = new Bishop(square.coordinates, "white", this, whiteTurn);
                     addPiece(square, bishopW);
                 }
                 if(square.coordinates.getCol() == 3){
-                    Piece queenW = new Queen(square.coordinates, "white", this);
+                    Piece queenW = new Queen(square.coordinates, "white", this, whiteTurn);
                     addPiece(square, queenW);
                 }
                 if(square.coordinates.getCol() == 4){
-                    Piece kingW = new King(square.coordinates, "white", this);
+                    Piece kingW = new King(square.coordinates, "white", this, whiteTurn);
                     addPiece(square, kingW);
                 }
 
             }
             if(square.coordinates.getRow() == 6){
-                Piece pawnW = new Pawn(square.coordinates, "white", this);
+                Piece pawnW = new Pawn(square.coordinates, "white", this, whiteTurn);
                 addPiece(square, pawnW);
             }
             if(square.coordinates.getRow() == 1){
-                Piece pawnB = new Pawn(square.coordinates, "black", this);
+                Piece pawnB = new Pawn(square.coordinates, "black", this, blackTurn);
                 addPiece(square, pawnB);
             }
 
             if(square.coordinates.getRow() == 0){
                 if(square.coordinates.getCol() == 0 || square.coordinates.getCol() == 7){
-                    Piece rookB = new Rook(square.coordinates, "black", this);
+                    Piece rookB = new Rook(square.coordinates, "black", this, blackTurn);
                     addPiece(square, rookB);
                 }
                 if(square.coordinates.getCol() == 1 || square.coordinates.getCol() == 6){
-                    Piece knightB = new Knight(square.coordinates, "black", this);
+                    Piece knightB = new Knight(square.coordinates, "black", this, blackTurn);
                     addPiece(square, knightB);
                 }
                 if(square.coordinates.getCol() == 2 || square.coordinates.getCol() == 5){
-                    Piece bishopB = new Bishop(square.coordinates, "black", this);
+                    Piece bishopB = new Bishop(square.coordinates, "black", this, blackTurn);
                     addPiece(square, bishopB);
                 }
                 if(square.coordinates.getCol() == 4){
-                    Piece kingB = new King(square.coordinates, "black", this);
+                    Piece kingB = new King(square.coordinates, "black", this, blackTurn);
                     addPiece(square, kingB);
                 }
                 if(square.coordinates.getCol() == 3){
-                    Piece queenB = new Queen(square.coordinates, "black", this);
+                    Piece queenB = new Queen(square.coordinates, "black", this, blackTurn);
                     addPiece(square, queenB);
                 }
             }
@@ -189,6 +179,20 @@ public class Board {
         square.getChildren().add(piece);
         pieceToSquare.put(square, piece);
         square.containsPiece = true;
+
+        // each piece needs to be able to be dragged and dropped
+        piece.setOnDragDetected(event -> {
+            if(piece.isTurn){
+                draggingPiece = piece;
+                Dragboard db = piece.startDragAndDrop(TransferMode.MOVE);
+                piece.showMoves(this);
+                db.setDragView(piece.getImage());
+                ClipboardContent content = new ClipboardContent();
+                content.putString(""); // You can put any content here if needed
+                db.setContent(content);
+                event.consume();
+            }
+        });
     }
 
     /**
@@ -237,6 +241,11 @@ public class Board {
                     // Set the new coordinates of the piece
                     draggingPiece.coordinates = destSquare.coordinates;
 
+                    // Pawn promotion
+                    if(draggingPiece.type.equals("pawn")){
+                        pawnPromotion();
+                    }
+
                     // handle any rules after first movement of pawn
                     if(draggingPiece.type.equals("pawn") || draggingPiece.type.equals("king") || draggingPiece.type.equals("rook")){
                         caseOfMove();
@@ -257,7 +266,7 @@ public class Board {
     public void showMoves(Coordinates coordinates){
         for(BoardSquare square : boardSquares){
             if(coordinates.equals(square.coordinates)){
-                //All of this for drawing the move hints
+                // All of this for drawing the move hints
                 Circle circle1 = new Circle(10, 10, 10);
                 circle1.setFill(Color.BLACK);
                 Sphere sphere = new Sphere(8);
@@ -285,5 +294,63 @@ public class Board {
         if(!draggingPiece.moved){
             draggingPiece.moved = true;
         }
+    }
+
+    /**
+     * Handles the promotion of the pawns once they reach the other side of the board
+     */
+    public void pawnPromotion(){
+        // Get the pawn to be promoted
+        Pawn pawnToPromote = (Pawn) draggingPiece;
+        // The current row of the pawn
+        int currentRow = pawnToPromote.coordinates.getRow();
+        // Get current square
+        BoardSquare currentSquare;
+        for(BoardSquare square: boardSquares) {
+            if(square.coordinates.equals(pawnToPromote.coordinates)){
+                currentSquare = square;
+
+                if(pawnToPromote.color.equals("white") && currentRow == 0 || pawnToPromote.color.equals("black") && currentRow == 7){
+                    switch("knight"){
+                        case "rook":
+                            Rook newRook = new Rook(pawnToPromote.coordinates, pawnToPromote.color, this, pawnToPromote.isTurn);
+                            pieceToSquare.remove(currentSquare, pawnToPromote);
+                            currentSquare.getChildren().remove(pawnToPromote);
+                            addPiece(currentSquare, newRook);
+                            System.out.println("chose rook");
+                            break;
+                        case "queen":
+                            Queen newQueen = new Queen(pawnToPromote.coordinates, pawnToPromote.color, this, pawnToPromote.isTurn);
+                            pieceToSquare.remove(currentSquare, pawnToPromote);
+                            currentSquare.getChildren().remove(pawnToPromote);
+                            addPiece(currentSquare, newQueen);
+                            System.out.println("chose queen");
+                            break;
+                        case "knight":
+                            Knight newKnight = new Knight(pawnToPromote.coordinates, pawnToPromote.color, this, pawnToPromote.isTurn);
+                            pieceToSquare.remove(currentSquare, pawnToPromote);
+                            currentSquare.getChildren().remove(pawnToPromote);
+                            addPiece(currentSquare, newKnight);
+                            System.out.println("chose knight");
+                            break;
+                        case "bishop":
+                            Bishop newBishop = new Bishop(pawnToPromote.coordinates, pawnToPromote.color, this, pawnToPromote.isTurn);
+                            pieceToSquare.remove(currentSquare, pawnToPromote);
+                            currentSquare.getChildren().remove(pawnToPromote);
+                            addPiece(currentSquare, newBishop);
+                            System.out.println("chose bishop");
+                            break;
+                        default:
+                            System.out.println("not a piece");
+                            break;
+                    }
+                }
+            }
+        }
+
+    }
+
+    public Game getGame(){
+        return game;
     }
 }

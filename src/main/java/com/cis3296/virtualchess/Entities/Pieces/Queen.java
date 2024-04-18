@@ -29,8 +29,8 @@ public class Queen extends Piece {
      * @param coordinates are the coordinates of the Queen on the board
      * @param color chooses the color of the piece
      */
-    public Queen(Coordinates coordinates, String color, Board board){
-        super(coordinates, color, board);
+    public Queen(Coordinates coordinates, String color, Board board, boolean isTurn){
+        super(coordinates, color, board, isTurn);
         this.type = "queen";
         setImage();
     }
