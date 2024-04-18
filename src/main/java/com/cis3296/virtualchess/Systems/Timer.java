@@ -52,7 +52,7 @@ public class Timer {
         while (running && timeSeconds > 0) {
             if (!paused) {
                 try {
-                    System.out.println("Timer " + timeSeconds + " seconds");
+//                    System.out.println("Timer " + timeSeconds + " seconds");
                     Thread.sleep(1000);
                     timeSeconds--;
                 } catch (InterruptedException e) {

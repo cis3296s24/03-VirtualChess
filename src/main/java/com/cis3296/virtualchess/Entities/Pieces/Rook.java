@@ -22,8 +22,8 @@ public class Rook extends Piece {
      * @param coordinates are the coordinates of the Rook on the board
      * @param color chooses the color of the piece
      */
-    public Rook(Coordinates coordinates, String color, Board board){
-        super(coordinates, color, board);
+    public Rook(Coordinates coordinates, String color, Board board, boolean isTurn){
+        super(coordinates, color, board, isTurn);
         this.type = "rook";
         setImage();
     }

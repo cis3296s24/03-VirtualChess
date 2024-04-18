@@ -14,8 +14,8 @@ public class King extends Piece {
      * @param color chooses the color of the piece
      * @param board current board the piece is on
      */
-    public King(Coordinates coordinates, String color, Board board){
-        super(coordinates, color, board);
+    public King(Coordinates coordinates, String color, Board board, boolean isTurn){
+        super(coordinates, color, board, isTurn);
         this.type = "king";
         setImage();
     }

@@ -12,8 +12,8 @@ public class Knight extends Piece {
      * @param coordinates are the coordinates of the Knight on the board
      * @param color chooses the color of the piece
      */
-    public Knight(Coordinates coordinates, String color, Board board){
-        super(coordinates, color, board);
+    public Knight(Coordinates coordinates, String color, Board board, boolean isTurn){
+        super(coordinates, color, board, isTurn);
         this.type = "knight";
         setImage();
     }
@@ -31,6 +31,7 @@ public class Knight extends Piece {
       
         // Move up 2 and right 1
         targetCoordinates = new Coordinates(this.coordinates.getCol() - 2, this.coordinates.getRow() + 1);
+        addCoordinates(moveSet, targetCoordinates);
         // Move up 2 and left 1
         targetCoordinates = new Coordinates(this.coordinates.getCol() - 2, this.coordinates.getRow() - 1);
         addCoordinates(moveSet, targetCoordinates);

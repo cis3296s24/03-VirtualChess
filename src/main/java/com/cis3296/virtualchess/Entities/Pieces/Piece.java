@@ -3,6 +3,9 @@ package com.cis3296.virtualchess.Entities.Pieces;
 import com.cis3296.virtualchess.Components.Board;
 import com.cis3296.virtualchess.Components.BoardSquare;
 import com.cis3296.virtualchess.Entities.Coordinates;
+import com.cis3296.virtualchess.Entities.Player;
+import com.cis3296.virtualchess.Game;
+import com.cis3296.virtualchess.Systems.TurnSystem;
 import javafx.event.Event;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,11 +27,11 @@ public abstract class Piece extends ImageView {
      * @param coordinates are the coordinates of the Piece on the board
      * @param color chooses the color of the piece
      */
-    public Piece(Coordinates coordinates, String color, Board board) {
+    public Piece(Coordinates coordinates, String color, Board board, boolean isTurn) {
         this.coordinates = coordinates;
         this.color = color;
         this.board = board;
-        isTurn = this.color.equals("white");
+        this.isTurn = isTurn;
         moved = false;
         setDragHandlers();
     }
