@@ -5,6 +5,7 @@ import com.cis3296.virtualchess.Components.BoardSettings;
 import com.cis3296.virtualchess.Components.BoardStyle;
 import com.cis3296.virtualchess.Entities.Player;
 import com.cis3296.virtualchess.Entities.Pieces.Piece;
+import com.cis3296.virtualchess.Systems.Database;
 import com.cis3296.virtualchess.Systems.TurnSystem;
 import javafx.application.Platform;
 import javafx.scene.layout.GridPane;
@@ -65,6 +66,7 @@ public class Game {
     }
 
     public void endGame(){
+        Database.insert(new Player("Nick"), new Player("Ken"), "Lose", "Win");
         turnSystem.stop();
     }
 }

@@ -9,7 +9,7 @@ public class TurnSystem {
     public Timer whiteTimer;
 
     private Player blackPlayer;
-    public Timer blackTimer;
+    private Timer blackTimer;
 
     private Player currentPlayer;
 

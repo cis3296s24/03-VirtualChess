@@ -68,7 +68,6 @@ public class GameController {
             event.consume();
         });
 
-        Database.insert(new Player("Nick"), new Player("Ken"), "Lose", "Win");
 
 
     }
@@ -93,6 +92,7 @@ public class GameController {
         stage.setScene(scene);
         stage.show();
         game.endGame();
+
     }
 
     public void settings(){
