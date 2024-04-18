@@ -98,7 +98,7 @@ public class Pawn extends Piece {
      * This checks whether a pawn can move diagonally.
      * If there is a piece in the diagonal path, the pawn can move
      * @param targetCoordinates the desired diagonal coordinates
-     * @return whether the pawn can move or not
+     * @return true if the is not blocked
      */
     public boolean checkForDiagPiece(Coordinates targetCoordinates){
         // Go through all board squares
