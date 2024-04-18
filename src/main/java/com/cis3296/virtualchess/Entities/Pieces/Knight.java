@@ -20,7 +20,7 @@ public class Knight extends Piece {
 
     /**
      * This method determines the possible moves that a knight can move based on their current position
-     * @return a set with possible coordinates to move
+     * @return a move set with possible coordinates to move
      */
     @Override
     public ArrayList<Coordinates> getMoveSet() {

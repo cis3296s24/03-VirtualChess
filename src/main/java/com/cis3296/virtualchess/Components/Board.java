@@ -9,7 +9,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Sphere;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -18,15 +17,13 @@ public class Board {
     public final int MAX_COL = 8, MAX_ROW = 8;
     public static final int SQUARE_SIZE = 100;
 
-    private GridPane chessBoard;
-
     public ArrayList<BoardSquare> boardSquares = new ArrayList<>();
     public ArrayList<Piece> pieces = new ArrayList<>();
-    private ArrayList<StackPane> moves = new ArrayList<>();
+    private final ArrayList<StackPane> moves = new ArrayList<>();
     public HashMap<BoardSquare, Piece> pieceToSquare = new HashMap<>();
 
-    private Game game;
-    private BoardSettings settings;
+    private final Game game;
+    private final BoardSettings settings;
 
     private Piece draggingPiece;
 
@@ -43,13 +40,12 @@ public class Board {
 
     /**
      *  Constructor for the Chess Board
-     * @param chessBoard - A gridpane representing the chessboard
+     * @param chessBoard - A gridPane representing the chessboard
      */
     public Board(GridPane chessBoard, BoardSettings settings, Game game){
 
-        this.chessBoard = chessBoard;
         this.settings = settings;
-        init(this.chessBoard);
+        init(chessBoard);
         this.game = game;
     }
 
@@ -69,9 +65,7 @@ public class Board {
                 chessBoard.add(square, col, row, 1, 1);
 
                 boardSquares.add(square);
-                square.setOnDragDropped(dragEvent ->{
-                    movePiece(square);
-                });
+                square.setOnDragDropped(dragEvent -> movePiece(square));
             }
         }
         addPieces();
@@ -181,7 +175,6 @@ public class Board {
             }
         }
 
-
     }
 
     public void rerenderBoard() {
@@ -198,8 +191,8 @@ public class Board {
     }
 
     /**
-     * Checks to see if teh move being made is valid
-     * @return
+     * Checks to see if the move being made is valid
+     * @return true if the move is valid, false if not
      */
     public boolean isValidMove(int col, int row) {
         return draggingPiece.canMove(col, row) && isValidCoordinate(col, row);
@@ -209,7 +202,7 @@ public class Board {
      * Checks to see if the coordinates are valid coordinates on the GridPane
      * @param col column the piece is being dragged over
      * @param row row the piece is being dragged over
-     * @return
+     * @return true if valid, false if not valid
      */
     private boolean isValidCoordinate(int col, int row) {
         return col >= 0 && col < MAX_COL && row >= 0 && row < MAX_ROW;
@@ -244,8 +237,8 @@ public class Board {
                     draggingPiece.coordinates = destSquare.coordinates;
 
                     // handle any rules after first movement of pawn
-                    if(draggingPiece.type.equals("pawn")){
-                        caseOfPawnMove();
+                    if(draggingPiece.type.equals("pawn") || draggingPiece.type.equals("king") || draggingPiece.type.equals("rook")){
+                        caseOfMove();
                     }
 
                     game.handleTurn();
@@ -258,7 +251,7 @@ public class Board {
 
     /**
      * This method takes the coordinates of the current piece being dragged and shows the
-     * @param coordinates
+     * @param coordinates on the board
      */
     public void showMoves(Coordinates coordinates){
         for(BoardSquare square : boardSquares){
@@ -287,15 +280,9 @@ public class Board {
     /**
      * Handles a boolean value after a pawn makes its first move
      */
-    public void caseOfPawnMove(){
-        if(draggingPiece.color.equals("white")){
-            if(draggingPiece.whitePawnFirstMove){
-                draggingPiece.whitePawnFirstMove = false;
-            }
-        } else {
-            if(draggingPiece.blackPawnFirstMove){
-                draggingPiece.blackPawnFirstMove = false;
-            }
+    public void caseOfMove(){
+        if(!draggingPiece.moved){
+            draggingPiece.moved = true;
         }
     }
 }

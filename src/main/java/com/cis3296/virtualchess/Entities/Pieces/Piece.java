@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public abstract class Piece extends ImageView {
 
@@ -16,8 +17,7 @@ public abstract class Piece extends ImageView {
     public String type;
     public Board board;
     public boolean isTurn;
-    public boolean blackPawnFirstMove = true;
-    public boolean whitePawnFirstMove = true;
+    public boolean moved;
 
     /**
      * Constructor for a standard Piece
@@ -28,11 +28,8 @@ public abstract class Piece extends ImageView {
         this.coordinates = coordinates;
         this.color = color;
         this.board = board;
-        if(this.color.equals("white")){
-            isTurn = true;
-        } else {
-            isTurn = false;
-        }
+        isTurn = this.color.equals("white");
+        moved = false;
         setDragHandlers();
     }
 
@@ -51,7 +48,7 @@ public abstract class Piece extends ImageView {
     }
 
     public void setImage() {
-        this.setPiece(new Image(getClass().getResourceAsStream("/assets/piecesNorm/" + this.color + "_" +  this.type + ".png"), 90, 90, true, true));
+        this.setPiece(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/piecesNorm/" + this.color + "_" + this.type + ".png")), 90, 90, true, true));
     }
     public void setPiece(Image image) {
         this.setImage(image);
