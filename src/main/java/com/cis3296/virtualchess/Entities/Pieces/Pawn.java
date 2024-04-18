@@ -53,16 +53,15 @@ public class Pawn extends Piece {
             addCoordinates(moveSet, targetCoordinates);
         }
         // Allow for diagonal movement if the pawn's forward path is blocked
-        if(blockedForward){
-            targetCoordinates = new Coordinates(this.coordinates.getCol() - direction, this.coordinates.getRow() + direction);
-            if(checkForDiagPiece(targetCoordinates)){
-                addCoordinates(moveSet, targetCoordinates);
-            }
-            targetCoordinates = new Coordinates(this.coordinates.getCol() + direction, this.coordinates.getRow() + direction);
-            if(checkForDiagPiece(targetCoordinates)){
-                addCoordinates(moveSet, targetCoordinates);
-            }
+        targetCoordinates = new Coordinates(this.coordinates.getCol() - direction, this.coordinates.getRow() + direction);
+        if(checkForDiagPiece(targetCoordinates)){
+            addCoordinates(moveSet, targetCoordinates);
         }
+        targetCoordinates = new Coordinates(this.coordinates.getCol() + direction, this.coordinates.getRow() + direction);
+        if(checkForDiagPiece(targetCoordinates)){
+            addCoordinates(moveSet, targetCoordinates);
+        }
+
 
         return moveSet;
     }
