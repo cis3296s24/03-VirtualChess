@@ -6,7 +6,9 @@ import com.cis3296.virtualchess.Components.BoardStyle;
 import com.cis3296.virtualchess.Entities.Player;
 import com.cis3296.virtualchess.Entities.Pieces.Piece;
 import com.cis3296.virtualchess.Systems.TurnSystem;
+import javafx.application.Platform;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,6 +18,7 @@ import java.util.Properties;
 
 public class Game {
 
+    private TurnSystem turnSystem;
     public Board chessBoard;
     public BoardSettings boardSettings = new BoardSettings(BoardStyle.SANDCASTLE);
 
@@ -25,8 +28,8 @@ public class Game {
      */
     public Game(GridPane chessBoard) {
         getTheme();
-        TurnSystem.start();
-
+        this.turnSystem = TurnSystem.getInstance();
+        this.turnSystem.start();
         this.chessBoard = new Board(chessBoard, boardSettings, this);
     }
 
@@ -49,8 +52,7 @@ public class Game {
 
 
     public void handleTurn() {
-
-        TurnSystem.changeTurn();
+        turnSystem.changeTurn();
 
         for(Piece piece: this.chessBoard.pieces){
             if(piece.color.equals("white")){
@@ -63,6 +65,6 @@ public class Game {
     }
 
     public void endGame(){
-        TurnSystem.stop();
+        turnSystem.stop();
     }
 }

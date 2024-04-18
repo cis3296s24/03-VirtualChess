@@ -1,33 +1,34 @@
 package com.cis3296.virtualchess.Systems;
 
-import com.cis3296.virtualchess.Components.Board;
 import com.cis3296.virtualchess.Entities.Player;
-import com.cis3296.virtualchess.Game;
+import javafx.scene.text.Text;
 
 public class TurnSystem {
 
-    private static Player whitePlayer;
-    public static Timer whiteTimer;
+    private Player whitePlayer;
+    public Timer whiteTimer;
 
-    private static Player blackPlayer;
-    public static Timer blackTimer;
+    private Player blackPlayer;
+    public Timer blackTimer;
 
-    private static Player currentPlayer;
+    private Player currentPlayer;
+
+    private Text currentPlayerText;
 
     private static TurnSystem instance = null;
 
     private TurnSystem() {
     }
 
-    public static synchronized void setWhitePlayer(Player whitePlayer){
-        TurnSystem.whitePlayer = whitePlayer;
+    public void setWhitePlayer(Player whitePlayer){
+        this.whitePlayer = whitePlayer;
     }
 
-    public static synchronized void setBlackPlayer(Player blackPlayer){
-        TurnSystem.blackPlayer = blackPlayer;
+    public void setBlackPlayer(Player blackPlayer){
+        this.blackPlayer = blackPlayer;
     }
 
-    public static synchronized void start(){
+    public void start(){
         currentPlayer = whitePlayer;
         whiteTimer = new Timer(5);
         blackTimer = new Timer(5);
@@ -43,28 +44,31 @@ public class TurnSystem {
         return instance;
     }
 
-    public static synchronized String changeTurn(){
+    public void setCurrentPlayerText(Text text){
+        currentPlayerText = text;
+    }
+
+    public void changeTurn(){
         if(currentPlayer == whitePlayer){
-//            currentPlayer = blackPlayer;
+            currentPlayer = blackPlayer;
 
             whiteTimer.pause();
             blackTimer.unpause();
-            return blackPlayer.name;
         } else {
             currentPlayer = whitePlayer;
 
             blackTimer.pause();
             whiteTimer.unpause();
-            return whitePlayer.name;
         }
+        currentPlayerText.setText("Current Turn:\n" + this.currentPlayer.name);
     }
 
-    public static synchronized void stop(){
+    public void stop(){
         whiteTimer.stop();
         blackTimer.stop();
     }
 
-    public static synchronized Player getCurrentPlayer() {
+    public Player getCurrentPlayer() {
         return currentPlayer;
     }
 }

@@ -41,6 +41,7 @@ public class GameController {
 
     private Timeline timeline;
 
+    private TurnSystem turnSystem;
     Game game;
 
     /**
@@ -48,10 +49,12 @@ public class GameController {
      */
     public void initialize(){
         this.game = new Game(chessBoard);
+        this.turnSystem = TurnSystem.getInstance();
         timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), event -> updateTime()));
         timeline.setCycleCount(Timeline.INDEFINITE); // Repeat indefinitely
         timeline.play();
-        currentTurnText.setText("Current Turn:\n" + TurnSystem.getCurrentPlayer().name);
+        currentTurnText.setText("Current Turn:\n" + turnSystem.getCurrentPlayer().name);
+        turnSystem.setCurrentPlayerText(currentTurnText);
 
         // Add drag-and-drop event handlers to the chessboard GridPane
         chessBoard.setOnDragOver(event -> {
@@ -71,13 +74,13 @@ public class GameController {
     }
 
     public void updateTime(){
-        int minutesW = TurnSystem.whiteTimer.getRemainingTimeMinutes();
-        int secondsW = TurnSystem.whiteTimer.getRemainingTimeSeconds();
+        int minutesW = turnSystem.whiteTimer.getRemainingTimeMinutes();
+        int secondsW = turnSystem.whiteTimer.getRemainingTimeSeconds();
 
         timerTextWhite.setText(String.format("White Time: %02d:%02d", minutesW, secondsW));
 
-        int minutesB = TurnSystem.blackTimer.getRemainingTimeMinutes();
-        int secondsB = TurnSystem.blackTimer.getRemainingTimeSeconds();
+        int minutesB = turnSystem.blackTimer.getRemainingTimeMinutes();
+        int secondsB = turnSystem.blackTimer.getRemainingTimeSeconds();
 
         timerTextBlack.setText(String.format("Black Time: %02d:%02d", minutesB, secondsB));
     }

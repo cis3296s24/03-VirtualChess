@@ -37,9 +37,9 @@ public class GameModeController {
     @FXML
     public void switchToChessBoard(ActionEvent event) throws IOException {
         if(!player1name.getText().isBlank() && !player2name.getText().isBlank()){
-            TurnSystem.getInstance();
-            TurnSystem.setWhitePlayer(new Player(player1name.getText()));
-            TurnSystem.setBlackPlayer(new Player(player2name.getText()));
+            TurnSystem ts = TurnSystem.getInstance();
+            ts.setWhitePlayer(new Player(player1name.getText()));
+            ts.setBlackPlayer(new Player(player2name.getText()));
 
             root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/board.fxml")));
             stage = (Stage)((Node)event.getSource()).getScene().getWindow();
