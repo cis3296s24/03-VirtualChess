@@ -6,7 +6,7 @@ import javafx.scene.text.Text;
 public class TurnSystem {
 
     private Player whitePlayer;
-    public Timer whiteTimer;
+    private Timer whiteTimer;
 
     private Player blackPlayer;
     private Timer blackTimer;
@@ -62,6 +62,29 @@ public class TurnSystem {
         }
         currentPlayerText.setText("Current Turn:\n" + this.currentPlayer.name);
     }
+
+    public void getWhiteTime(Text timerTextWhite){
+        int minutes = whiteTimer.getRemainingTimeMinutes();
+        int seconds = whiteTimer.getRemainingTimeSeconds();
+        timerTextWhite.setText(String.format(
+                        "White Time: %02d:%02d",
+                        minutes,
+                        seconds
+                )
+        );
+    }
+
+    public void getBlackTime(Text timerTextBlack){
+        int minutes = blackTimer.getRemainingTimeMinutes();
+        int seconds = blackTimer.getRemainingTimeSeconds();
+        timerTextBlack.setText(String.format(
+                "Black Time: %02d:%02d",
+                minutes,
+                seconds
+            )
+        );
+    }
+
 
     public void stop(){
         whiteTimer.stop();

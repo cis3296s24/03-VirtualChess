@@ -73,15 +73,9 @@ public class GameController {
     }
 
     public void updateTime(){
-        int minutesW = turnSystem.whiteTimer.getRemainingTimeMinutes();
-        int secondsW = turnSystem.whiteTimer.getRemainingTimeSeconds();
+        turnSystem.getWhiteTime(timerTextWhite);
 
-        timerTextWhite.setText(String.format("White Time: %02d:%02d", minutesW, secondsW));
-
-        int minutesB = turnSystem.blackTimer.getRemainingTimeMinutes();
-        int secondsB = turnSystem.blackTimer.getRemainingTimeSeconds();
-
-        timerTextBlack.setText(String.format("Black Time: %02d:%02d", minutesB, secondsB));
+        turnSystem.getBlackTime(timerTextBlack);
     }
 
     public void leaveGame(ActionEvent event) throws IOException {
