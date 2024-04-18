@@ -6,16 +6,18 @@ import javafx.scene.text.Text;
 public class TurnSystem {
 
     private Player whitePlayer;
-    private Timer whiteTimer;
+    private Timer whiteTimer = null;
 
     private Player blackPlayer;
-    private Timer blackTimer;
+    private Timer blackTimer = null;
 
     private Player currentPlayer;
 
     private Text currentPlayerText;
 
     private static TurnSystem instance = null;
+
+    public static final int DEFAULT_TIMER_AMOUNT = 5;
 
     private TurnSystem() {
     }
@@ -30,8 +32,10 @@ public class TurnSystem {
 
     public void start(){
         currentPlayer = whitePlayer;
-        whiteTimer = new Timer(5);
-        blackTimer = new Timer(5);
+        if(whiteTimer == null || blackTimer == null){
+            whiteTimer = new Timer(DEFAULT_TIMER_AMOUNT);
+            blackTimer = new Timer(DEFAULT_TIMER_AMOUNT);
+        }
         whiteTimer.start();
         blackTimer.start();
         blackTimer.pause();
@@ -93,5 +97,13 @@ public class TurnSystem {
 
     public Player getCurrentPlayer() {
         return currentPlayer;
+    }
+
+    public void setWhiteTimer(int startingMinutes){
+        whiteTimer = new Timer(startingMinutes);
+    }
+
+    public void setBlackTimer(int startingMinutes){
+        blackTimer = new Timer(startingMinutes);
     }
 }

@@ -23,6 +23,8 @@ public class PlayerSelectionScreenController {
     public TextField player1name;
     @FXML
     public TextField player2name;
+    @FXML
+    public TextField timer;
 
     private Stage stage;
     private Scene scene;
@@ -40,6 +42,13 @@ public class PlayerSelectionScreenController {
             TurnSystem ts = TurnSystem.getInstance();
             ts.setWhitePlayer(new Player(player1name.getText()));
             ts.setBlackPlayer(new Player(player2name.getText()));
+            if(timer.getText().isBlank()){
+                ts.setWhiteTimer(TurnSystem.DEFAULT_TIMER_AMOUNT);
+                ts.setBlackTimer(TurnSystem.DEFAULT_TIMER_AMOUNT);
+            } else{
+                ts.setWhiteTimer(Integer.parseInt(timer.getText()));
+                ts.setBlackTimer(Integer.parseInt(timer.getText()));
+            }
 
             root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/board.fxml")));
             stage = (Stage)((Node)event.getSource()).getScene().getWindow();
