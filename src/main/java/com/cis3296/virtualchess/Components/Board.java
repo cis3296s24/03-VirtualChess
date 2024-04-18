@@ -9,7 +9,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Sphere;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -175,7 +174,6 @@ public class Board {
                 }
             }
         }
-
 
     }
 

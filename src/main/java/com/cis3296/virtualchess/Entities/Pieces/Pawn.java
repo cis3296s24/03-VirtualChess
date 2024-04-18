@@ -9,7 +9,7 @@ public class Pawn extends Piece {
 
     private final int UP = -1;
     private final int DOWN = 1;
-    private int direction = DOWN;
+    private final int direction;
     // directions are in respect to the pawn's location
     // i.e. black pawn's forward goes up, white pawn's "forward" goes down
     private boolean blockedForward;
@@ -33,7 +33,7 @@ public class Pawn extends Piece {
 
     /**
      * This method determines the possible moves that a pawn can move based on their current position
-     * @return a set with possible coordinates to move
+     * @return a move set with possible coordinates to move
      */
     @Override
     public ArrayList<Coordinates> getMoveSet(){
@@ -43,14 +43,10 @@ public class Pawn extends Piece {
         Coordinates targetCoordinates;
 
         // Allows for pawns to move twice on their first move
-        if(color.equals("white") && !moved){
-            targetCoordinates = new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() + (direction-1));
-            addCoordinates(moveSet, targetCoordinates);
-        } else if (color.equals("black") && !moved){
-            targetCoordinates = new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() + (direction+1));
+        if(!moved){
+            targetCoordinates = new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() + (direction * 2));
             addCoordinates(moveSet, targetCoordinates);
         }
-
         // Handles the movement moving forward
         targetCoordinates = new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() + direction);
         if(checkForForwardPieces(targetCoordinates)){
