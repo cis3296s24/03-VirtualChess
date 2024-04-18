@@ -18,34 +18,39 @@ public class Knight extends Piece {
         setImage();
     }
 
+    /**
+     * This method determines the possible moves that a knight can move based on their current position
+     * @return a set with possible coordinates to move
+     */
     @Override
     public ArrayList<Coordinates> getMoveSet() {
+        // Set to return with all possible coordinates based on current position
         ArrayList<Coordinates> moveSet = new ArrayList<>();
-
-        Coordinates targetCoordinates = new Coordinates(this.coordinates.getCol(), this.coordinates.getRow());
-        addCoordinates(moveSet, targetCoordinates);
-
-        targetCoordinates = new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() + 2);
-        addCoordinates(moveSet, targetCoordinates);
-
-        targetCoordinates = new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() + 2);
-        addCoordinates(moveSet, targetCoordinates);
-
-        targetCoordinates = new Coordinates(this.coordinates.getCol() + 2, this.coordinates.getRow() + 1);
-        addCoordinates(moveSet, targetCoordinates);
-
-        targetCoordinates = new Coordinates(this.coordinates.getCol() + 2, this.coordinates.getRow() - 1);
-        addCoordinates(moveSet, targetCoordinates);
-
+        // Coordinates to be added in the move set
+        Coordinates targetCoordinates;
+      
+        // Move up 2 and right 1
+        targetCoordinates = new Coordinates(this.coordinates.getCol() - 2, this.coordinates.getRow() + 1);
+        // Move up 2 and left 1
         targetCoordinates = new Coordinates(this.coordinates.getCol() - 2, this.coordinates.getRow() - 1);
         addCoordinates(moveSet, targetCoordinates);
-
-        targetCoordinates = new Coordinates(this.coordinates.getCol() - 2, this.coordinates.getRow() + 1);
+        // Move up 1 and right 2
+        targetCoordinates = new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() + 2);
         addCoordinates(moveSet, targetCoordinates);
-
+        // Move up 1 and left 2
         targetCoordinates = new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() - 2);
         addCoordinates(moveSet, targetCoordinates);
 
+        // Move down 2 and right 1
+        targetCoordinates = new Coordinates(this.coordinates.getCol() + 2, this.coordinates.getRow() + 1);
+        addCoordinates(moveSet, targetCoordinates);
+        // Move down 2 and left 1
+        targetCoordinates = new Coordinates(this.coordinates.getCol() + 2, this.coordinates.getRow() - 1);
+        addCoordinates(moveSet, targetCoordinates);
+        // Move down 1 and right 2
+        targetCoordinates = new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() + 2);
+        addCoordinates(moveSet, targetCoordinates);
+        // Move down 1 and left 2
         targetCoordinates = new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() - 2);
         addCoordinates(moveSet, targetCoordinates);
 
