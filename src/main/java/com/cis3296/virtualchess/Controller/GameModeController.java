@@ -19,10 +19,6 @@ public class GameModeController {
 
     @FXML
     public AnchorPane menu;
-    @FXML
-    public TextField player1name;
-    @FXML
-    public TextField player2name;
 
     private Stage stage;
     private Scene scene;
@@ -35,18 +31,13 @@ public class GameModeController {
     }
 
     @FXML
-    public void switchToChessBoard(ActionEvent event) throws IOException {
-        if(!player1name.getText().isBlank() && !player2name.getText().isBlank()){
-            TurnSystem ts = TurnSystem.getInstance();
-            ts.setWhitePlayer(new Player(player1name.getText()));
-            ts.setBlackPlayer(new Player(player2name.getText()));
-
-            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/board.fxml")));
-            stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-            scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-        }
+    public void switchToSelection(ActionEvent event) throws IOException {
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/playerSelectionScreen.fxml")));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css").toExternalForm());
+        stage.setScene(scene);
+        stage.show();
     }
 
     @FXML
