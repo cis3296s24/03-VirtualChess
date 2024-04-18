@@ -81,7 +81,9 @@ public class Board {
                 if(piece.isTurn){
                     draggingPiece = piece;
                     Dragboard db = piece.startDragAndDrop(TransferMode.MOVE);
-                    piece.showMoves(this);
+                    if(Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.HINTS_CONFIG_ACCESS_STRING))){
+                        piece.showMoves(this);
+                    }
                     ClipboardContent content = new ClipboardContent();
                     content.putString(""); // You can put any content here if needed
                     db.setContent(content);
