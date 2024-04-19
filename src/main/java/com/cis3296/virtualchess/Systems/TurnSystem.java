@@ -19,6 +19,9 @@ public class TurnSystem {
 
     public static final int DEFAULT_TIMER_AMOUNT = 5;
 
+    public boolean isCheck = false;
+    public boolean isCheckMate = false;
+
     private TurnSystem() {
     }
 
