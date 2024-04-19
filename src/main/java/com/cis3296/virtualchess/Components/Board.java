@@ -271,6 +271,23 @@ public class Board {
                 pawnPromotion();
             }
 
+            if(targetPiece.type.equals("king")){
+                Coordinates rightRookCoord = new Coordinates(destSquare.coordinates.getCol()+1, destSquare.coordinates.getRow());
+                Coordinates leftRookCoord = new Coordinates(destSquare.coordinates.getCol()-2, destSquare.coordinates.getRow());
+                Piece rightRook = getPieceAt(rightRookCoord);
+                Piece leftRook = getPieceAt(leftRookCoord);
+                if(rightRook != null && !rightRook.moved && rightRook.type.equals("rook")){
+                    BoardSquare square = getSquareAt(leftRookCoord);
+                    square.getChildren().remove(rightRook);
+                    square.getChildren().add(rightRook);
+                }
+                if(leftRook != null && !leftRook.moved && leftRook.type.equals("rook")){
+                    BoardSquare square = getSquareAt(rightRookCoord);
+                    square.getChildren().remove(leftRook);
+                    square.getChildren().add(leftRook);
+                }
+            }
+
             // handle any rules after first movement of pawn
             if(targetPiece.type.equals("pawn") || targetPiece.type.equals("king") || targetPiece.type.equals("rook")){
                 caseOfMove();
@@ -288,6 +305,9 @@ public class Board {
      */
     public void showMoves(Coordinates coordinates){
         BoardSquare square = getSquareAt(coordinates);
+        if(square == null){
+            return;
+        }
         // All of this for drawing the move hints
         Circle circle1 = new Circle(10, 10, 10);
         circle1.setFill(Color.BLACK);

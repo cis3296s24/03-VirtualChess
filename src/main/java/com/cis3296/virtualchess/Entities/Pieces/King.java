@@ -46,16 +46,63 @@ public class King extends Piece {
         }
     }
 
-    /**
-     * Adds possible castling moves if the King has not moved.
-     *
-     * @param moveSet The list to add the coordinates to.
-     */
     private void addCastlingMoves(ArrayList<Coordinates> moveSet) {
-        if (!moved) {
+        // Check for left castling
+        if (!moved && canCastleLeft()) {
             addCoordinates(moveSet, new Coordinates(this.coordinates.getCol() - 2, this.coordinates.getRow()));
+        }
+        // Check for right castling
+        if (!moved && canCastleRight()) {
             addCoordinates(moveSet, new Coordinates(this.coordinates.getCol() + 2, this.coordinates.getRow()));
         }
+    }
+
+    private boolean canCastleLeft() {
+        Coordinates rookPosition = new Coordinates(this.coordinates.getCol() - 4, this.coordinates.getRow());
+        Piece piece = board.getPieceAt(rookPosition);
+
+        if (!(piece instanceof Rook)) {
+            return false;
+        }
+
+        Rook leftRook = (Rook) piece;
+
+        if (leftRook.moved) {
+            return false;
+        }
+
+        // Check for clear path
+        for (int i = this.coordinates.getCol() - 1; i >= this.coordinates.getCol() - 3; i--) {
+            if (board.getPieceAt(new Coordinates(i, this.coordinates.getRow())) != null) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean canCastleRight() {
+        Coordinates rookPosition = new Coordinates(this.coordinates.getCol() + 3, this.coordinates.getRow());
+        Piece piece = board.getPieceAt(rookPosition);
+
+        if (!(piece instanceof Rook)) {
+            return false;
+        }
+
+        Rook rightRook = (Rook) piece;
+
+        if (rightRook.moved) {
+            return false;
+        }
+
+        // Check for clear path
+        for (int i = this.coordinates.getCol() + 1; i <= this.coordinates.getCol() + 2; i++) {
+            if (board.getPieceAt(new Coordinates(i, this.coordinates.getRow())) != null) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 
