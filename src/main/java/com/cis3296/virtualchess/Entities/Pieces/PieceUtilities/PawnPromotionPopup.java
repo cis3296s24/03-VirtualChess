@@ -116,7 +116,7 @@ public class PawnPromotionPopup {
         Queen newQueen = new Queen(pawn.coordinates, pawn.color, board, pawn.isTurn);
 
         // Remove the association of the square to the pawn
-        board.pieceToSquare.remove(currentSquare, pawn);
+//        board.pieceToSquare.remove(currentSquare, pawn);
 
         // Remove the pawn from the square
         currentSquare.getChildren().remove(pawn);
@@ -140,7 +140,7 @@ public class PawnPromotionPopup {
         Rook newRook = new Rook(pawn.coordinates, pawn.color, board, pawn.isTurn);
 
         // Remove the association of the square to the pawn
-        board.pieceToSquare.remove(currentSquare, pawn);
+//        board.pieceToSquare.remove(currentSquare, pawn);
 
         // Remove the pawn from the square
         currentSquare.getChildren().remove(pawn);
@@ -164,7 +164,7 @@ public class PawnPromotionPopup {
         Bishop newBishop = new Bishop(pawn.coordinates, pawn.color, board, pawn.isTurn);
 
         // Remove the association of the square to the pawn
-        board.pieceToSquare.remove(currentSquare, pawn);
+//        board.pieceToSquare.remove(currentSquare, pawn);
 
         // Remove the pawn from the square
         currentSquare.getChildren().remove(pawn);
@@ -188,7 +188,7 @@ public class PawnPromotionPopup {
         Knight newKnight = new Knight(pawn.coordinates, pawn.color, board, pawn.isTurn);
 
         // Remove the association of the square to the pawn
-        board.pieceToSquare.remove(currentSquare, pawn);
+//        board.pieceToSquare.remove(currentSquare, pawn);
 
         // Remove the pawn from the square
         currentSquare.getChildren().remove(pawn);

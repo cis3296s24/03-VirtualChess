@@ -116,7 +116,7 @@ public class Rook extends Piece {
             // Find the square with the matching coordinates of rook's pathing
             if(square.coordinates.equals(targetCoordinates)){
                 // If the square does not have a piece then the rook can move there
-                if(!board.pieceToSquare.containsKey(square)){
+                if(board.getPieceAt(targetCoordinates) == null){
                     // Ensure the piece is not blocked
                     blockedNorth = false;
                     return true;
@@ -138,7 +138,7 @@ public class Rook extends Piece {
             // Find the square with the matching coordinates of rook's pathing
             if(square.coordinates.equals(targetCoordinates)){
                 // If the square does not have a piece then the rook can move there
-                if(!board.pieceToSquare.containsKey(square)){
+                if(board.getPieceAt(targetCoordinates) == null){
                     // Ensure the piece is not blocked
                     blockedSouth = false;
                     return true;
@@ -160,7 +160,7 @@ public class Rook extends Piece {
             // Find the square with the matching coordinates of rook's pathing
             if(square.coordinates.equals(targetCoordinates)){
                 // If the square does not have a piece then the rook can move there
-                if(!board.pieceToSquare.containsKey(square)){
+                if(board.getPieceAt(targetCoordinates) == null){
                     // Ensure the piece is not blocked
                     blockedWest = false;
                     return true;
@@ -182,7 +182,7 @@ public class Rook extends Piece {
             // Find the square with the matching coordinates of rook's pathing
             if(square.coordinates.equals(targetCoordinates)){
                 // If the square does not have a piece then the rook can move there
-                if(!board.pieceToSquare.containsKey(square)){
+                if(board.getPieceAt(targetCoordinates) == null){
                     // Ensure the piece is not blocked
                     blockedEast = false;
                     return true;
@@ -204,7 +204,7 @@ public class Rook extends Piece {
             // Find the square with the matching coordinates of rook's pathing
             if(square.coordinates.equals(targetCoordinates)){
                 // If the square has a piece then the rook can move there
-                if(board.pieceToSquare.containsKey(square)){
+                if(board.getPieceAt(targetCoordinates) != null){
                     opponentNorth = true;
                     return true;
                 }
@@ -225,7 +225,7 @@ public class Rook extends Piece {
             // Find the square with the matching coordinates of rook's pathing
             if(square.coordinates.equals(targetCoordinates)){
                 // If the square has a piece then the rook can move there
-                if(board.pieceToSquare.containsKey(square)){
+                if(board.getPieceAt(targetCoordinates) == null){
                     opponentSouth = true;
                     return true;
                 }
@@ -246,7 +246,7 @@ public class Rook extends Piece {
             // Find the square with the matching coordinates of rook's pathing
             if(square.coordinates.equals(targetCoordinates)){
                 // If the square has a piece then the rook can move there
-                if(board.pieceToSquare.containsKey(square)){
+                if(board.getPieceAt(targetCoordinates) == null){
                     opponentWest = true;
                     return true;
                 }
@@ -267,7 +267,7 @@ public class Rook extends Piece {
             // Find the square with the matching coordinates of rook's pathing
             if(square.coordinates.equals(targetCoordinates)){
                 // If the square has a piece then the rook can move there
-                if(board.pieceToSquare.containsKey(square)){
+                if(board.getPieceAt(targetCoordinates) == null){
                     opponentEast = true;
                     return true;
                 }

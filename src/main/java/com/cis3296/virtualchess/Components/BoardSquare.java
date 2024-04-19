@@ -7,7 +7,7 @@ public class BoardSquare extends StackPane {
 
     public Coordinates coordinates;
     // Not used now but can later be used when pieces are added
-    boolean containsPiece;
+    public boolean containsPiece;
 
     /**
      * Constructor for the squares on the board

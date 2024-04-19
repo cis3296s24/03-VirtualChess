@@ -87,14 +87,16 @@ public abstract class Piece extends ImageView {
      */
     public void addCoordinates(ArrayList<Coordinates> moveSet, Coordinates targetCoordinates){
         // Go through all board squares and find the square the piece is supposed to move to
-        for(BoardSquare destinationSquare: board.boardSquares){
-            if(destinationSquare.coordinates.equals(targetCoordinates)){
+//        BoardSquare destinationSquare = board.getSquareAt(targetCoordinates);
+        Piece targetPiece = board.getPieceAt(targetCoordinates);
+//        for(BoardSquare destinationSquare: board.boardSquares){
+//            if(destinationSquare.coordinates.equals(targetCoordinates)){
                 // Check to see if the square has a piece on it
-                if(board.pieceToSquare.containsKey(destinationSquare)){
+                if(targetPiece != null){
                     // Check to see if the piece is not of the same color
-                    Piece opponentPiece = board.pieceToSquare.get(destinationSquare);
-                    String opponentColor = opponentPiece.color;
-                    if(!this.color.equals(opponentColor)){
+//                    Piece opponentPiece = board.pieceToSquare.get(destinationSquare);
+//                    String opponentColor = opponentPiece.color;
+                    if(!this.color.equals(targetPiece.color)){
                         // Add the coordinate as a possible move
                         moveSet.add(targetCoordinates);
                     }
@@ -103,6 +105,6 @@ public abstract class Piece extends ImageView {
                     moveSet.add(targetCoordinates);
                 }
             }
-        }
-    }
+//        }
+//    }
 }

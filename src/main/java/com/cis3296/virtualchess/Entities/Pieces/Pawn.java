@@ -46,6 +46,8 @@ public class Pawn extends Piece {
 
         // Allows for pawns to move twice on their first move
         if(!moved){
+            System.out.println(board.getSquareAt(this.coordinates).containsPiece);
+            System.out.println(this.coordinates.toString());
             targetCoordinates = new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() + (direction * 2));
             addCoordinates(moveSet, targetCoordinates);
         }
