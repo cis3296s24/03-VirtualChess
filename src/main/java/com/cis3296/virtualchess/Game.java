@@ -12,9 +12,10 @@ import javafx.scene.layout.GridPane;
 
 public class Game {
 
-    private TurnSystem turnSystem;
+    public TurnSystem turnSystem;
     public Board chessBoard;
     public BoardSettings boardSettings = new BoardSettings(BoardStyle.SANDCASTLE);
+
 
 
     /**
@@ -57,5 +58,9 @@ public class Game {
     public void endGame(){
         Database.insert(turnSystem.getWhitePlayer(), turnSystem.getBlackPlayer(), "Lose", "Win");
         turnSystem.stop();
+    }
+    public boolean isComputersTurn() {
+
+        return turnSystem.getCurrentPlayer().getName().equals("Computer");
     }
 }
