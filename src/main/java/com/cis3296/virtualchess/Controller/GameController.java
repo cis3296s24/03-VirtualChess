@@ -69,10 +69,6 @@ public class GameController {
             event.setDropCompleted(true);
             event.consume();
         });
-
-        Database.insert(new Player("Nick"), new Player("Ken"), "Lose", "Win");
-
-
     }
 
     public void updateTime(){

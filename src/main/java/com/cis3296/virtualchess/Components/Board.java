@@ -72,6 +72,11 @@ public class Board {
             }
         }
         addPieces();
+        getPiece();
+    }
+
+    private void getPiece() {
+
     }
 
     /**
