@@ -24,36 +24,20 @@ public class Knight extends Piece {
      */
     @Override
     public ArrayList<Coordinates> getMoveSet() {
-        // Set to return with all possible coordinates based on current position
         ArrayList<Coordinates> moveSet = new ArrayList<>();
-        // Coordinates to be added in the move set
-        Coordinates targetCoordinates;
-      
-        // Move up 2 and right 1
-        targetCoordinates = new Coordinates(this.coordinates.getCol() - 2, this.coordinates.getRow() + 1);
-        addCoordinates(moveSet, targetCoordinates);
-        // Move up 2 and left 1
-        targetCoordinates = new Coordinates(this.coordinates.getCol() - 2, this.coordinates.getRow() - 1);
-        addCoordinates(moveSet, targetCoordinates);
-        // Move up 1 and right 2
-        targetCoordinates = new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() + 2);
-        addCoordinates(moveSet, targetCoordinates);
-        // Move up 1 and left 2
-        targetCoordinates = new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() - 2);
-        addCoordinates(moveSet, targetCoordinates);
+        // Possible moves a knight can make (row, col) from the current position.
+        int[][] moves = {
+                {2, 1}, {2, -1}, {-2, 1}, {-2, -1},
+                {1, 2}, {1, -2}, {-1, 2}, {-1, -2}
+        };
 
-        // Move down 2 and right 1
-        targetCoordinates = new Coordinates(this.coordinates.getCol() + 2, this.coordinates.getRow() + 1);
-        addCoordinates(moveSet, targetCoordinates);
-        // Move down 2 and left 1
-        targetCoordinates = new Coordinates(this.coordinates.getCol() + 2, this.coordinates.getRow() - 1);
-        addCoordinates(moveSet, targetCoordinates);
-        // Move down 1 and right 2
-        targetCoordinates = new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() + 2);
-        addCoordinates(moveSet, targetCoordinates);
-        // Move down 1 and left 2
-        targetCoordinates = new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() - 2);
-        addCoordinates(moveSet, targetCoordinates);
+        for (int[] move : moves) {
+            Coordinates targetCoordinates = new Coordinates(
+                    this.coordinates.getCol() + move[1],
+                    this.coordinates.getRow() + move[0]
+            );
+            addCoordinates(moveSet, targetCoordinates);
+        }
 
         return moveSet;
     }

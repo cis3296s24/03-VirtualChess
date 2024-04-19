@@ -10,11 +10,9 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Sphere;
-import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class Board {
     // In case we need to change these column/row/size values for any reason later on...
@@ -76,24 +74,26 @@ public class Board {
     }
 
     public BoardSquare getSquareAt(Coordinates coordinates) {
-        return boardSquares.get(coordinates.getCol() * 8 + coordinates.getRow());
+        int index = coordinates.getCol() * 8 + coordinates.getRow();
+        if(index >= boardSquares.size() || index < 0) return null;
+        return boardSquares.get(index);
     }
 
     public Piece getPieceAt(Coordinates coordinates) {
         System.out.println(coordinates.toString());
         BoardSquare square = getSquareAt(coordinates);
+
+        if(square == null) return null;
+
         if (!square.getChildren().isEmpty()) {
-            // Get the first child and check if it is an instance of Piece
             Node child = square.getChildren().getFirst();
             if (child instanceof Piece) {
                 return (Piece) child;
             } else {
-                // Handle the case where the first child is not a Piece
-                return null; // or handle accordingly based on your needs
+                return null;
             }
         } else {
-            // Handle the case where there are no children in the square
-            return null; // or handle accordingly based on your needs
+            return null;
         }
     }
 
@@ -200,7 +200,6 @@ public class Board {
     public void addPiece(BoardSquare square, Piece piece){
         pieces.add(piece);
         square.getChildren().add(piece);
-//        pieceToSquare.put(square, piece);
         square.containsPiece = true;
 
         // each piece needs to be able to be dragged and dropped
@@ -244,7 +243,6 @@ public class Board {
      * @param destSquare the square for the piece to be set on
      */
     private void movePiece(BoardSquare destSquare){
-        // Look through all board square and find the one that matches the piece's coordinates
         BoardSquare prevSquare = getSquareAt(draggingPiece.coordinates);
         if(isValidMove(destSquare.coordinates.getCol(), destSquare.coordinates.getRow())){
             // Remove the piece from the square
@@ -276,13 +274,6 @@ public class Board {
         } else{
             System.out.println("Invalid Move");
         }
-
-//        for(BoardSquare prevSquare: boardSquares){
-//            if(prevSquare.coordinates.equals(draggingPiece.coordinates)){
-//                // Validate the movement
-//
-//            }
-//        }
     }
 
     /**
@@ -326,20 +317,12 @@ public class Board {
      * Handles the promotion of the pawns once they reach the other side of the board
      */
     public void pawnPromotion(){
-        // Get the pawn to be promoted
-        Pawn pawnToPromote = (Pawn) draggingPiece;
         // The current row of the pawn
-        int currentRow = pawnToPromote.coordinates.getRow();
+        int currentRow = draggingPiece.coordinates.getRow();
         // If the pawn is at the opposite side then promote it
-        if(pawnToPromote.color.equals("white") && currentRow == 0 || pawnToPromote.color.equals("black") && currentRow == 7){
-            // Go through each square
-            for(BoardSquare currentSquare: boardSquares) {
-                // Find the desired square
-                if(currentSquare.coordinates.equals(pawnToPromote.coordinates)){
-                    // Promote the pawn
-                    pawnToPromote.promote(currentSquare, this);
-                }
-            }
+        if(draggingPiece.color.equals("white") && currentRow == 0 || draggingPiece.color.equals("black") && currentRow == 7){
+            BoardSquare currentSquare = getSquareAt(draggingPiece.coordinates);
+            ((Pawn)draggingPiece).promote(currentSquare, this);
         }
     }
 }
