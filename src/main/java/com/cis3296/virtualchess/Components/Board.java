@@ -23,6 +23,8 @@ public class Board {
     private final ArrayList<StackPane> moves = new ArrayList<>();
     public ArrayList<Piece> pieces = new ArrayList<>();
 
+    private Piece kingW;
+
     private final Game game;
     private final BoardSettings settings;
 
@@ -151,7 +153,7 @@ public class Board {
                     addPiece(square, queenW);
                 }
                 if(square.coordinates.getCol() == 4){
-                    Piece kingW = new King(square.coordinates, "white", this, whiteTurn);
+                    kingW = new King(square.coordinates, "white", this, whiteTurn);
                     addPiece(square, kingW);
                 }
 
@@ -346,5 +348,25 @@ public class Board {
             BoardSquare currentSquare = getSquareAt(targetPiece.coordinates);
             ((Pawn) targetPiece).promote(currentSquare, this);
         }
+    }
+
+    @Override
+    public String toString(){
+        String board = "";
+        for(int col = 0; col < MAX_COL; col++){
+            for(int row = 0; row < MAX_ROW; row++){
+                Piece piece = getPieceAt(new Coordinates(col, row));
+                if(piece != null){
+                    board += piece.toString() + "\n";
+                }
+            }
+        }
+        for(BoardSquare square: boardSquares){
+            Piece piece = getPieceAt(square.coordinates);
+            if(){
+
+            }
+        }
+        return board;
     }
 }

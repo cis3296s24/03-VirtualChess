@@ -13,11 +13,18 @@ import java.io.OutputStreamWriter;
  */
 public class Stockfish {
 
+	public static String GO = "go";
 	private Process engineProcess;
 	private BufferedReader processReader;
 	private OutputStreamWriter processWriter;
 
-	private static final String PATH = "../engine/stockfish";
+	public static String UCI = "uci";
+	public static String NEW_GAME = "newgame";
+
+	public static String moveTime(int interval){return "movetime "+ interval;}
+
+
+	private static final String PATH = "stockfish/stockfish-windows-x86-64-avx2.exe";
 
 	/**
 	 * Starts Stockfish engine as a process and initializes it
@@ -47,6 +54,7 @@ public class Stockfish {
 		try {
 			processWriter.write(command + "\n");
 			processWriter.flush();
+			System.out.println("Sending command: " + command);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
