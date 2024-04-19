@@ -3,7 +3,6 @@ package com.cis3296.virtualchess;
 import com.cis3296.virtualchess.Components.Board;
 import com.cis3296.virtualchess.Components.BoardSettings;
 import com.cis3296.virtualchess.Components.BoardStyle;
-import com.cis3296.virtualchess.Entities.Player;
 import com.cis3296.virtualchess.Entities.Pieces.Piece;
 import com.cis3296.virtualchess.Systems.Database;
 import com.cis3296.virtualchess.Systems.TurnSystem;

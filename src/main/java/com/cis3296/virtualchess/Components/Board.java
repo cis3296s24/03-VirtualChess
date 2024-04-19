@@ -72,11 +72,10 @@ public class Board {
             }
         }
         addPieces();
-        getPiece();
     }
 
-    private void getPiece() {
-
+    private Piece getPieceAt(Coordinates coordinates) {
+        return (Piece)boardSquares.get(coordinates.getCol() * 8 + coordinates.getRow()).getChildren().getFirst();
     }
 
     /**
