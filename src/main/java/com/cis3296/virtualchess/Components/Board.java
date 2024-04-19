@@ -276,12 +276,12 @@ public class Board {
                 Piece rightRook = getPieceAt(rightRookCoord);
                 Piece leftRook = getPieceAt(leftRookCoord);
                 if(rightRook != null && !rightRook.moved && rightRook.type.equals("rook")){
-                    BoardSquare square = getSquareAt(leftRookCoord);
+                    BoardSquare square = getSquareAt(new Coordinates(destSquare.coordinates.getCol()-1, destSquare.coordinates.getRow()));
                     square.getChildren().remove(rightRook);
                     square.getChildren().add(rightRook);
                 }
                 if(leftRook != null && !leftRook.moved && leftRook.type.equals("rook")){
-                    BoardSquare square = getSquareAt(rightRookCoord);
+                    BoardSquare square = getSquareAt(new Coordinates(destSquare.coordinates.getCol()+1, destSquare.coordinates.getRow()));
                     square.getChildren().remove(leftRook);
                     square.getChildren().add(leftRook);
                 }
