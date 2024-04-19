@@ -14,6 +14,9 @@ public class Game {
     public Board chessBoard;
     public BoardSettings boardSettings = new BoardSettings(BoardStyle.SANDCASTLE);
 
+    private boolean isCheck = false;
+    private boolean isCheckMate = false;
+
     /**
      * Constructor for the game
      * @param chessBoard
@@ -42,6 +45,13 @@ public class Game {
                 piece.isTurn = !piece.isTurn;
             }
         }
+        if(isCheckMate){
+            endGame();
+        }
+        if(isCheck){
+            isCheckMate = true;
+        }
+
     }
 
     public void endGame(){

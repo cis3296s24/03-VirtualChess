@@ -81,7 +81,6 @@ public class Board {
     }
 
     public Piece getPieceAt(Coordinates coordinates) {
-        System.out.println(coordinates.toString());
         BoardSquare square = getSquareAt(coordinates);
 
         if(square == null) return null;
@@ -288,19 +287,16 @@ public class Board {
      * @param coordinates on the board
      */
     public void showMoves(Coordinates coordinates){
-        for(BoardSquare square : boardSquares){
-            if(coordinates.equals(square.coordinates)){
-                // All of this for drawing the move hints
-                Circle circle1 = new Circle(10, 10, 10);
-                circle1.setFill(Color.BLACK);
-                Sphere sphere = new Sphere(8);
-                StackPane stackPane = new StackPane();
-                StackPane.setMargin(circle1, new Insets(5, 5, 5, 5));
-                stackPane.getChildren().addAll(circle1, sphere);
-                square.getChildren().add(stackPane);
-                moves.add(stackPane);
-            }
-        }
+        BoardSquare square = getSquareAt(coordinates);
+        // All of this for drawing the move hints
+        Circle circle1 = new Circle(10, 10, 10);
+        circle1.setFill(Color.BLACK);
+        Sphere sphere = new Sphere(8);
+        StackPane stackPane = new StackPane();
+        StackPane.setMargin(circle1, new Insets(5, 5, 5, 5));
+        stackPane.getChildren().addAll(circle1, sphere);
+        square.getChildren().add(stackPane);
+        moves.add(stackPane);
     }
 
     public void removeShownMoves(){
