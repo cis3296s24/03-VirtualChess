@@ -255,7 +255,6 @@ public class Board {
             prevSquare.getChildren().remove(targetPiece);
             // If the destination square has an opponent piece, remove it
             if(destSquare.containsPiece){
-                System.out.println("Got here");
                 Piece destPiece = getPieceAt(destSquare.coordinates);
                 destSquare.getChildren().remove(destPiece);
             }
@@ -292,7 +291,7 @@ public class Board {
             if(targetPiece.type.equals("pawn") || targetPiece.type.equals("king") || targetPiece.type.equals("rook")){
                 caseOfMove();
             }
-
+            System.out.println(targetPiece.type + " to " + Coordinates.toChessCoordinates(destSquare.coordinates));
             game.handleTurn();
         } else{
             System.out.println("Invalid Move");
