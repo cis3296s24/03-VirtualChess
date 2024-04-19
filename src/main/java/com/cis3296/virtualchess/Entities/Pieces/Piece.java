@@ -1,8 +1,8 @@
 package com.cis3296.virtualchess.Entities.Pieces;
 
 import com.cis3296.virtualchess.Components.Board;
-import com.cis3296.virtualchess.Components.BoardSquare;
 import com.cis3296.virtualchess.Entities.Coordinates;
+import com.cis3296.virtualchess.Systems.TurnSystem;
 import javafx.event.Event;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,6 +18,7 @@ public abstract class Piece extends ImageView {
     public Board board;
     public boolean isTurn;
     public boolean moved;
+
 
     /**
      * Constructor for a standard Piece
@@ -87,6 +88,9 @@ public abstract class Piece extends ImageView {
      */
     public void addCoordinates(ArrayList<Coordinates> moveSet, Coordinates targetCoordinates){
         Piece targetPiece = board.getPieceAt(targetCoordinates);
+        if(!board.isValidCoordinate(targetCoordinates.getCol(), targetCoordinates.getRow())){
+            return;
+        }
         // Check to see if the square has a piece on it
         if(targetPiece != null){
             // Check to see if the piece is not of the same color

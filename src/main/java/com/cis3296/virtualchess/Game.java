@@ -3,6 +3,8 @@ package com.cis3296.virtualchess;
 import com.cis3296.virtualchess.Components.Board;
 import com.cis3296.virtualchess.Components.BoardSettings;
 import com.cis3296.virtualchess.Components.BoardStyle;
+import com.cis3296.virtualchess.Entities.Coordinates;
+import com.cis3296.virtualchess.Entities.Pieces.King;
 import com.cis3296.virtualchess.Entities.Pieces.Piece;
 import com.cis3296.virtualchess.Systems.Database;
 import com.cis3296.virtualchess.Systems.TurnSystem;
@@ -14,8 +16,6 @@ public class Game {
     public Board chessBoard;
     public BoardSettings boardSettings = new BoardSettings(BoardStyle.SANDCASTLE);
 
-    private boolean isCheck = false;
-    private boolean isCheckMate = false;
 
     /**
      * Constructor for the game
@@ -45,11 +45,11 @@ public class Game {
                 piece.isTurn = !piece.isTurn;
             }
         }
-        if(isCheckMate){
+        if(turnSystem.isCheckMate){
             endGame();
         }
-        if(isCheck){
-            isCheckMate = true;
+        if(turnSystem.isCheck){
+            turnSystem.isCheckMate = true;
         }
 
     }

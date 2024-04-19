@@ -239,7 +239,7 @@ public class Board {
      * @param row row the piece is being dragged over
      * @return true if valid, false if not valid
      */
-    private boolean isValidCoordinate(int col, int row) {
+    public boolean isValidCoordinate(int col, int row) {
         return col >= 0 && col < MAX_COL && row >= 0 && row < MAX_ROW;
     }
 
