@@ -28,7 +28,7 @@ public class Knight extends Piece {
         ArrayList<Coordinates> moveSet = new ArrayList<>();
         // Coordinates to be added in the move set
         Coordinates targetCoordinates;
-      
+
         // Move up 2 and right 1
         targetCoordinates = new Coordinates(this.coordinates.getCol() - 2, this.coordinates.getRow() + 1);
         addCoordinates(moveSet, targetCoordinates);

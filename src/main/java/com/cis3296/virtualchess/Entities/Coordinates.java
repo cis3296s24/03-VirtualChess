@@ -98,4 +98,61 @@ public class Coordinates {
         }
         return super.equals(obj);
     }
+
+    public static String toChessCoordinates(Coordinates coordinates) {
+        String coordinatesString = "";
+        switch(coordinates.getCol()) {
+            case 0:
+                coordinatesString += "a";
+                break;
+            case 1:
+                coordinatesString += "b";
+                break;
+            case 2:
+                coordinatesString += "c";
+                break;
+            case 3:
+                coordinatesString += "d";
+                break;
+            case 4:
+                coordinatesString += "e";
+                break;
+            case 5:
+                coordinatesString += "f";
+                break;
+            case 6:
+                coordinatesString += "g";
+                break;
+            case 7:
+                coordinatesString += "h";
+                break;
+        }
+        switch(coordinates.getRow()) {
+            case 0:
+                coordinatesString += "1";
+                break;
+            case 1:
+                coordinatesString += "2";
+                break;
+            case 2:
+                coordinatesString += "3";
+                break;
+            case 3:
+                coordinatesString += "4";
+                break;
+            case 4:
+                coordinatesString += "5";
+                break;
+            case 5:
+                coordinatesString += "6";
+                break;
+            case 6:
+                coordinatesString += "7";
+                break;
+            case 7:
+                coordinatesString += "8";
+                break;
+        }
+        return coordinatesString;
+    }
 }

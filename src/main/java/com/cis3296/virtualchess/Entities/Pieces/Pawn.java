@@ -34,78 +34,57 @@ public class Pawn extends Piece {
     }
 
     /**
-     * This method determines the possible moves that a pawn can move based on their current position
-     * @return a move set with possible coordinates to move
+     * Determines the possible moves that a pawn can make based on its current position.
+     * @return a list of possible coordinates the pawn can move to.
      */
     @Override
-    public ArrayList<Coordinates> getMoveSet(){
-        // Set to return with all possible coordinates based on current position
+    public ArrayList<Coordinates> getMoveSet() {
         ArrayList<Coordinates> moveSet = new ArrayList<>();
-        // Coordinates to be added in the move set
         Coordinates targetCoordinates;
 
-        // Allows for pawns to move twice on their first move
-        if(!moved){
-            targetCoordinates = new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() + (direction * 2));
+
+
+        // Handle single forward movement
+        targetCoordinates = new Coordinates(coordinates.getCol(), coordinates.getRow() + direction);
+        if (isForwardPathClear(targetCoordinates)) {
             addCoordinates(moveSet, targetCoordinates);
+            // Handle initial double step move
+            if (!moved) {
+                targetCoordinates = new Coordinates(coordinates.getCol(), coordinates.getRow() + (direction * 2));
+                addCoordinates(moveSet, targetCoordinates);
+            }
         }
-        // Handles the movement moving forward
-        targetCoordinates = new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() + direction);
-        if(checkForForwardPieces(targetCoordinates)){
-            addCoordinates(moveSet, targetCoordinates);
+
+        // Handle diagonal captures
+        int[] diagonalOffsets = {-1, 1};
+        for (int offset : diagonalOffsets) {
+            targetCoordinates = new Coordinates(coordinates.getCol() + offset, coordinates.getRow() + direction);
+            if (canMoveDiagonally(targetCoordinates)) {
+                addCoordinates(moveSet, targetCoordinates);
+            }
         }
-        // Allow for diagonal movement if the pawn's forward path is blocked
-        targetCoordinates = new Coordinates(this.coordinates.getCol() - direction, this.coordinates.getRow() + direction);
-        if(checkForDiagPiece(targetCoordinates)){
-            addCoordinates(moveSet, targetCoordinates);
-        }
-        targetCoordinates = new Coordinates(this.coordinates.getCol() + direction, this.coordinates.getRow() + direction);
-        if(checkForDiagPiece(targetCoordinates)){
-            addCoordinates(moveSet, targetCoordinates);
-        }
+
         return moveSet;
     }
 
     /**
-     * Checks to see whether a pawn's forward movement is blocked
-     * @param targetCoordinates the desired forward coordinates
-     * @return whether the path is blocked or not
+     * Checks if the pawn's forward path is clear of other pieces.
+     * @param targetCoordinates the desired forward coordinates.
+     * @return true if the path is clear, false otherwise.
      */
-    public boolean checkForForwardPieces(Coordinates targetCoordinates){
-        // Go through all board squares
-        for(BoardSquare square: board.boardSquares){
-            // Find the square with the matching coordinates of pawn's pathing
-            if(square.coordinates.equals(targetCoordinates)){
-                // If the square does not have a piece then the pawn can move there
-                if(!board.pieceToSquare.containsKey(square)){
-                    // Ensure the piece is not blocked
-                    return true;
-                }
-            }
-        }
-        // Pawn is blocked and cannot move forward
-        return false;
+    public boolean isForwardPathClear(Coordinates targetCoordinates) {
+        Piece piece = board.getPieceAt(targetCoordinates);
+        return piece == null;
     }
 
     /**
-     * This checks whether a pawn can move diagonally.
-     * If there is a piece in the diagonal path, the pawn can move
-     * @param targetCoordinates the desired diagonal coordinates
-     * @return true if the is not blocked
+     * Checks if the pawn can move diagonally (for capturing pieces).
+     * @param targetCoordinates the desired diagonal coordinates.
+     * @return true if the pawn can move diagonally, false otherwise.
      */
-    public boolean checkForDiagPiece(Coordinates targetCoordinates){
-        // Go through all board squares
-        for(BoardSquare square: board.boardSquares){
-            // Find the square with the matching coordinates of pawn's pathing
-            if(square.coordinates.equals(targetCoordinates)){
-                // If the square has a piece then the pawn can move there
-                if(board.pieceToSquare.containsKey(square)){
-                    return true;
-                }
-            }
-        }
-        // The pawn cannot move diagonally, there's no piece
-        return false;
+    public boolean canMoveDiagonally(Coordinates targetCoordinates) {
+        Piece piece = board.getPieceAt(targetCoordinates);
+        return piece != null;
     }
 
     /**

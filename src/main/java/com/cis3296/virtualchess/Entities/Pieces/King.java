@@ -21,52 +21,88 @@ public class King extends Piece {
     }
 
     /**
-     * This method determines the possible moves that a king can move based on their current position
-     * @return a set with possible coordinates to move
+     * Determines the possible moves for a King based on its current position.
+     *
+     * @return An array list of possible coordinates the King can move to.
      */
     @Override
     public ArrayList<Coordinates> getMoveSet() {
-        // Set to return with all possible coordinates based on current position
         ArrayList<Coordinates> moveSet = new ArrayList<>();
-        // Coordinates to be added in the move set
-        Coordinates targetCoordinates;
+        addKingMoves(moveSet);
+        addCastlingMoves(moveSet);
+        return moveSet;
+    }
 
-        // Move to the North
-        targetCoordinates = new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow());
-        addCoordinates(moveSet, targetCoordinates);
-        // Move to the South
-        targetCoordinates = new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow());
-        addCoordinates(moveSet, targetCoordinates);
-        // Move to the West
-        targetCoordinates = new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() - 1);
-        addCoordinates(moveSet, targetCoordinates);
-        // Move to the East
-        targetCoordinates = new Coordinates(this.coordinates.getCol(), this.coordinates.getRow() + 1);
-        addCoordinates(moveSet, targetCoordinates);
+    /**
+     * Adds possible moves in all directions around the King.
+     *
+     * @param moveSet The list to add the coordinates to.
+     */
+    private void addKingMoves(ArrayList<Coordinates> moveSet) {
+        int[][] directions = { {-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, 1}, {-1, -1}, {1, 1}, {1, -1} };
+        for (int[] dir : directions) {
+            Coordinates target = new Coordinates(this.coordinates.getCol() + dir[0], this.coordinates.getRow() + dir[1]);
+            addCoordinates(moveSet, target);
+        }
+    }
 
-        // Move to the North-East
-        targetCoordinates = new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() + 1);
-        addCoordinates(moveSet, targetCoordinates);
-        // Move to the North-West
-        targetCoordinates = new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow() - 1);
-        addCoordinates(moveSet, targetCoordinates);
-        // Move to the South-East
-        targetCoordinates = new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() + 1);
-        addCoordinates(moveSet, targetCoordinates); // Move to the South-West
-        targetCoordinates = new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow() - 1);
-        addCoordinates(moveSet, targetCoordinates);
+    private void addCastlingMoves(ArrayList<Coordinates> moveSet) {
+        // Check for left castling
+        if (!moved && canCastleLeft()) {
+            addCoordinates(moveSet, new Coordinates(this.coordinates.getCol() - 2, this.coordinates.getRow()));
+        }
+        // Check for right castling
+        if (!moved && canCastleRight()) {
+            addCoordinates(moveSet, new Coordinates(this.coordinates.getCol() + 2, this.coordinates.getRow()));
+        }
+    }
 
-        // Castling
-        if (!moved) {
-            // Left Castle
-            targetCoordinates = new Coordinates(this.coordinates.getCol() - 2, this.coordinates.getRow());
-            addCoordinates(moveSet, targetCoordinates);
-            // Right Castle
-            targetCoordinates = new Coordinates(this.coordinates.getCol() + 2, this.coordinates.getRow());
-            addCoordinates(moveSet, targetCoordinates);
+    private boolean canCastleLeft() {
+        Coordinates rookPosition = new Coordinates(this.coordinates.getCol() - 4, this.coordinates.getRow());
+        Piece piece = board.getPieceAt(rookPosition);
+
+        if (!(piece instanceof Rook)) {
+            return false;
         }
 
-        return moveSet;
+        Rook leftRook = (Rook) piece;
+
+        if (leftRook.moved) {
+            return false;
+        }
+
+        // Check for clear path
+        for (int i = this.coordinates.getCol() - 1; i >= this.coordinates.getCol() - 3; i--) {
+            if (board.getPieceAt(new Coordinates(i, this.coordinates.getRow())) != null) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean canCastleRight() {
+        Coordinates rookPosition = new Coordinates(this.coordinates.getCol() + 3, this.coordinates.getRow());
+        Piece piece = board.getPieceAt(rookPosition);
+
+        if (!(piece instanceof Rook)) {
+            return false;
+        }
+
+        Rook rightRook = (Rook) piece;
+
+        if (rightRook.moved) {
+            return false;
+        }
+
+        // Check for clear path
+        for (int i = this.coordinates.getCol() + 1; i <= this.coordinates.getCol() + 2; i++) {
+            if (board.getPieceAt(new Coordinates(i, this.coordinates.getRow())) != null) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 
