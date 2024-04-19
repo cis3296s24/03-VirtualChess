@@ -174,7 +174,7 @@ public class Board {
         }
     }
 
-    private void addPiece(BoardSquare square, Piece piece){
+    public void addPiece(BoardSquare square, Piece piece){
         pieces.add(piece);
         square.getChildren().add(piece);
         pieceToSquare.put(square, piece);
@@ -304,53 +304,16 @@ public class Board {
         Pawn pawnToPromote = (Pawn) draggingPiece;
         // The current row of the pawn
         int currentRow = pawnToPromote.coordinates.getRow();
-        // Get current square
-        BoardSquare currentSquare;
-        for(BoardSquare square: boardSquares) {
-            if(square.coordinates.equals(pawnToPromote.coordinates)){
-                currentSquare = square;
-
-                if(pawnToPromote.color.equals("white") && currentRow == 0 || pawnToPromote.color.equals("black") && currentRow == 7){
-                    switch("knight"){
-                        case "rook":
-                            Rook newRook = new Rook(pawnToPromote.coordinates, pawnToPromote.color, this, pawnToPromote.isTurn);
-                            pieceToSquare.remove(currentSquare, pawnToPromote);
-                            currentSquare.getChildren().remove(pawnToPromote);
-                            addPiece(currentSquare, newRook);
-                            System.out.println("chose rook");
-                            break;
-                        case "queen":
-                            Queen newQueen = new Queen(pawnToPromote.coordinates, pawnToPromote.color, this, pawnToPromote.isTurn);
-                            pieceToSquare.remove(currentSquare, pawnToPromote);
-                            currentSquare.getChildren().remove(pawnToPromote);
-                            addPiece(currentSquare, newQueen);
-                            System.out.println("chose queen");
-                            break;
-                        case "knight":
-                            Knight newKnight = new Knight(pawnToPromote.coordinates, pawnToPromote.color, this, pawnToPromote.isTurn);
-                            pieceToSquare.remove(currentSquare, pawnToPromote);
-                            currentSquare.getChildren().remove(pawnToPromote);
-                            addPiece(currentSquare, newKnight);
-                            System.out.println("chose knight");
-                            break;
-                        case "bishop":
-                            Bishop newBishop = new Bishop(pawnToPromote.coordinates, pawnToPromote.color, this, pawnToPromote.isTurn);
-                            pieceToSquare.remove(currentSquare, pawnToPromote);
-                            currentSquare.getChildren().remove(pawnToPromote);
-                            addPiece(currentSquare, newBishop);
-                            System.out.println("chose bishop");
-                            break;
-                        default:
-                            System.out.println("not a piece");
-                            break;
-                    }
+        // If the pawn is at the opposite side then promote it
+        if(pawnToPromote.color.equals("white") && currentRow == 0 || pawnToPromote.color.equals("black") && currentRow == 7){
+            // Go through each square
+            for(BoardSquare currentSquare: boardSquares) {
+                // Find the desired square
+                if(currentSquare.coordinates.equals(pawnToPromote.coordinates)){
+                    // Promote the pawn
+                    pawnToPromote.promote(currentSquare, this);
                 }
             }
         }
-
-    }
-
-    public Game getGame(){
-        return game;
     }
 }
