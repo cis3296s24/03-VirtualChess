@@ -3,6 +3,7 @@ package com.cis3296.virtualchess.Components;
 import com.cis3296.virtualchess.*;
 import com.cis3296.virtualchess.Entities.Coordinates;
 import com.cis3296.virtualchess.Entities.Pieces.*;
+import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.input.*;
@@ -12,7 +13,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Sphere;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Board {
     // In case we need to change these column/row/size values for any reason later on...
@@ -22,12 +22,12 @@ public class Board {
     public ArrayList<BoardSquare> boardSquares = new ArrayList<>();
     private final ArrayList<StackPane> moves = new ArrayList<>();
     public ArrayList<Piece> pieces = new ArrayList<>();
-    public HashMap<BoardSquare, Piece> pieceToSquare = new HashMap<>();
 
     private final Game game;
     private final BoardSettings settings;
 
-    private Piece draggingPiece;
+    private Piece targetPiece;
+    private BoardSquare targetSquare;
 
 
     //The border surround each of the board squares
@@ -68,6 +68,7 @@ public class Board {
 
                 boardSquares.add(square);
                 square.setOnDragDropped(dragEvent -> movePiece(square));
+//                square.setOnMouseClicked(mouseEvent -> pieceOnInteract(mouseEvent, getPieceAt(square.coordinates)));
             }
         }
         addPieces();
@@ -204,19 +205,25 @@ public class Board {
 
         // each piece needs to be able to be dragged and dropped
         piece.setOnDragDetected(event -> {
-            if(piece.isTurn){
-                draggingPiece = piece;
+            pieceOnInteract(event, piece);
+        });
+    }
+
+    private void pieceOnInteract(Event event, Piece piece){
+        if(piece.isTurn){
+            targetPiece = piece;
+//            if(event instanceof DragEvent){
                 Dragboard db = piece.startDragAndDrop(TransferMode.MOVE);
-                if(Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.HINTS_CONFIG_ACCESS_STRING))){
-                    piece.showMoves(this);
-                }
                 db.setDragView(piece.getImage());
                 ClipboardContent content = new ClipboardContent();
                 content.putString(""); // You can put any content here if needed
                 db.setContent(content);
-                event.consume();
+//            }
+            if(Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.HINTS_CONFIG_ACCESS_STRING))){
+                piece.showMoves(this);
             }
-        });
+            event.consume();
+        }
     }
 
     /**
@@ -224,7 +231,7 @@ public class Board {
      * @return true if the move is valid, false if not
      */
     public boolean isValidMove(int col, int row) {
-        return draggingPiece.canMove(col, row) && isValidCoordinate(col, row);
+        return targetPiece.canMove(col, row) && isValidCoordinate(col, row);
     }
 
     /**
@@ -243,10 +250,10 @@ public class Board {
      * @param destSquare the square for the piece to be set on
      */
     private void movePiece(BoardSquare destSquare){
-        BoardSquare prevSquare = getSquareAt(draggingPiece.coordinates);
+        BoardSquare prevSquare = getSquareAt(targetPiece.coordinates);
         if(isValidMove(destSquare.coordinates.getCol(), destSquare.coordinates.getRow())){
             // Remove the piece from the square
-            prevSquare.getChildren().remove(draggingPiece);
+            prevSquare.getChildren().remove(targetPiece);
             // If the destination square has an opponent piece, remove it
             if(destSquare.containsPiece){
                 System.out.println("Got here");
@@ -255,18 +262,18 @@ public class Board {
             }
             // Add the piece to the new square
             destSquare.containsPiece = true;
-            destSquare.getChildren().add(draggingPiece);
+            destSquare.getChildren().add(targetPiece);
 
             // Set the new coordinates of the piece
-            draggingPiece.coordinates = destSquare.coordinates;
+            targetPiece.coordinates = destSquare.coordinates;
 
             // Pawn promotion
-            if(draggingPiece.type.equals("pawn")){
+            if(targetPiece.type.equals("pawn")){
                 pawnPromotion();
             }
 
             // handle any rules after first movement of pawn
-            if(draggingPiece.type.equals("pawn") || draggingPiece.type.equals("king") || draggingPiece.type.equals("rook")){
+            if(targetPiece.type.equals("pawn") || targetPiece.type.equals("king") || targetPiece.type.equals("rook")){
                 caseOfMove();
             }
 
@@ -308,8 +315,8 @@ public class Board {
      * Handles a boolean value after a pawn makes its first move
      */
     public void caseOfMove(){
-        if(!draggingPiece.moved){
-            draggingPiece.moved = true;
+        if(!targetPiece.moved){
+            targetPiece.moved = true;
         }
     }
 
@@ -318,11 +325,11 @@ public class Board {
      */
     public void pawnPromotion(){
         // The current row of the pawn
-        int currentRow = draggingPiece.coordinates.getRow();
+        int currentRow = targetPiece.coordinates.getRow();
         // If the pawn is at the opposite side then promote it
-        if(draggingPiece.color.equals("white") && currentRow == 0 || draggingPiece.color.equals("black") && currentRow == 7){
-            BoardSquare currentSquare = getSquareAt(draggingPiece.coordinates);
-            ((Pawn)draggingPiece).promote(currentSquare, this);
+        if(targetPiece.color.equals("white") && currentRow == 0 || targetPiece.color.equals("black") && currentRow == 7){
+            BoardSquare currentSquare = getSquareAt(targetPiece.coordinates);
+            ((Pawn) targetPiece).promote(currentSquare, this);
         }
     }
 }
