@@ -27,8 +27,7 @@ public class Game {
 
     public void getTheme() {
         String theme = BoardSettings.getConfig(BoardSettings.THEME_CONFIG_ACCESS_STRING);
-        BoardStyle style = BoardSettings.getStyleFromString(theme);
-        boardSettings.currentBoardStyle = style;
+        boardSettings.currentBoardStyle = BoardSettings.getStyleFromString(theme);
     }
 
 
