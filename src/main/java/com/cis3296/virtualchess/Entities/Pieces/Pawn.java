@@ -42,16 +42,17 @@ public class Pawn extends Piece {
         ArrayList<Coordinates> moveSet = new ArrayList<>();
         Coordinates targetCoordinates;
 
-        // Handle initial double step move
-        if (!moved) {
-            targetCoordinates = new Coordinates(coordinates.getCol(), coordinates.getRow() + (direction * 2));
-            addCoordinates(moveSet, targetCoordinates);
-        }
+
 
         // Handle single forward movement
         targetCoordinates = new Coordinates(coordinates.getCol(), coordinates.getRow() + direction);
         if (isForwardPathClear(targetCoordinates)) {
             addCoordinates(moveSet, targetCoordinates);
+            // Handle initial double step move
+            if (!moved) {
+                targetCoordinates = new Coordinates(coordinates.getCol(), coordinates.getRow() + (direction * 2));
+                addCoordinates(moveSet, targetCoordinates);
+            }
         }
 
         // Handle diagonal captures
