@@ -1,10 +1,7 @@
 package com.cis3296.virtualchess.Entities.Pieces;
 
 import com.cis3296.virtualchess.Components.Board;
-import com.cis3296.virtualchess.Components.BoardSquare;
 import com.cis3296.virtualchess.Entities.Coordinates;
-import com.cis3296.virtualchess.Entities.Player;
-import com.cis3296.virtualchess.Game;
 import com.cis3296.virtualchess.Systems.TurnSystem;
 import javafx.event.Event;
 import javafx.scene.image.Image;
@@ -22,6 +19,7 @@ public abstract class Piece extends ImageView {
     public boolean isTurn;
     public boolean moved;
     public boolean twoStepped;
+
 
     /**
      * Constructor for a standard Piece
@@ -90,23 +88,23 @@ public abstract class Piece extends ImageView {
      * @param targetCoordinates the coordinates of the move being made
      */
     public void addCoordinates(ArrayList<Coordinates> moveSet, Coordinates targetCoordinates){
-        // Go through all board squares and find the square the piece is supposed to move to
-        for(BoardSquare destinationSquare: board.boardSquares){
-            if(destinationSquare.coordinates.equals(targetCoordinates)){
-                // Check to see if the square has a piece on it
-                if(board.pieceToSquare.containsKey(destinationSquare)){
-                    // Check to see if the piece is not of the same color
-                    Piece opponentPiece = board.pieceToSquare.get(destinationSquare);
-                    String opponentColor = opponentPiece.color;
-                    if(!this.color.equals(opponentColor)){
-                        // Add the coordinate as a possible move
-                        moveSet.add(targetCoordinates);
-                    }
-                } else {
-                    // Add the coordinate as a possible move
-                    moveSet.add(targetCoordinates);
-                }
+        Piece targetPiece = board.getPieceAt(targetCoordinates);
+        if(!board.isValidCoordinate(targetCoordinates.getCol(), targetCoordinates.getRow())){
+            return;
+        }
+        // Check to see if the square has a piece on it
+        if(targetPiece != null){
+            // Check to see if the piece is not of the same color
+            if(!this.color.equals(targetPiece.color)){
+                // Add the coordinate as a possible move
+                moveSet.add(targetCoordinates);
             }
+            if(targetPiece instanceof King){
+                System.out.println("Check");
+            }
+        } else {
+            // Add the coordinate as a possible move
+            moveSet.add(targetCoordinates);
         }
     }
 }

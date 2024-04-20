@@ -1,9 +1,7 @@
 package com.cis3296.virtualchess.Controller;
 
 import com.cis3296.virtualchess.Components.BoardSettings;
-import com.cis3296.virtualchess.Systems.Database;
 import com.cis3296.virtualchess.Game;
-import com.cis3296.virtualchess.Entities.Player;
 import com.cis3296.virtualchess.Systems.TurnSystem;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -22,11 +20,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
-import java.util.Properties;
 
 public class GameController {
 
@@ -67,10 +62,6 @@ public class GameController {
             event.setDropCompleted(true);
             event.consume();
         });
-
-        Database.insert(new Player("Nick"), new Player("Ken"), "Lose", "Win");
-
-
     }
 
     public void updateTime(){
