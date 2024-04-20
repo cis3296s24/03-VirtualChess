@@ -14,25 +14,6 @@ public class ChessApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         Database.getInstance();
-        Stockfish stockfish = new Stockfish();
-        stockfish.startEngine();
-        String FEN = "8/6pk/8/1R5p/3K3P/8/6r1/8 b - - 0 42";
-        // send commands manually
-        stockfish.commandBuffer(() -> {
-            stockfish.setUCI();
-            stockfish.startNewGame();
-        });
-
-        // receive output dump
-        System.out.println(stockfish.getOutput(1000));
-
-        // draw board from a given position
-        System.out.println("Board state :");
-        stockfish.drawBoard(FEN);
-        stockfish.sendCommand("g7g6");
-
-
-
         try{
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainmenu.fxml")));
             Scene scene = new Scene(root);

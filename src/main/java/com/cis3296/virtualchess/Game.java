@@ -26,7 +26,30 @@ public class Game {
         this.turnSystem = TurnSystem.getInstance();
         this.turnSystem.start();
         this.chessBoard = new Board(chessBoard, boardSettings, this);
-        System.out.println(this.chessBoard);
+        setupStockfish(this.chessBoard.toString());
+    }
+
+    private void setupStockfish(String FEN) {
+        Stockfish stockfish = new Stockfish();
+        stockfish.startEngine();
+
+        // send commands manually
+        stockfish.commandBuffer(() -> {
+            stockfish.setUCI();
+            stockfish.startNewGame();
+        });
+
+        System.out.println(stockfish.getOutput(1000));
+
+        // draw board from a given position
+        System.out.println("Board state :");
+        stockfish.drawBoard(FEN);
+        stockfish.commandBuffer(() -> {
+
+        });
+        System.out.println(stockfish.getOutput(1000));
+
+
     }
 
     public void getTheme() {
