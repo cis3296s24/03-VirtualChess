@@ -27,6 +27,7 @@ public class Game {
         this.turnSystem.start();
         this.chessBoard = new Board(chessBoard, boardSettings, this);
         setupStockfish(this.chessBoard.toString());
+        System.out.println(new Coordinates("a7"));
     }
 
     private void setupStockfish(String FEN) {

@@ -18,6 +18,40 @@ public class Coordinates {
         this.y = SQUARE_SIZE * row;
     }
 
+    public Coordinates(String chessCoords) {
+        if(chessCoords.length() != 2){
+            System.out.println("Invalid coordinates");
+        } else{
+            switch(chessCoords.charAt(0)){
+                case 'a':
+                    row = 0;
+                    break;
+                case 'b':
+                    row = 1;
+                    break;
+                case 'c':
+                    row = 2;
+                    break;
+                case 'd':
+                    row = 3;
+                    break;
+                case 'e':
+                    row = 4;
+                    break;
+                case 'f':
+                    row = 5;
+                    break;
+                case 'g':
+                    row = 6;
+                    break;
+                case 'h':
+                    row = 7;
+                    break;
+            }
+            col = Integer.parseInt(chessCoords.substring(1, 2));
+        }
+    }
+
     /**
      * Sets all 4 coordinate values
      * @param col is the desired new row-coordinate to be set
