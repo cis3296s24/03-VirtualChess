@@ -6,6 +6,7 @@ import com.cis3296.virtualchess.Components.Board;
 import com.cis3296.virtualchess.Entities.Pieces.PieceUtilities.PawnPromotionPopup;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Pawn extends Piece {
 
@@ -54,7 +55,7 @@ public class Pawn extends Piece {
         if(checkForForwardPieces(targetCoordinates)){
             addCoordinates(moveSet, targetCoordinates);
         }
-        // Allow for diagonal movement if the pawn's forward path is blocked
+        // Allow for diagonal movement if the pawn can attack
         targetCoordinates = new Coordinates(this.coordinates.getCol() - direction, this.coordinates.getRow() + direction);
         if(checkForDiagPiece(targetCoordinates)){
             addCoordinates(moveSet, targetCoordinates);
@@ -63,6 +64,20 @@ public class Pawn extends Piece {
         if(checkForDiagPiece(targetCoordinates)){
             addCoordinates(moveSet, targetCoordinates);
         }
+
+        // En Passant
+        targetCoordinates = new Coordinates(this.coordinates.getCol() - direction, this.coordinates.getRow());
+        if(checkForDiagPiece(targetCoordinates)) {
+            targetCoordinates = new Coordinates(this.coordinates.getCol() - direction, this.coordinates.getRow() + direction);
+            addCoordinates(moveSet, targetCoordinates);
+        }
+        targetCoordinates = new Coordinates(this.coordinates.getCol() + direction, this.coordinates.getRow());
+        if(checkForDiagPiece(targetCoordinates)){
+            targetCoordinates = new Coordinates(this.coordinates.getCol() + direction, this.coordinates.getRow() + direction);
+            addCoordinates(moveSet, targetCoordinates);
+        }
+
+
         return moveSet;
     }
 
