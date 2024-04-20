@@ -17,8 +17,6 @@ public class Stockfish {
 	private BufferedReader processReader;
 	private OutputStreamWriter processWriter;
 
-	private static final String PATH = "stockfish/stockfish-windows-x86-64-avx2.exe";
-
 	/**
 	 * Starts Stockfish engine as a process and initializes it
 	 *
@@ -27,7 +25,7 @@ public class Stockfish {
 	 */
 	public boolean startEngine() {
 		try {
-			engineProcess = Runtime.getRuntime().exec(PATH);
+			engineProcess = Runtime.getRuntime().exec(getClass().getResource("stockfish/stockfish-windows-x86-64-avx2.exe").getPath());
 			processReader = new BufferedReader(new InputStreamReader(
 					engineProcess.getInputStream()));
 			processWriter = new OutputStreamWriter(
