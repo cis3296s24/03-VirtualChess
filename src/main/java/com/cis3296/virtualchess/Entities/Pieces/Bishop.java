@@ -74,4 +74,13 @@ public class Bishop extends Piece {
     private boolean isValidMove(int row, int col) {
         return row >= 0 && row < 8 && col >= 0 && col < 8;
     }
+
+    @Override
+    public String toString() {
+        if(color.equals("white")){
+            return "B";
+        } else{
+            return "b";
+        }
+    }
 }

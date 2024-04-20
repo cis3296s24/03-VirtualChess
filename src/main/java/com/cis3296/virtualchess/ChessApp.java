@@ -10,9 +10,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
-import static com.cis3296.virtualchess.Stockfish.NEW_GAME;
-import static com.cis3296.virtualchess.Stockfish.UCI;
-
 public class ChessApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
@@ -21,7 +18,10 @@ public class ChessApp extends Application {
         stockfish.startEngine();
         String FEN = "8/6pk/8/1R5p/3K3P/8/6r1/8 b - - 0 42";
         // send commands manually
-        stockfish.sendCommand(UCI+NEW_GAME);
+        stockfish.commandBuffer(() -> {
+            stockfish.setUCI();
+            stockfish.startNewGame();
+        });
 
         // receive output dump
         System.out.println(stockfish.getOutput(1000));

@@ -26,6 +26,7 @@ public class Game {
         this.turnSystem = TurnSystem.getInstance();
         this.turnSystem.start();
         this.chessBoard = new Board(chessBoard, boardSettings, this);
+        System.out.println(this.chessBoard);
     }
 
     public void getTheme() {

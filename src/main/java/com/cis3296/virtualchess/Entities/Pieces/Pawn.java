@@ -94,4 +94,13 @@ public class Pawn extends Piece {
         // Display buttons from PawnPromotionPopup class
         popup.displayPromotionButtons(currentSquare, board);
     }
+
+    @Override
+    public String toString() {
+        if(color.equals("white")){
+            return "P";
+        } else{
+            return "p";
+        }
+    }
 }

@@ -351,22 +351,32 @@ public class Board {
     }
 
     @Override
-    public String toString(){
-        String board = "";
-        for(int col = 0; col < MAX_COL; col++){
-            for(int row = 0; row < MAX_ROW; row++){
+    public String toString() {
+        StringBuilder board = new StringBuilder();
+        int empty = 0;
+
+        for (int row = 0; row < MAX_ROW; row++) {
+            for (int col = 0; col < MAX_COL; col++) {
                 Piece piece = getPieceAt(new Coordinates(col, row));
-                if(piece != null){
-                    board += piece.toString() + "\n";
+                if (piece != null) {
+                    if (empty != 0) {
+                        board.append(empty);
+                        empty = 0;
+                    }
+                    String pieceChar = piece.toString();
+                    board.append(pieceChar);
+                } else {
+                    empty++;
                 }
             }
-        }
-        for(BoardSquare square: boardSquares){
-            Piece piece = getPieceAt(square.coordinates);
-            if(){
-
+            if (empty != 0) {
+                board.append(empty);
+                empty = 0;
+            }
+            if (row < MAX_ROW - 1) {
+                board.append("/");
             }
         }
-        return board;
+        return board.toString();
     }
 }

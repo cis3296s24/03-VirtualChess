@@ -58,5 +58,14 @@ public class Knight extends Piece {
         return moveSet;
     }
 
+    @Override
+    public String toString() {
+        if(color.equals("white")){
+            return "N";
+        } else{
+            return "n";
+        }
+    }
+
 
 }

@@ -18,11 +18,7 @@ public class Stockfish {
 	private BufferedReader processReader;
 	private OutputStreamWriter processWriter;
 
-	public static String UCI = "uci";
-	public static String NEW_GAME = "newgame";
-
-	public static String moveTime(int interval){return "movetime "+ interval;}
-
+	private StringBuilder buff = new StringBuilder();
 
 	private static final String PATH = "stockfish/stockfish-windows-x86-64-avx2.exe";
 
@@ -58,6 +54,30 @@ public class Stockfish {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void setUCI() {
+		buff.append("uci");
+	}
+
+	public void startNewGame(){
+		buff.append("newgame");
+	}
+
+	public void move(String startPos, String endPos){
+		buff.append(startPos).append(endPos);
+	}
+
+
+	public interface CommandFun{
+		void execute();
+	}
+
+	public void commandBuffer(CommandFun fun){
+		fun.execute();
+		sendCommand(buff.toString());
+		buff = new StringBuilder();
+
 	}
 
 	/**
