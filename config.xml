@@ -3,5 +3,5 @@
 <properties>
 <comment>Configuration</comment>
 <entry key="hints">true</entry>
-<entry key="theme">Sandcastle</entry>
+<entry key="theme">Emerald</entry>
 </properties>
