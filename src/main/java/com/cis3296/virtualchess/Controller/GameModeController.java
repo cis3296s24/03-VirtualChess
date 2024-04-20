@@ -39,6 +39,7 @@ public class GameModeController {
         scene.getStylesheets().add(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
+        BoardSettings.setConfig(BoardSettings.AI_CONFIG_ACCESS_STRING, "false");
     }
 
     @FXML

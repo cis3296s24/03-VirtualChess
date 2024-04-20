@@ -7,9 +7,8 @@ import java.io.OutputStreamWriter;
 
 /**
  * A simple and efficient client to run Stockfish from Java
- * 
  * @author Rahul A R
- * 
+ * I(Nick Rucinski) worked on cleaning it up and extending it
  */
 public class Stockfish {
 
@@ -25,7 +24,7 @@ public class Stockfish {
 	 */
 	public boolean startEngine() {
 		try {
-			engineProcess = Runtime.getRuntime().exec(getClass().getResource("stockfish/stockfish-windows-x86-64-avx2.exe").getPath());
+			engineProcess = Runtime.getRuntime().exec("stockfish/stockfish-windows-x86-64-avx2.exe");
 			processReader = new BufferedReader(new InputStreamReader(
 					engineProcess.getInputStream()));
 			processWriter = new OutputStreamWriter(
