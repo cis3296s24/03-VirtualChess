@@ -20,6 +20,8 @@ public class Game {
     private Stockfish stockfish = new Stockfish();
     public String FEN;
 
+    public boolean isAiGame = false;
+
 
 
     /**
@@ -28,11 +30,12 @@ public class Game {
      */
     public Game(GridPane chessBoard) {
         getTheme();
+        isAiGame = Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.AI_CONFIG_ACCESS_STRING));
         this.turnSystem = TurnSystem.getInstance();
         this.turnSystem.start();
         this.chessBoard = new Board(chessBoard, boardSettings, this);
         this.FEN = this.chessBoard.toString();
-        setupStockfish();
+        if(isAiGame) setupStockfish();
     }
 
     private void setupStockfish() {
@@ -56,18 +59,20 @@ public class Game {
 
     public void handleTurn() {
         turnSystem.changeTurn();
-        Platform.runLater(() ->{
-            String move = "";
-            FEN = this.chessBoard.toString();
-            stockfish.drawBoard(FEN);
-            if(turnSystem.currentColor.equals("black")){
-                move = stockfish.getBestMove(FEN, 100);
+        if(isAiGame){
+            Platform.runLater(() ->{
+                String move = "";
+                FEN = this.chessBoard.toString();
+                stockfish.drawBoard(FEN);
+                if(turnSystem.currentColor.equals("black")){
+                    move = stockfish.getBestMove(FEN, 100);
 
-                System.out.println(move);
-                this.chessBoard.moveFromTo(new Coordinates(move.substring(0, 2)), new Coordinates(move.substring(2, 4)));
-            }
+                    System.out.println(move);
+                    this.chessBoard.moveFromTo(new Coordinates(move.substring(0, 2)), new Coordinates(move.substring(2, 4)));
+                }
 
-        });
+            });
+        }
 
         for(Piece piece: this.chessBoard.pieces){
             if(piece.color.equals("white")){
@@ -78,9 +83,6 @@ public class Game {
 
             }
         }
-
-
-
 
         if(turnSystem.isCheckMate){
             endGame();
