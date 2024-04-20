@@ -8,6 +8,7 @@ import com.cis3296.virtualchess.Entities.Pieces.King;
 import com.cis3296.virtualchess.Entities.Pieces.Piece;
 import com.cis3296.virtualchess.Systems.Database;
 import com.cis3296.virtualchess.Systems.TurnSystem;
+import javafx.application.Platform;
 import javafx.scene.layout.GridPane;
 
 public class Game {
@@ -15,6 +16,10 @@ public class Game {
     private TurnSystem turnSystem;
     public Board chessBoard;
     public BoardSettings boardSettings = new BoardSettings(BoardStyle.SANDCASTLE);
+
+    private Stockfish stockfish = new Stockfish();
+    public String FEN;
+
 
 
     /**
@@ -26,31 +31,21 @@ public class Game {
         this.turnSystem = TurnSystem.getInstance();
         this.turnSystem.start();
         this.chessBoard = new Board(chessBoard, boardSettings, this);
-        setupStockfish(this.chessBoard.toString());
-        System.out.println(new Coordinates("a7"));
+        this.FEN = this.chessBoard.toString();
+        setupStockfish();
     }
 
-    private void setupStockfish(String FEN) {
-        Stockfish stockfish = new Stockfish();
+    private void setupStockfish() {
         stockfish.startEngine();
 
         // send commands manually
-        stockfish.commandBuffer(() -> {
-            stockfish.setUCI();
-            stockfish.startNewGame();
-        });
+        stockfish.setUCINewGame();
 
-        System.out.println(stockfish.getOutput(1000));
+        System.out.println(stockfish.getOutput(0));
 
         // draw board from a given position
         System.out.println("Board state :");
         stockfish.drawBoard(FEN);
-        stockfish.commandBuffer(() -> {
-
-        });
-        System.out.println(stockfish.getOutput(1000));
-
-
     }
 
     public void getTheme() {
@@ -61,6 +56,18 @@ public class Game {
 
     public void handleTurn() {
         turnSystem.changeTurn();
+        Platform.runLater(() ->{
+            String move = "";
+            FEN = this.chessBoard.toString();
+            stockfish.drawBoard(FEN);
+            if(turnSystem.currentColor.equals("black")){
+                move = stockfish.getBestMove(FEN, 100);
+
+                System.out.println(move);
+                this.chessBoard.moveFromTo(new Coordinates(move.substring(0, 2)), new Coordinates(move.substring(2, 4)));
+            }
+
+        });
 
         for(Piece piece: this.chessBoard.pieces){
             if(piece.color.equals("white")){
@@ -68,8 +75,13 @@ public class Game {
             }
             if(piece.color.equals("black")){
                 piece.isTurn = !piece.isTurn;
+
             }
         }
+
+
+
+
         if(turnSystem.isCheckMate){
             endGame();
         }
@@ -82,5 +94,6 @@ public class Game {
     public void endGame(){
         Database.insert(turnSystem.getWhitePlayer(), turnSystem.getBlackPlayer(), "Lose", "Win");
         turnSystem.stop();
+        stockfish.stopEngine();
     }
 }

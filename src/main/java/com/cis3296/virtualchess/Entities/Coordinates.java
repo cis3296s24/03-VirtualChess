@@ -24,31 +24,31 @@ public class Coordinates {
         } else{
             switch(chessCoords.charAt(0)){
                 case 'a':
-                    row = 0;
+                    col = 0;
                     break;
                 case 'b':
-                    row = 1;
+                    col = 1;
                     break;
                 case 'c':
-                    row = 2;
+                    col = 2;
                     break;
                 case 'd':
-                    row = 3;
+                    col = 3;
                     break;
                 case 'e':
-                    row = 4;
+                    col = 4;
                     break;
                 case 'f':
-                    row = 5;
+                    col = 5;
                     break;
                 case 'g':
-                    row = 6;
+                    col = 6;
                     break;
                 case 'h':
-                    row = 7;
+                    col = 7;
                     break;
             }
-            col = Integer.parseInt(chessCoords.substring(1, 2));
+            row = Integer.parseInt(chessCoords.substring(1, 2))-1;
         }
     }
 
