@@ -260,7 +260,7 @@ public class Board {
         BoardSquare toSquare = getSquareAt(to);
         Piece fromPiece = getPieceAt(from);
         Piece toPiece = getPieceAt(to);
-        if(isValidMove(to.getCol(), to.getRow(), toPiece) && fromPiece != null){
+        if(fromPiece != null && isValidMove(to.getCol(), to.getRow(), fromPiece)){
             // Remove the piece from the square
             fromSquare.getChildren().remove(fromPiece);
             // If the destination square has an opponent piece, remove it
@@ -277,7 +277,7 @@ public class Board {
 //            pieceCheck(fromPiece, toSquare);
 
             System.out.println(fromPiece.type + " to " + Coordinates.toChessCoordinates(to));
-//            game.handleTurn();
+            game.handleTurn();
 
         } else{
             System.out.println("Invalid Move");

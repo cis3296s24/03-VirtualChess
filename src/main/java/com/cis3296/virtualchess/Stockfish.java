@@ -82,8 +82,25 @@ public class Stockfish {
 	}
 	public String getBestMove(String fen, int waitTime) {
 		sendCommand("position fen " + fen);
-		sendCommand("go movetime " + waitTime);
-		return getOutput(waitTime + 20).split("bestmove ")[1].split(" ")[0];
+		sendCommand("go depth 1 movetime " + waitTime);
+
+		// Wait for the output to be ready
+		String output = getOutput(waitTime + 20);
+		System.out.println("Best move RAW: " + output);
+
+		// Split the output to find the best move
+		String[] lines = output.split("\n");
+		for (String line : lines) {
+			if (line.startsWith("bestmove")) {
+				String[] parts = line.split(" ");
+				if (parts.length >= 2) {
+					return parts[1]; // Return the best move
+				}
+			}
+		}
+
+		// Return null if no best move found
+		return null;
 	}
 
 	/**

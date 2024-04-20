@@ -48,8 +48,9 @@ public class Coordinates {
                     col = 7;
                     break;
             }
-            row = Integer.parseInt(chessCoords.substring(1, 2))-1;
+            row = (8 - Integer.parseInt(chessCoords.substring(1, 2)));
         }
+        System.out.println(this.toString());
     }
 
     /**
