@@ -31,6 +31,17 @@ public class TutorialScreenController {
     }
 
     @FXML
+    public void switchToPieceInfo(ActionEvent event) throws IOException {
+        // Assuming you have a separate FXML for pieces details
+        Parent pieceRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/Pieces.fxml")));
+        Stage pieceStage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Scene pieceScene = new Scene(pieceRoot);
+        pieceStage.setScene(pieceScene);
+        pieceStage.show();
+    }
+
+
+    @FXML
     public void switchToSelection(ActionEvent event) throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/Tutorial Screen.fxml")));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
