@@ -64,6 +64,23 @@ public class Pawn extends Piece {
             }
         }
 
+        //Handle En Passant
+        targetCoordinates = new Coordinates(this.coordinates.getCol() - direction, this.coordinates.getRow());
+        if(canMoveDiagonally(targetCoordinates) &&
+                !board.getPieceAt(targetCoordinates).color.equals(this.color) &&
+                board.getPieceAt(targetCoordinates).type.equals("pawn") &&
+        board.getPieceAt(targetCoordinates).twoStepped) {
+            targetCoordinates = new Coordinates(this.coordinates.getCol() - direction, this.coordinates.getRow() + direction);
+            addCoordinates(moveSet, targetCoordinates);
+        }
+        targetCoordinates = new Coordinates(this.coordinates.getCol() + direction, this.coordinates.getRow());
+        if(canMoveDiagonally(targetCoordinates) &&
+                !board.getPieceAt(targetCoordinates).color.equals(this.color) &&
+                board.getPieceAt(targetCoordinates).type.equals("pawn") &&
+                board.getPieceAt(targetCoordinates).twoStepped){
+            targetCoordinates = new Coordinates(this.coordinates.getCol() + direction, this.coordinates.getRow() + direction);
+            addCoordinates(moveSet, targetCoordinates);
+        }
         return moveSet;
     }
 
