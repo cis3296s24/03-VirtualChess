@@ -289,8 +289,9 @@ public class Board {
 
             // handle any rules after first movement of pawn
             if(targetPiece.type.equals("pawn") || targetPiece.type.equals("king") || targetPiece.type.equals("rook")){
-                caseOfMove();
+                caseOfMove(destSquare);
             }
+
             System.out.println(targetPiece.type + " to " + Coordinates.toChessCoordinates(destSquare.coordinates));
             game.handleTurn();
         } else{
@@ -329,9 +330,17 @@ public class Board {
     /**
      * Handles a boolean value after a pawn makes its first move
      */
-    public void caseOfMove(){
+    public void caseOfMove(BoardSquare destSquare){
         if(!targetPiece.moved){
             targetPiece.moved = true;
+        }
+        if (targetPiece.type.equals("pawn")){
+            if(targetPiece.color.equals("white") && destSquare.coordinates.getRow() == 4) {
+                targetPiece.twoStepped = true;
+            }
+            else if(targetPiece.color.equals("black") && destSquare.coordinates.getRow() == 3){
+                targetPiece.twoStepped = true;
+            }
         }
     }
 
