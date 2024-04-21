@@ -61,4 +61,13 @@ public class Rook extends Piece {
 
         return moveSet;
     }
+
+    @Override
+    public String toString() {
+        if(color.equals("white")){
+            return "R";
+        } else{
+            return "r";
+        }
+    }
 }

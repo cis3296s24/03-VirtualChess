@@ -15,6 +15,7 @@ public class BoardSettings {
     public static final String THEME_CONFIG_ACCESS_STRING = "theme";
     public static final String UNDO_CONFIG_ACCESS_STRING = "undo";
     public static final String HINTS_CONFIG_ACCESS_STRING = "hints";
+    public static final String AI_CONFIG_ACCESS_STRING = "ai";
 
     private static Properties prop = new Properties();
 

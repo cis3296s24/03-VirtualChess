@@ -106,4 +106,13 @@ public class Queen extends Piece {
         return row >= 0 && row < 8 && col >= 0 && col < 8;
     }
 
+    @Override
+    public String toString() {
+        if(color.equals("white")){
+            return "Q";
+        } else{
+            return "q";
+        }
+    }
+
 }

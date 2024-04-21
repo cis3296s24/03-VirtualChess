@@ -12,7 +12,7 @@ public class TurnSystem {
     private Timer blackTimer = null;
 
     private Player currentPlayer;
-    public String currentColor = "";
+    public String currentColor;
 
     private Text currentPlayerText;
 
@@ -67,7 +67,6 @@ public class TurnSystem {
         } else {
             currentPlayer = whitePlayer;
             currentColor = "white";
-
             blackTimer.pause();
             whiteTimer.unpause();
         }

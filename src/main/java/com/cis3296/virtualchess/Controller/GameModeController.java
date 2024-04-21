@@ -1,5 +1,6 @@
 package com.cis3296.virtualchess.Controller;
 
+import com.cis3296.virtualchess.Components.BoardSettings;
 import com.cis3296.virtualchess.Entities.Player;
 import com.cis3296.virtualchess.Systems.TurnSystem;
 import javafx.event.ActionEvent;
@@ -31,13 +32,25 @@ public class GameModeController {
     }
 
     @FXML
-    public void switchToSelection(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/playerSelectionScreen.fxml")));
+    public void switchToSelectionPVP(ActionEvent event) throws IOException {
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/playerSelectionScreenPVP.fxml")));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
+        BoardSettings.setConfig(BoardSettings.AI_CONFIG_ACCESS_STRING, "false");
+    }
+
+    @FXML
+    public void switchToSelectionPVC(ActionEvent event) throws IOException {
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/playerSelectionScreenPVC.fxml")));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css").toExternalForm());
+        stage.setScene(scene);
+        stage.show();
+        BoardSettings.setConfig(BoardSettings.AI_CONFIG_ACCESS_STRING, "true");
     }
 
     @FXML
