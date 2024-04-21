@@ -20,7 +20,6 @@ public class Game {
     private Stockfish stockfish = new Stockfish();
     public String FEN;
 
-    public boolean isAiGame = false;
 
 
 
@@ -30,12 +29,11 @@ public class Game {
      */
     public Game(GridPane chessBoard) {
         getTheme();
-        isAiGame = Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.AI_CONFIG_ACCESS_STRING));
         this.turnSystem = TurnSystem.getInstance();
         this.turnSystem.start();
         this.chessBoard = new Board(chessBoard, boardSettings, this);
         this.FEN = this.chessBoard.toString();
-        if(isAiGame) setupStockfish();
+        if(Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.AI_CONFIG_ACCESS_STRING))) setupStockfish();
     }
 
     private void setupStockfish() {
@@ -59,7 +57,7 @@ public class Game {
 
     public void handleTurn() {
         turnSystem.changeTurn();
-        if(isAiGame){
+        if(Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.AI_CONFIG_ACCESS_STRING))){
             Platform.runLater(() ->{
                 String move = "";
                 FEN = this.chessBoard.toString();
@@ -101,6 +99,8 @@ public class Game {
     public void endGame(){
         Database.insert(turnSystem.getWhitePlayer(), turnSystem.getBlackPlayer(), "Lose", "Win");
         turnSystem.stop();
-        stockfish.stopEngine();
+        if(Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.AI_CONFIG_ACCESS_STRING))){
+            stockfish.stopEngine();
+        }
     }
 }
