@@ -291,6 +291,28 @@ public class Board {
             if(targetPiece.type.equals("pawn") || targetPiece.type.equals("king") || targetPiece.type.equals("rook")){
                 caseOfMove(destSquare);
             }
+            if(targetPiece.type.equals("pawn")){
+                Coordinates topLeft = new Coordinates(targetPiece.coordinates.getCol()-1, targetPiece.coordinates.getRow()-1);
+                Coordinates topRight = new Coordinates(targetPiece.coordinates.getCol()+1, targetPiece.coordinates.getRow()-1);
+                Coordinates bottomLeft = new Coordinates(targetPiece.coordinates.getCol()-1, targetPiece.coordinates.getRow()+1);
+                Coordinates bottomRight = new Coordinates(targetPiece.coordinates.getCol()+1, targetPiece.coordinates.getRow()+1);
+                if(targetPiece.color.equals("white") &&
+                        destSquare.coordinates.getRow() == 4 &&
+                        prevSquare.coordinates.equals(bottomRight) || prevSquare.coordinates.equals(bottomLeft)){
+                    BoardSquare square = getSquareAt(new Coordinates(targetPiece.coordinates.getCol(), targetPiece.coordinates.getRow()+1));
+                    if(!square.getChildren().isEmpty()){
+                        square.getChildren().removeFirst();
+                    }
+                } else if(targetPiece.color.equals("black") &&
+                        destSquare.coordinates.getRow() == 3 &&
+                        prevSquare.coordinates.equals(topRight) || prevSquare.coordinates.equals(topLeft)){
+                    BoardSquare square = getSquareAt(new Coordinates(targetPiece.coordinates.getCol(), targetPiece.coordinates.getRow()-1));
+                    if(!square.getChildren().isEmpty()){
+                        square.getChildren().removeFirst();
+                    }
+
+                }
+            }
 
             System.out.println(targetPiece.type + " to " + Coordinates.toChessCoordinates(destSquare.coordinates));
             game.handleTurn();
