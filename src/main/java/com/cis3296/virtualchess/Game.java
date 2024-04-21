@@ -75,6 +75,11 @@ public class Game {
         }
 
         for(Piece piece: this.chessBoard.pieces){
+            if (turnSystem.currentColor.equals("white") && piece.color.equals("white")) {
+                piece.twoStepped = false;
+            } else if (turnSystem.currentColor.equals("black") && piece.color.equals("black")) {
+                piece.twoStepped = false;
+            }
             if(piece.color.equals("white")){
                 piece.isTurn = !piece.isTurn;
             }
