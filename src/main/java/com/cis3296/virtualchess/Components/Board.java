@@ -77,6 +77,9 @@ public class Board {
             }
         }
         addPieces();
+        for (Piece piece : this.pieces) {
+            piece.currentMoveSet = piece.getMoveSet();
+        }
     }
 
     public BoardSquare getSquareAt(Coordinates coordinates) {

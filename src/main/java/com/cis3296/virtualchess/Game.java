@@ -57,6 +57,9 @@ public class Game {
 
     public void handleTurn() {
         turnSystem.changeTurn();
+        for (Piece piece : chessBoard.pieces) {
+            piece.currentMoveSet = piece.getMoveSet();
+        }
         if(Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.AI_CONFIG_ACCESS_STRING))){
             Platform.runLater(() ->{
                 String move = "";
@@ -83,8 +86,8 @@ public class Game {
             }
             if(piece.color.equals("black")){
                 piece.isTurn = !piece.isTurn;
-
             }
+            piece.getMoveSet();
         }
 
         if(turnSystem.isCheckMate){
