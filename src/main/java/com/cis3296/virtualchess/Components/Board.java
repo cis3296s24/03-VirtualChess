@@ -3,6 +3,7 @@ package com.cis3296.virtualchess.Components;
 import com.cis3296.virtualchess.*;
 import com.cis3296.virtualchess.Entities.Coordinates;
 import com.cis3296.virtualchess.Entities.Pieces.*;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -22,6 +23,8 @@ public class Board {
     public ArrayList<BoardSquare> boardSquares = new ArrayList<>();
     private final ArrayList<StackPane> moves = new ArrayList<>();
     public ArrayList<Piece> pieces = new ArrayList<>();
+
+    private Piece kingW;
 
     private final Game game;
     private final BoardSettings settings;
@@ -67,7 +70,9 @@ public class Board {
                 chessBoard.add(square, col, row, 1, 1);
 
                 boardSquares.add(square);
-                square.setOnDragDropped(dragEvent -> movePiece(square));
+                square.setOnDragDropped(dragEvent -> {
+                    movePiece(square);
+                });
 //                square.setOnMouseClicked(mouseEvent -> pieceOnInteract(mouseEvent, getPieceAt(square.coordinates)));
             }
         }
@@ -151,7 +156,7 @@ public class Board {
                     addPiece(square, queenW);
                 }
                 if(square.coordinates.getCol() == 4){
-                    Piece kingW = new King(square.coordinates, "white", this, whiteTurn);
+                    kingW = new King(square.coordinates, "white", this, whiteTurn);
                     addPiece(square, kingW);
                 }
 
@@ -232,6 +237,13 @@ public class Board {
     public boolean isValidMove(int col, int row) {
         return targetPiece.canMove(col, row) && isValidCoordinate(col, row);
     }
+    public boolean isValidMove(int col, int row, Piece targetPiece) {
+        if(targetPiece != null){
+            return targetPiece.canMove(col, row) && isValidCoordinate(col, row);
+        } else {
+            return isValidCoordinate(col, row);
+        }
+    }
 
     /**
      * Checks to see if the coordinates are valid coordinates on the GridPane
@@ -241,6 +253,58 @@ public class Board {
      */
     public boolean isValidCoordinate(int col, int row) {
         return col >= 0 && col < MAX_COL && row >= 0 && row < MAX_ROW;
+    }
+    public void moveFromTo(Coordinates from, Coordinates to){
+        BoardSquare fromSquare = getSquareAt(from);
+        BoardSquare toSquare = getSquareAt(to);
+        Piece fromPiece = getPieceAt(from);
+        Piece toPiece = getPieceAt(to);
+        if(fromPiece != null && isValidMove(to.getCol(), to.getRow(), fromPiece)){
+            // Remove the piece from the square
+            fromSquare.getChildren().remove(fromPiece);
+            // If the destination square has an opponent piece, remove it
+            if(toPiece != null){
+                toSquare.getChildren().remove(toPiece);
+            }
+            // Add the piece to the new square
+            toSquare.containsPiece = true;
+            toSquare.getChildren().add(fromPiece);
+
+            // Set the new coordinates of the piece
+            fromPiece.coordinates = toSquare.coordinates;
+
+//            pieceCheck(fromPiece, toSquare);
+
+            //            if(targetPiece.type.equals("pawn")) {
+//                Coordinates topLeft = new Coordinates(targetPiece.coordinates.getCol() - 1, targetPiece.coordinates.getRow() - 1);
+//                Coordinates topRight = new Coordinates(targetPiece.coordinates.getCol() + 1, targetPiece.coordinates.getRow() - 1);
+//                Coordinates bottomLeft = new Coordinates(targetPiece.coordinates.getCol() - 1, targetPiece.coordinates.getRow() + 1);
+//                Coordinates bottomRight = new Coordinates(targetPiece.coordinates.getCol() + 1, targetPiece.coordinates.getRow() + 1);
+//                if (targetPiece.color.equals("white") &&
+//                        prevSquare.coordinates.getRow() == 3 &&
+//                        (prevSquare.coordinates.equals(bottomRight) || prevSquare.coordinates.equals(bottomLeft))) {
+//                    BoardSquare square = getSquareAt(new Coordinates(targetPiece.coordinates.getCol(), targetPiece.coordinates.getRow() + 1));
+//                    System.out.println(square.coordinates);
+//                    if (!square.getChildren().isEmpty()) {
+//                        square.getChildren().removeFirst();
+//                    }
+//                } else if (targetPiece.color.equals("black") &&
+//                        prevSquare.coordinates.getRow() == 4 &&
+//                        (prevSquare.coordinates.equals(topRight) || prevSquare.coordinates.equals(topLeft))) {
+//                    BoardSquare square = getSquareAt(new Coordinates(targetPiece.coordinates.getCol(), targetPiece.coordinates.getRow() - 1));
+//                    if (!square.getChildren().isEmpty()) {
+//                        square.getChildren().removeFirst();
+//                    }
+//
+//                }
+//            }
+
+            System.out.println(fromPiece.type + " to " + Coordinates.toChessCoordinates(to));
+            game.handleTurn();
+
+        } else{
+            System.out.println("Invalid Move");
+        }
     }
 
     /**
@@ -265,36 +329,64 @@ public class Board {
             // Set the new coordinates of the piece
             targetPiece.coordinates = destSquare.coordinates;
 
-            // Pawn promotion
-            if(targetPiece.type.equals("pawn")){
-                pawnPromotion();
-            }
+            pieceCheck(targetPiece, destSquare, prevSquare);
 
-            if(targetPiece.type.equals("king")){
-                Coordinates rightRookCoord = new Coordinates(destSquare.coordinates.getCol()+1, destSquare.coordinates.getRow());
-                Coordinates leftRookCoord = new Coordinates(destSquare.coordinates.getCol()-2, destSquare.coordinates.getRow());
-                Piece rightRook = getPieceAt(rightRookCoord);
-                Piece leftRook = getPieceAt(leftRookCoord);
-                if(rightRook != null && !rightRook.moved && rightRook.type.equals("rook")){
-                    BoardSquare square = getSquareAt(new Coordinates(destSquare.coordinates.getCol()-1, destSquare.coordinates.getRow()));
-                    square.getChildren().remove(rightRook);
-                    square.getChildren().add(rightRook);
-                }
-                if(leftRook != null && !leftRook.moved && leftRook.type.equals("rook")){
-                    BoardSquare square = getSquareAt(new Coordinates(destSquare.coordinates.getCol()+1, destSquare.coordinates.getRow()));
-                    square.getChildren().remove(leftRook);
-                    square.getChildren().add(leftRook);
-                }
-            }
-
-            // handle any rules after first movement of pawn
-            if(targetPiece.type.equals("pawn") || targetPiece.type.equals("king") || targetPiece.type.equals("rook")){
-                caseOfMove();
-            }
             System.out.println(targetPiece.type + " to " + Coordinates.toChessCoordinates(destSquare.coordinates));
             game.handleTurn();
         } else{
             System.out.println("Invalid Move");
+        }
+    }
+
+    private void pieceCheck(Piece targetPiece, BoardSquare destSquare, BoardSquare prevSquare){
+        // Pawn promotion
+        if(targetPiece.type.equals("pawn")){
+            pawnPromotion();
+        }
+
+        if(targetPiece.type.equals("king")){
+            Coordinates rightRookCoord = new Coordinates(destSquare.coordinates.getCol()+1, destSquare.coordinates.getRow());
+            Coordinates leftRookCoord = new Coordinates(destSquare.coordinates.getCol()-2, destSquare.coordinates.getRow());
+            Piece rightRook = getPieceAt(rightRookCoord);
+            Piece leftRook = getPieceAt(leftRookCoord);
+            if(rightRook != null && !rightRook.moved && rightRook.type.equals("rook")){
+                BoardSquare square = getSquareAt(new Coordinates(destSquare.coordinates.getCol()-1, destSquare.coordinates.getRow()));
+                square.getChildren().remove(rightRook);
+                square.getChildren().add(rightRook);
+            }
+            if(leftRook != null && !leftRook.moved && leftRook.type.equals("rook")){
+                BoardSquare square = getSquareAt(new Coordinates(destSquare.coordinates.getCol()+1, destSquare.coordinates.getRow()));
+                square.getChildren().remove(leftRook);
+                square.getChildren().add(leftRook);
+            }
+        }
+
+        // handle any rules after first movement of pawn
+        if(targetPiece.type.equals("pawn") || targetPiece.type.equals("king") || targetPiece.type.equals("rook")){
+            caseOfMove(destSquare);
+        }
+        if(targetPiece.type.equals("pawn")) {
+            Coordinates topLeft = new Coordinates(targetPiece.coordinates.getCol() - 1, targetPiece.coordinates.getRow() - 1);
+            Coordinates topRight = new Coordinates(targetPiece.coordinates.getCol() + 1, targetPiece.coordinates.getRow() - 1);
+            Coordinates bottomLeft = new Coordinates(targetPiece.coordinates.getCol() - 1, targetPiece.coordinates.getRow() + 1);
+            Coordinates bottomRight = new Coordinates(targetPiece.coordinates.getCol() + 1, targetPiece.coordinates.getRow() + 1);
+            if (targetPiece.color.equals("white") &&
+                    prevSquare.coordinates.getRow() == 3 &&
+                    (prevSquare.coordinates.equals(bottomRight) || prevSquare.coordinates.equals(bottomLeft))) {
+                BoardSquare square = getSquareAt(new Coordinates(targetPiece.coordinates.getCol(), targetPiece.coordinates.getRow() + 1));
+                System.out.println(square.coordinates);
+                if (!square.getChildren().isEmpty()) {
+                    square.getChildren().removeFirst();
+                }
+            } else if (targetPiece.color.equals("black") &&
+                    prevSquare.coordinates.getRow() == 4 &&
+                    (prevSquare.coordinates.equals(topRight) || prevSquare.coordinates.equals(topLeft))) {
+                BoardSquare square = getSquareAt(new Coordinates(targetPiece.coordinates.getCol(), targetPiece.coordinates.getRow() - 1));
+                if (!square.getChildren().isEmpty()) {
+                    square.getChildren().removeFirst();
+                }
+
+            }
         }
     }
 
@@ -329,9 +421,17 @@ public class Board {
     /**
      * Handles a boolean value after a pawn makes its first move
      */
-    public void caseOfMove(){
+    public void caseOfMove(BoardSquare destSquare){
         if(!targetPiece.moved){
             targetPiece.moved = true;
+        }
+        if (targetPiece.type.equals("pawn")){
+            if(targetPiece.color.equals("white") && destSquare.coordinates.getRow() == 4) {
+                targetPiece.twoStepped = true;
+            }
+            else if(targetPiece.color.equals("black") && destSquare.coordinates.getRow() == 3){
+                targetPiece.twoStepped = true;
+            }
         }
     }
 
@@ -346,5 +446,35 @@ public class Board {
             BoardSquare currentSquare = getSquareAt(targetPiece.coordinates);
             ((Pawn) targetPiece).promote(currentSquare, this);
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder board = new StringBuilder();
+        int empty = 0;
+
+        for (int row = 0; row < MAX_ROW; row++) {
+            for (int col = 0; col < MAX_COL; col++) {
+                Piece piece = getPieceAt(new Coordinates(col, row));
+                if (piece != null) {
+                    if (empty != 0) {
+                        board.append(empty);
+                        empty = 0;
+                    }
+                    String pieceChar = piece.toString();
+                    board.append(pieceChar);
+                } else {
+                    empty++;
+                }
+            }
+            if (empty != 0) {
+                board.append(empty);
+                empty = 0;
+            }
+            if (row < MAX_ROW - 1) {
+                board.append("/");
+            }
+        }
+        return board.toString();
     }
 }

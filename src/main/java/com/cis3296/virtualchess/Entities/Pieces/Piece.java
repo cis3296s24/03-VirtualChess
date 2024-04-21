@@ -18,6 +18,7 @@ public abstract class Piece extends ImageView {
     public Board board;
     public boolean isTurn;
     public boolean moved;
+    public boolean twoStepped;
 
 
     /**

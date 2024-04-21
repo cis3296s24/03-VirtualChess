@@ -12,6 +12,7 @@ public class TurnSystem {
     private Timer blackTimer = null;
 
     private Player currentPlayer;
+    public String currentColor;
 
     private Text currentPlayerText;
 
@@ -35,6 +36,7 @@ public class TurnSystem {
 
     public void start(){
         currentPlayer = whitePlayer;
+        currentColor = "white";
         if(whiteTimer == null || blackTimer == null){
             whiteTimer = new Timer(DEFAULT_TIMER_AMOUNT);
             blackTimer = new Timer(DEFAULT_TIMER_AMOUNT);
@@ -58,12 +60,13 @@ public class TurnSystem {
     public void changeTurn(){
         if(currentPlayer == whitePlayer){
             currentPlayer = blackPlayer;
+            currentColor = "black";
 
             whiteTimer.pause();
             blackTimer.unpause();
         } else {
             currentPlayer = whitePlayer;
-
+            currentColor = "white";
             blackTimer.pause();
             whiteTimer.unpause();
         }

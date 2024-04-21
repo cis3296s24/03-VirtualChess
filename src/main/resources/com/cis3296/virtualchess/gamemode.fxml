@@ -5,9 +5,9 @@
 
 <AnchorPane fx:id="menu" prefHeight="800.0" prefWidth="810.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cis3296.virtualchess.Controller.GameModeController">
 
-    <Button layoutX="227.0" layoutY="271.0" mnemonicParsing="false" onAction="#switchToSelection" prefHeight="58.0" prefWidth="355.0" text="Player vs Player" />
+    <Button layoutX="227.0" layoutY="271.0" mnemonicParsing="false" onAction="#switchToSelectionPVP" prefHeight="58.0" prefWidth="355.0" text="Player vs Player" />
 
-    <Button layoutX="227.0" layoutY="371.0" mnemonicParsing="false" onAction="#switchToSelection" prefHeight="58.0" prefWidth="355.0" text="Player vs Computer" />
+    <Button layoutX="227.0" layoutY="371.0" mnemonicParsing="false" onAction="#switchToSelectionPVC" prefHeight="58.0" prefWidth="355.0" text="Player vs Computer" />
 
     <Button layoutX="227.0" layoutY="700.0" mnemonicParsing="false" onAction="#switchToMainMenu" prefHeight="58.0" prefWidth="355.0" text="Back" />
     </AnchorPane>

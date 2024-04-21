@@ -36,8 +36,6 @@ public class GameController {
     @FXML
     private Text currentTurnText;
 
-    private Timeline timeline;
-
     private TurnSystem turnSystem;
     Game game;
 
@@ -47,7 +45,7 @@ public class GameController {
     public void initialize(){
         this.game = new Game(chessBoard);
         this.turnSystem = TurnSystem.getInstance();
-        timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), event -> updateTime()));
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), event -> updateTime()));
         timeline.setCycleCount(Timeline.INDEFINITE); // Repeat indefinitely
         timeline.play();
         currentTurnText.setText("Current Turn:\n" + turnSystem.getCurrentPlayer().name);
