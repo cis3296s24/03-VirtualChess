@@ -1,3 +1,7 @@
+/*
+ * Citation:
+ * All images and gifs are collected from Chess.com, Britannica kids.com and ragchess.com
+ */
 package com.cis3296.virtualchess.Controller;
 
 import com.cis3296.virtualchess.Systems.Database;
@@ -8,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -28,19 +33,13 @@ public class PieceTutorialController {
     ImageView additionalImageView;
 
     @FXML
+    ImageView additionalImageView2;
+
+    @FXML
     AnchorPane piece;
 
     @FXML
     Label descriptionLabel;
-
-    /**
-     * Creates the chess board
-     *//*
-    public void initialize(){
-        Image image = new Image(String.valueOf(getClass().getResource("/assets/menuImages/VirtualChess!.gif")));
-        imageView.setImage(image);
-        Database.getInstance();
-    }*/
 
     public void switchToPawn(ActionEvent event) throws IOException {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Pieces & Basic animated/PawnMove.gif")));
@@ -96,6 +95,7 @@ public class PieceTutorialController {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/Tutorial Screen.fxml")));
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css")).toExternalForm());
         stage.setScene(scene);
         stage.show();
     }
@@ -103,13 +103,13 @@ public class PieceTutorialController {
     public void switchToSetupBoard(ActionEvent event) throws IOException {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Pieces & Basic animated/SetupBoard.gif")));
         imageView.setImage(image);
-        descriptionLabel.setText("Lay out the light square in the bottom-right corner\n" +
-                "Set up the pawns on the second rank\n" +
-                "Put your rooks in the corners\n" +
-                "Place your knights next to the rooks\n" +
-                "Bishops go next to knights\n" +
-                "Queen goes on her color\n" +
-                "Place your king in the last square available\n" +
+        descriptionLabel.setText("Lay out the light square in the bottom-right corner " +
+                "Set up the pawns on the second rank " +
+                "Put your rooks in the corners " +
+                "Place your knights next to the rooks " +
+                "Bishops go next to knights" +
+                "Queen goes on her color." +
+                "Place your king in the last square available." +
                 "Don't forget, white moves first!.");
     }
 
@@ -123,7 +123,7 @@ public class PieceTutorialController {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/SetupBoard.png")));
         imageView.setImage(image);
         descriptionLabel.setText("Each piece has a numerical value that can help you evaluate whether exchanging it makes sense." +
-                " pawns = 1\n, " +
+                " pawns = 1, " +
                 " knights = 3," +
                 " bishops = 3," +
                 " rooks = 5," +
@@ -134,9 +134,11 @@ public class PieceTutorialController {
     public void switchToCheck(ActionEvent event) {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Check/QueenCheck.png")));
         Image additionalImage = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Check/Pawncheck.png")));
+        Image additionalImage2 = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Check/Knightcheck.png")));
         imageView.setImage(image);
         additionalImageView.setImage(additionalImage);
-        descriptionLabel.setText("When a king is attacked, it is called check (written as \"+\" in chess notation). Check can be viewed as saying \"Watch out! The king is attacked!\" Since a king can never be captured, the term \"check\" is used when a king is threatened.\n");
+        additionalImageView2.setImage(additionalImage2);
+        descriptionLabel.setText("When a king is attacked, it is called check. Check can be viewed as saying ,Watch out! The king is attacked! Since a king can never be captured, the term check is used when a king is threatened.");
     }
 
     public void switchToGettingOutofCheck(ActionEvent event) {
@@ -144,7 +146,7 @@ public class PieceTutorialController {
         Image additionalImage = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Check/gettingoutofcheck2.png")));
         imageView.setImage(image);
         additionalImageView.setImage(additionalImage);
-        descriptionLabel.setText("If a player is in check, they must get out of check! There are three ways to get out of check are to move out of check, block the check, or capture the piece putting you in check.You can capture the piece and get out of check. for example We must capture the queen with our king! There is no way to block the check and no way to move out of check, so we must capture on f2.\n");
+        descriptionLabel.setText("If a player is in check, they must get out of check! There are three ways to get out of check are to move out of check, block the check, or capture the piece putting you in check.You can capture the piece and get out of check. for example We must capture the queen with our king! There is no way to block the check and no way to move out of check, so we must capture on f2.");
     }
 
     public void switchToCheckMate(ActionEvent event) {
@@ -153,7 +155,7 @@ public class PieceTutorialController {
         Image additionalImage2 = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Check/CheckmatePawn.png")));
         imageView.setImage(image);
         additionalImageView.setImage(additionalImage);
-        additionalImageView.setImage(additionalImage2);
+        additionalImageView2.setImage(additionalImage2);
         descriptionLabel.setText("if you are in check but cannot move out of check, block the check or capture the piece putting you in check? If you are in check and cannot get out of check, then checkmate has occurred and the game is over!" +
                 "Checkmate automatically ends the game, regardless of how many pieces are left on the board for either player. In some cases, one player will sacrifice many of their strongest pieces in order to end the game immediately with checkmate.");
     }
@@ -164,7 +166,7 @@ public class PieceTutorialController {
         Image additionalImage2 = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Check/Stalemate3.png")));
         imageView.setImage(image);
         additionalImageView.setImage(additionalImage);
-        additionalImageView.setImage(additionalImage2);
+        additionalImageView2.setImage(additionalImage2);
         descriptionLabel.setText("When a stalemate occurs, the game is considered drawn and both players receive half a point (1/2-1/2)\n" +
                 "Here are different ways stalemate can occur:\n" +
                 "1. Both players agree to a draw\n" +
@@ -174,7 +176,7 @@ public class PieceTutorialController {
                 "5. No major piece has moved and checkmate is not achieved within 50 moves \n" +
                 "For picture1, white’s king cannot move, so stalemate \n"+
                 "For picture2, the queen removes the king’s safe squares, and the king is not in check \n"+
-                "draw by repetition as the king and queen will move back and forth. No other moves are possible for white.");
+                "For picture3, draw by repetition as the king and queen will move back and forth. No other moves are possible for white.");
 
     }
 
@@ -191,12 +193,9 @@ public class PieceTutorialController {
     }
 
     public void switchToEnPassant(ActionEvent event) throws IOException {
-        Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/SpecialMoves/Enpassant2.gif")));
-        Image additionalImage = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/SpecialMoves/Enpassant.jpeg")));
+        Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/SpecialMoves/Enpassant.gif")));
         imageView.setImage(image);
-        additionalImageView.setImage(additionalImage);
-        descriptionLabel.setText("The en passant rule is a special pawn capturing move in chess. \"En passant\" is a French expression that translates to \"in passing\", which is precisely how this capture works.\n" +
-                "\n" +
+        descriptionLabel.setText("The en passant rule is a special pawn capturing move in chess.En passant is a French expression that translates to in passing, which is precisely how this capture works." +
                 "Pawns can usually capture only pieces that are directly and diagonally in front of them on an adjacent file. It moves to the captured piece's square and replaces it.");
     }
 
