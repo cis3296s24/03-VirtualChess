@@ -18,12 +18,15 @@ public class Stockfish {
 
 	/**
 	 * Starts Stockfish engine as a process and initializes it
-	 *
-	 * @param None
 	 * @return True on success. False otherwise
 	 */
 	public boolean startEngine() {
 		try {
+			// FOR MAC:
+			// Install homebrew,
+			// Install stockfish,
+			// Replace 'insert' with "/usr/local/bin/stockfish"
+			// Runtime.getRuntime().exec( 'insert' );
 			engineProcess = Runtime.getRuntime().exec("stockfish/stockfish-windows-x86-64-avx2.exe");
 			processReader = new BufferedReader(new InputStreamReader(
 					engineProcess.getInputStream()));
