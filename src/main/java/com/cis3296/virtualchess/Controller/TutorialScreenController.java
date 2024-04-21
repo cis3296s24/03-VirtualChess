@@ -40,15 +40,25 @@ public class TutorialScreenController {
         pieceStage.show();
     }
 
+    @FXML
+    public void switchToBasic(ActionEvent event) throws IOException {
+        // Assuming you have a separate FXML for pieces details
+        Parent pieceRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/BasicMove.fxml")));
+        Stage pieceStage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Scene pieceScene = new Scene(pieceRoot);
+        pieceStage.setScene(pieceScene);
+        pieceStage.show();
+    }
+
 
     @FXML
-    public void switchToSelection(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/Tutorial Screen.fxml")));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();
+    public void switchToCheckScreen(ActionEvent event) throws IOException {
+        // Assuming you have a separate FXML for pieces details
+        Parent pieceRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/Check.fxml")));
+        Stage pieceStage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Scene pieceScene = new Scene(pieceRoot);
+        pieceStage.setScene(pieceScene);
+        pieceStage.show();
     }
 
     @FXML

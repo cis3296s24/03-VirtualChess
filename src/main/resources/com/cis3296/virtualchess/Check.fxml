@@ -8,18 +8,14 @@
 <AnchorPane fx:id="piece" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="800.0" prefWidth="810.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.cis3296.virtualchess.Controller.PieceTutorialController">
-    <Button layoutX="227.0" layoutY="360.0" mnemonicParsing="false" onAction="#switchToPawn" prefHeight="58.0"
-            prefWidth="355.0" text="Pawn"/>
-    <Button layoutX="227.0" layoutY="420.0" mnemonicParsing="false" onAction="#switchToRook" prefHeight="58.0"
-            prefWidth="355.0" text="Rook"/>
-    <Button layoutX="227.0" layoutY="480.0" mnemonicParsing="false" onAction="#switchToBishop" prefHeight="58.0"
-            prefWidth="355.0" text="Bishop"/>
-    <Button layoutX="227.0" layoutY="540.0" mnemonicParsing="false" onAction="#switchToKnight" prefHeight="58.0"
-            prefWidth="355.0" text="Knight"/>
-    <Button layoutX="227.0" layoutY="600.0" mnemonicParsing="false" onAction="#switchToKing" prefHeight="58.0"
-            prefWidth="355.0" text="King"/>
-    <Button layoutX="227.0" layoutY="660.0" mnemonicParsing="false" onAction="#switchToQueen" prefHeight="58.0"
-            prefWidth="355.0" text="Queen"/>
+    <Button layoutX="227.0" layoutY="460.0" mnemonicParsing="false" onAction="#switchToCheck" prefHeight="58.0"
+            prefWidth="355.0" text="What is Check?"/>
+    <Button layoutX="227.0" layoutY="520.0" mnemonicParsing="false" onAction="#switchToGettingOutofCheck" prefHeight="58.0"
+            prefWidth="355.0" text="Getting Out of Check"/>
+    <Button layoutX="227.0" layoutY="580.0" mnemonicParsing="false" onAction="#switchToCheckMate" prefHeight="58.0"
+            prefWidth="355.0" text="Checkmate"/>
+    <Button layoutX="227.0" layoutY="640.0" mnemonicParsing="false" onAction="#switchToStalemate" prefHeight="58.0"
+            prefWidth="355.0" text="Stalemate"/>
     <Button layoutX="227.0" layoutY="740.0" mnemonicParsing="false" onAction="#switchToTutorial" prefHeight="58.0" prefWidth="355.0" text="Back" />
     <HBox layoutX="55.0" layoutY="43.0" spacing="10">
         <ImageView fx:id="imageView" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true"/>
