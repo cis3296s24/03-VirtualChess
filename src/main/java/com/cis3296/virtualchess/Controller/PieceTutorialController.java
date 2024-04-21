@@ -178,5 +178,28 @@ public class PieceTutorialController {
 
     }
 
+    public void switchToCastling(ActionEvent event) throws IOException {
+        Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/SpecialMoves/Castling.gif")));
+        imageView.setImage(image);
+        descriptionLabel.setText("The king may move two squares to either side, with the rook moving to the other side of the king. Not legal if either piece has moved or if the king would move into, out of, or through check.");
+    }
+
+    public void switchToPromotion(ActionEvent event) throws IOException {
+        Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/SpecialMoves/PawnPromotion.gif")));
+        imageView.setImage(image);
+        descriptionLabel.setText("Pawn promotion occurs when a pawn reaches the farthest rank from its original square—the eighth rank for White and first rank for Black. When this happens, the player can replace the pawn for a queen, a rook, a bishop, or a knight. ");
+    }
+
+    public void switchToEnPassant(ActionEvent event) throws IOException {
+        Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/SpecialMoves/Enpassant2.gif")));
+        Image additionalImage = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/SpecialMoves/Enpassant.jpeg")));
+        imageView.setImage(image);
+        additionalImageView.setImage(additionalImage);
+        descriptionLabel.setText("The en passant rule is a special pawn capturing move in chess. \"En passant\" is a French expression that translates to \"in passing\", which is precisely how this capture works.\n" +
+                "\n" +
+                "Pawns can usually capture only pieces that are directly and diagonally in front of them on an adjacent file. It moves to the captured piece's square and replaces it.");
+    }
+
+
 
 }

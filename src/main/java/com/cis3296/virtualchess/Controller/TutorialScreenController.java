@@ -25,10 +25,10 @@ public class TutorialScreenController {
     private Parent root;
 
 
-
+/*
     public void initialize(){
 
-    }
+    }*/
 
     @FXML
     public void switchToPieceInfo(ActionEvent event) throws IOException {
@@ -55,6 +55,16 @@ public class TutorialScreenController {
     public void switchToCheckScreen(ActionEvent event) throws IOException {
         // Assuming you have a separate FXML for pieces details
         Parent pieceRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/Check.fxml")));
+        Stage pieceStage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Scene pieceScene = new Scene(pieceRoot);
+        pieceStage.setScene(pieceScene);
+        pieceStage.show();
+    }
+
+    @FXML
+    public void switchToSpecialMove(ActionEvent event) throws IOException {
+        // Assuming you have a separate FXML for pieces details
+        Parent pieceRoot = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/SpecialMove.fxml")));
         Stage pieceStage = (Stage)((Node)event.getSource()).getScene().getWindow();
         Scene pieceScene = new Scene(pieceRoot);
         pieceStage.setScene(pieceScene);
