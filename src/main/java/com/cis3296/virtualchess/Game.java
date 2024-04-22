@@ -57,9 +57,7 @@ public class Game {
 
     public void handleTurn() {
         turnSystem.changeTurn();
-        for (Piece piece : chessBoard.pieces) {
-            piece.currentMoveSet = piece.getMoveSet();
-        }
+
         if(Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.AI_CONFIG_ACCESS_STRING))){
             Platform.runLater(() ->{
                 String move = "";
@@ -89,12 +87,27 @@ public class Game {
             }
         }
 
+        for (Piece piece : chessBoard.pieces) {
+            piece.currentMoveSet = piece.getMoveSet();
+        }
+        for (Piece piece : chessBoard.pieces) {
+            if (piece instanceof King && ((King) piece).isInCheck()) {
+                piece.inCheck = true;
+                handleCheck();
+            }
+        }
+
         if(turnSystem.isCheckMate){
             endGame();
         }
         if(turnSystem.isCheck){
             turnSystem.isCheckMate = true;
         }
+
+    }
+
+    public void handleCheck() {
+        System.out.println("Check");
 
     }
 
