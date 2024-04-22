@@ -41,6 +41,9 @@ public class PieceTutorialController {
     @FXML
     Label descriptionLabel;
 
+    @FXML
+    TextArea descriptionTextArea;
+
     public void switchToPawn(ActionEvent event) throws IOException {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Pieces & Basic animated/PawnMove.gif")));
         Image additionalImage = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/PawnMovearrow.png")));
@@ -138,7 +141,7 @@ public class PieceTutorialController {
         imageView.setImage(image);
         additionalImageView.setImage(additionalImage);
         additionalImageView2.setImage(additionalImage2);
-        descriptionLabel.setText("When a king is attacked, it is called check. Check can be viewed as saying ,Watch out! The king is attacked! Since a king can never be captured, the term check is used when a king is threatened.");
+        descriptionTextArea.setText("When a king is attacked, it is called check. Check can be viewed as saying ,Watch out! The king is attacked! Since a king can never be captured, the term check is used when a king is threatened.");
     }
 
     public void switchToGettingOutofCheck(ActionEvent event) {
@@ -146,7 +149,7 @@ public class PieceTutorialController {
         Image additionalImage = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Check/gettingoutofcheck2.png")));
         imageView.setImage(image);
         additionalImageView.setImage(additionalImage);
-        descriptionLabel.setText("If a player is in check, they must get out of check! There are three ways to get out of check are to move out of check, block the check, or capture the piece putting you in check.You can capture the piece and get out of check. for example We must capture the queen with our king! There is no way to block the check and no way to move out of check, so we must capture on f2.");
+        descriptionTextArea.setText("If a player is in check, they must get out of check! There are three ways to get out of check are to move out of check, block the check, or capture the piece putting you in check.You can capture the piece and get out of check. for example We must capture the queen with our king! There is no way to block the check and no way to move out of check, so we must capture on f2.");
     }
 
     public void switchToCheckMate(ActionEvent event) {
@@ -156,7 +159,7 @@ public class PieceTutorialController {
         imageView.setImage(image);
         additionalImageView.setImage(additionalImage);
         additionalImageView2.setImage(additionalImage2);
-        descriptionLabel.setText("if you are in check but cannot move out of check, block the check or capture the piece putting you in check? If you are in check and cannot get out of check, then checkmate has occurred and the game is over!" +
+        descriptionTextArea.setText("if you are in check but cannot move out of check, block the check or capture the piece putting you in check? If you are in check and cannot get out of check, then checkmate has occurred and the game is over!" +
                 "Checkmate automatically ends the game, regardless of how many pieces are left on the board for either player. In some cases, one player will sacrifice many of their strongest pieces in order to end the game immediately with checkmate.");
     }
 
@@ -167,7 +170,7 @@ public class PieceTutorialController {
         imageView.setImage(image);
         additionalImageView.setImage(additionalImage);
         additionalImageView2.setImage(additionalImage2);
-        descriptionLabel.setText("When a stalemate occurs, the game is considered drawn and both players receive half a point (1/2-1/2)\n" +
+        descriptionTextArea.setText("When a stalemate occurs, the game is considered drawn and both players receive half a point (1/2-1/2)\n" +
                 "Here are different ways stalemate can occur:\n" +
                 "1. Both players agree to a draw\n" +
                 "2. One player is unable to move any pieces, is not in check, and it is their turn\n" +

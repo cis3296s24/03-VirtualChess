@@ -7,21 +7,21 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cis3296.virtualchess.Controller.SettingsMenuController">
+<AnchorPane fx:id="menu" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cis3296.virtualchess.Controller.SettingsMenuController">
    <Button fx:id="backButton" layoutX="122.0" layoutY="523.0" mnemonicParsing="false" onAction="#backToMainMenu" prefHeight="58.0" prefWidth="355.0" text="Back" />
-   <Text layoutX="125.0" layoutY="147.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Themes" wrappingWidth="181.21153259277344">
+   <Text fill="WHITE" layoutX="125.0" layoutY="147.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Themes" wrappingWidth="181.21153259277344">
       <font>
          <Font size="24.0" />
       </font>
    </Text>
-   <Text layoutX="122.0" layoutY="267.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Help" wrappingWidth="181.21153259277344">
+   <Text fill="WHITE" layoutX="122.0" layoutY="267.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Help" wrappingWidth="181.21153259277344">
       <font>
          <Font size="24.0" />
       </font>
    </Text>
    <ComboBox fx:id="ThemeDropDown" layoutX="125.0" layoutY="165.0" onAction="#setTheme" />
-   <CheckBox fx:id="hints" layoutX="122.0" layoutY="290.0" mnemonicParsing="false" text="Enable Hints" onAction="#setHints"/>
-   <CheckBox fx:id="undo" layoutX="122.0" layoutY="331.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="117.0" text="Allow Undos" onAction="#setUndoButton"/>
+   <CheckBox fx:id="hints" layoutX="122.0" layoutY="290.0" mnemonicParsing="false" onAction="#setHints" text="Enable Hints" textFill="WHITE" />
+   <CheckBox fx:id="undo" layoutX="122.0" layoutY="331.0" mnemonicParsing="false" onAction="#setUndoButton" prefHeight="25.0" prefWidth="117.0" text="Allow Undos" textFill="WHITE" />
 
 
 </AnchorPane>
