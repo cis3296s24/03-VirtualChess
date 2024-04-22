@@ -332,6 +332,8 @@ public class Board {
             // Set the new coordinates of the piece
             targetPiece.coordinates = destSquare.coordinates;
 
+            targetPiece.currentMoveSet = targetPiece.getMoveSet();
+
             pieceCheck(targetPiece, destSquare, prevSquare);
 
             System.out.println(targetPiece.type + " to " + Coordinates.toChessCoordinates(destSquare.coordinates));
@@ -391,7 +393,7 @@ public class Board {
 
             }
         }
-        movingIntoCheck();
+//        movingIntoCheck();
     }
 
     /**
@@ -483,33 +485,47 @@ public class Board {
     }
 
     public void movingIntoCheck(){
+        // Get all pieces
         for(Piece piece: pieces){
-            if(piece.type.equals("king")){
-                if(piece.color.equals("white")){
-                    King whiteKing = (King) piece;
-                    for(Piece otherPiece: pieces){
-                        if(!otherPiece.equals(whiteKing)){
-                            for(Coordinates wKingCoords: whiteKing.getMoveSet()){
-                                for(Coordinates opCoords: otherPiece.getMoveSet()){
-                                    if(wKingCoords.equals(opCoords)){
-                                        if(otherPiece.color.equals("black")){
-                                            System.out.println(whiteKing.color+" "+whiteKing.type+" path blocked by "+otherPiece.color+" "+otherPiece.type+" at "+opCoords);
-                                        }
+            // Search for king pieces only
+            if(piece.type.equals("king") && piece.color.equals("white")) {
+                // cast piece to king
+                King whiteKing = (King) piece;
+                // Other piece = all pieces
+                for (Piece otherPiece : pieces) {
+                    // Other piece is not white king (all other pieces)
+                    if (!otherPiece.equals(whiteKing)) {
+                        otherPiece.currentMoveSet = otherPiece.getMoveSet();
+                        for (Coordinates wKingCoords : whiteKing.currentMoveSet) {
+                            for (Coordinates opCoords : otherPiece.currentMoveSet) {
+                                if (wKingCoords.equals(opCoords)) {
+                                    if (otherPiece.color.equals("black")) {
+                                        System.out.println(whiteKing.color + " " + whiteKing.type + " path blocked by " + otherPiece.color + " " + otherPiece.type + " at " + opCoords);
                                     }
                                 }
                             }
                         }
                     }
-                } else if (piece.color.equals("black")) {
-                    King blackKing = (King) piece;
-                    for(Piece otherPiece: pieces){
-                        if(!otherPiece.equals(blackKing)){
-                            for(Coordinates wKingCoords: blackKing.getMoveSet()){
-                                for(Coordinates opCoords: otherPiece.getMoveSet()){
-                                    if(wKingCoords.equals(opCoords)){
-                                        if(otherPiece.color.equals("white")){
-                                            System.out.println(blackKing.color+" "+blackKing.type+" path blocked by "+otherPiece.color+" "+otherPiece.type+" at "+opCoords);
-                                        }
+                }
+            } else if (piece.color.equals("black") && piece.type.equals("king")) {
+                // Cast the king piece
+                King blackKing = (King) piece;
+                // get the current move set of black king
+                blackKing.currentMoveSet = blackKing.getMoveSet();
+                // look through the pieces again
+                for(Piece otherPiece: pieces){
+                    // ensure we are not looking at the same king we just casted
+                    if(!otherPiece.equals(blackKing)){
+                        // get the move set of the other piece
+                        otherPiece.currentMoveSet = otherPiece.getMoveSet();
+                        // go through each move in the king's move set
+                        for(Coordinates bKingCoords: blackKing.currentMoveSet){
+                            // go through each move in the other piece's move set
+                            for(Coordinates opCoords: otherPiece.currentMoveSet){
+                                // if they're equal then "insert code" (king's path is blocked)
+                                if(bKingCoords.equals(opCoords)){
+                                    if(otherPiece.color.equals("white")){
+                                        System.out.println(blackKing.color+" "+blackKing.type+" path blocked by "+otherPiece.color+" "+otherPiece.type+" at "+opCoords);
                                     }
                                 }
                             }
