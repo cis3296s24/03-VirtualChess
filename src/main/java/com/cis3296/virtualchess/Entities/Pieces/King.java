@@ -42,7 +42,9 @@ public class King extends Piece {
         int[][] directions = { {-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, 1}, {-1, -1}, {1, 1}, {1, -1} };
         for (int[] dir : directions) {
             Coordinates target = new Coordinates(this.coordinates.getCol() + dir[0], this.coordinates.getRow() + dir[1]);
-            addCoordinates(moveSet, target);
+            if(!movingIntoCheck(target)){
+                addCoordinates(moveSet, target);
+            }
         }
     }
 
@@ -114,4 +116,18 @@ public class King extends Piece {
         }
     }
 
+    public boolean movingIntoCheck(Coordinates targetCoordinates){
+        for (Piece otherPiece : board.pieces) {
+            // Other piece is not king (all other pieces)
+            if (!otherPiece.equals(this)) {
+//                otherPiece.currentMoveSet = otherPiece.getMoveSet();
+                for (Coordinates opCoords : otherPiece.currentMoveSet) {
+                    if (targetCoordinates.equals(opCoords) && !otherPiece.color.equals(this.color)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 }

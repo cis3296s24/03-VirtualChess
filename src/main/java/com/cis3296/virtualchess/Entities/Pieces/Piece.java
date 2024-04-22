@@ -19,6 +19,7 @@ public abstract class Piece extends ImageView {
     public boolean isTurn;
     public boolean moved;
     public boolean twoStepped;
+    public ArrayList<Coordinates> currentMoveSet = new ArrayList<>();
 
 
     /**
@@ -98,9 +99,6 @@ public abstract class Piece extends ImageView {
             if(!this.color.equals(targetPiece.color)){
                 // Add the coordinate as a possible move
                 moveSet.add(targetCoordinates);
-            }
-            if(targetPiece instanceof King){
-                System.out.println("Check");
             }
         } else {
             // Add the coordinate as a possible move
