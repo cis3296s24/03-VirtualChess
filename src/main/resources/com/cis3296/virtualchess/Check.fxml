@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="piece" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="810.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cis3296.virtualchess.Controller.PieceTutorialController">
+    <Button layoutX="227.0" layoutY="400.0" mnemonicParsing="false" onAction="#switchToCheck" prefHeight="58.0" prefWidth="355.0" text="What is Check?" />
+    <Button layoutX="227.0" layoutY="480.0" mnemonicParsing="false" onAction="#switchToGettingOutofCheck" prefHeight="58.0" prefWidth="355.0" text="Getting Out of Check" />
+    <Button layoutX="227.0" layoutY="560.0" mnemonicParsing="false" onAction="#switchToCheckMate" prefHeight="58.0" prefWidth="355.0" text="Checkmate" />
+    <Button layoutX="227.0" layoutY="640.0" mnemonicParsing="false" onAction="#switchToStalemate" prefHeight="58.0" prefWidth="355.0" text="Stalemate" />
+    <Button layoutX="227.0" layoutY="720.0" mnemonicParsing="false" onAction="#switchToTutorial" prefHeight="58.0" prefWidth="355.0" text="Back" />
+   <GridPane layoutX="-1.0" layoutY="55.0" prefHeight="302.0" prefWidth="810.0">
+     <columnConstraints>
+       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+     </columnConstraints>
+     <rowConstraints>
+       <RowConstraints maxHeight="234.60001220703126" minHeight="10.0" prefHeight="234.60001220703126" vgrow="SOMETIMES" />
+       <RowConstraints maxHeight="145.79999389648438" minHeight="10.0" prefHeight="68.19998779296876" vgrow="SOMETIMES" />
+     </rowConstraints>
+      <children>
+          <HBox alignment="CENTER" prefHeight="200.0" prefWidth="827.0" spacing="10" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+              <ImageView fx:id="imageView" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+              <ImageView fx:id="additionalImageView" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+              <ImageView fx:id="additionalImageView2" fitHeight="200.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+      
+          </HBox>
+         <BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: transparent;" GridPane.rowIndex="1">
+            <left>
+               <AnchorPane prefHeight="68.0" prefWidth="146.0" visible="false" BorderPane.alignment="CENTER" />
+            </left>
+            <center>
+                <TextArea fx:id="descriptionTextArea" editable="false" prefHeight="66.0" prefWidth="438.0" wrapText="true" BorderPane.alignment="CENTER">
+                  <font>
+                     <Font size="14.0" />
+                  </font></TextArea>
+            </center>
+            <right>
+               <AnchorPane prefHeight="68.0" prefWidth="146.0" visible="false" BorderPane.alignment="CENTER" />
+            </right>
+         </BorderPane>
+      </children>
+   </GridPane>
+</AnchorPane>
