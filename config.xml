@@ -2,7 +2,5 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
 <comment>Configuration</comment>
-<entry key="hints">true</entry>
 <entry key="ai">false</entry>
-<entry key="theme">Dusk</entry>
 </properties>

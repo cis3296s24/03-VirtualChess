@@ -1,7 +1,28 @@
 #menu {
     -fx-background-color: linear-gradient(to bottom, #090124 0%, #2d0040 50%, #350e55 55%, #2d0040 75%, #090124 100%);
 }
+#piece {
+    -fx-background-color: linear-gradient(to bottom, #090124 0%, #2d0040 50%, #350e55 55%, #2d0040 75%, #090124 100%);
+}
 
 .button {
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 10, 0, 0, 0);
+}
+
+.text-area {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+
+.text-area .scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.text-area .scroll-pane .viewport{
+    -fx-background-color: transparent;
+}
+
+
+.text-area .scroll-pane .content{
+    -fx-background-color: transparent;
 }

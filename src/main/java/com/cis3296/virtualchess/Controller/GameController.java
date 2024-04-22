@@ -88,6 +88,9 @@ public class GameController {
 
             Stage settingsPopup = new Stage();
             Scene settingsScene = new Scene(settingsContent);
+
+            settingsScene.getStylesheets().add(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css").toExternalForm());
+
             settingsPopup.setScene(settingsScene);
 
             settingsPopup.setTitle("Settings");

@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -34,6 +35,8 @@ public class SettingsMenuController {
     public CheckBox undo;
     @FXML
     public CheckBox hints;
+    @FXML
+    public AnchorPane menu;
 
     private Stage stage;
     private Scene scene;
