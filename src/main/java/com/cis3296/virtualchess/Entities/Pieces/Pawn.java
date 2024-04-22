@@ -62,6 +62,8 @@ public class Pawn extends Piece {
             if (canMoveDiagonally(targetCoordinates)) {
                 addCoordinates(moveSet, targetCoordinates);
             }
+            // Regardless of whether on not they can move there, pawns guard these squares. Add them to the guarded list
+            guardedSquares.add(targetCoordinates);
         }
 
         //Handle En Passant

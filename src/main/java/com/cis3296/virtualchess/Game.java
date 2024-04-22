@@ -88,8 +88,11 @@ public class Game {
         }
 
         for (Piece piece : chessBoard.pieces) {
+            piece.guardedSquares.clear();
+            piece.currentMoveSet.clear();
             piece.currentMoveSet = piece.getMoveSet();
         }
+
         for (Piece piece : chessBoard.pieces) {
             if (piece instanceof King && ((King) piece).isInCheck()) {
                 piece.inCheck = true;

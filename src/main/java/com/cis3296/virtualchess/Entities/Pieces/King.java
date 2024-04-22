@@ -131,12 +131,30 @@ public class King extends Piece {
     }
 
     public boolean movingIntoCheck(Coordinates targetCoordinates){
-        for (Piece otherPiece : board.pieces) {
-            // Other piece is not king (all other pieces)
-            if (!otherPiece.equals(this)) {
-//                otherPiece.currentMoveSet = otherPiece.getMoveSet();
-                for (Coordinates opCoords : otherPiece.currentMoveSet) {
-                    if (targetCoordinates.equals(opCoords) && !otherPiece.color.equals(this.color)) {
+        // For all Pieces on the board
+        for (Piece piece : board.pieces) {
+            // If the other piece isn't this king (king to be moved)
+            if (!piece.equals(this)) {
+                // Case of a pawn
+                if (piece instanceof Pawn)
+                {
+                    for (Coordinates guarded : piece.guardedSquares) {
+                        if (guarded.equals(targetCoordinates) && !piece.color.equals(this.color)) {
+                            return true;
+                        }
+                    }
+                } else {
+                    // For all of a piece's possible moves (other than pawn)
+                    for (Coordinates opCoords : piece.currentMoveSet) {
+                        // If the intended square for the king to move is in the other piece's move set
+                        if (targetCoordinates.equals(opCoords) && !piece.color.equals(this.color)) {
+                            return true;
+                        }
+                    }
+                }
+            } else {
+                for (Coordinates guarded : piece.guardedSquares) {
+                    if (guarded.equals(targetCoordinates) && !piece.color.equals(this.color)) {
                         return true;
                     }
                 }

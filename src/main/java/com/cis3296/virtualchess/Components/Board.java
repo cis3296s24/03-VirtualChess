@@ -267,6 +267,8 @@ public class Board {
             fromSquare.getChildren().remove(fromPiece);
             // If the destination square has an opponent piece, remove it
             if(toPiece != null){
+                getPieceAt(to).guardedSquares.clear();
+                getPieceAt(to).currentMoveSet.clear();
                 toSquare.getChildren().remove(toPiece);
             }
             // Add the piece to the new square
