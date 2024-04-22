@@ -147,7 +147,7 @@ public class King extends Piece {
                     // For all of a piece's possible moves (other than pawn)
                     for (Coordinates opCoords : piece.currentMoveSet) {
                         // If the intended square for the king to move is in the other piece's move set
-                        if (targetCoordinates.equals(opCoords) && !piece.color.equals(this.color)) {
+                        if (targetCoordinates.equals(opCoords) && !piece.color.equals(this.color) && piece.canMove(opCoords.getCol(), opCoords.getRow())) {
                             return true;
                         }
                     }
