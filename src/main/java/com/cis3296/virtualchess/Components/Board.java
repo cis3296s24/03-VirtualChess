@@ -388,6 +388,7 @@ public class Board {
 
             }
         }
+        movingIntoCheck();
     }
 
     /**
@@ -476,5 +477,43 @@ public class Board {
             }
         }
         return board.toString();
+    }
+
+    public void movingIntoCheck(){
+        for(Piece piece: pieces){
+            if(piece.type.equals("king")){
+                if(piece.color.equals("white")){
+                    King whiteKing = (King) piece;
+                    for(Piece otherPiece: pieces){
+                        if(!otherPiece.equals(whiteKing)){
+                            for(Coordinates wKingCoords: whiteKing.getMoveSet()){
+                                for(Coordinates opCoords: otherPiece.getMoveSet()){
+                                    if(wKingCoords.equals(opCoords)){
+                                        if(otherPiece.color.equals("black")){
+                                            System.out.println(whiteKing.color+" "+whiteKing.type+" path blocked by "+otherPiece.color+" "+otherPiece.type+" at "+opCoords);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else if (piece.color.equals("black")) {
+                    King blackKing = (King) piece;
+                    for(Piece otherPiece: pieces){
+                        if(!otherPiece.equals(blackKing)){
+                            for(Coordinates wKingCoords: blackKing.getMoveSet()){
+                                for(Coordinates opCoords: otherPiece.getMoveSet()){
+                                    if(wKingCoords.equals(opCoords)){
+                                        if(otherPiece.color.equals("white")){
+                                            System.out.println(blackKing.color+" "+blackKing.type+" path blocked by "+otherPiece.color+" "+otherPiece.type+" at "+opCoords);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
