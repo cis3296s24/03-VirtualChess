@@ -20,6 +20,8 @@ public abstract class Piece extends ImageView {
     public boolean moved;
     public boolean twoStepped;
     public ArrayList<Coordinates> currentMoveSet = new ArrayList<>();
+    public boolean isChecking;
+    public boolean inCheck;
 
 
     /**
@@ -33,6 +35,8 @@ public abstract class Piece extends ImageView {
         this.board = board;
         this.isTurn = isTurn;
         moved = false;
+        isChecking = false;
+        inCheck = false;
         setDragHandlers();
     }
 

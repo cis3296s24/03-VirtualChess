@@ -80,6 +80,13 @@ public class King extends Piece {
             }
         }
 
+        // Check to see if castle is moving through the King being checked
+        Coordinates leftCastleTest1 = new Coordinates(this.coordinates.getCol() - 1, this.coordinates.getRow());
+        Coordinates leftCastleTest2 = new Coordinates(this.coordinates.getCol() - 2, this.coordinates.getRow());
+        if (movingIntoCheck(this.coordinates) || movingIntoCheck(leftCastleTest1) || movingIntoCheck(leftCastleTest2)) {
+            return false;
+        }
+
         return true;
     }
 
@@ -104,6 +111,13 @@ public class King extends Piece {
             }
         }
 
+        // Check to see if castle is moving through the King being checked
+        Coordinates rightCastleTest1 = new Coordinates(this.coordinates.getCol() + 1, this.coordinates.getRow());
+        Coordinates rightCastleTest2 = new Coordinates(this.coordinates.getCol() + 2, this.coordinates.getRow());
+        if (movingIntoCheck(this.coordinates) || movingIntoCheck(rightCastleTest1) || movingIntoCheck(rightCastleTest2)) {
+            return false;
+        }
+
         return true;
     }
 
@@ -123,6 +137,20 @@ public class King extends Piece {
 //                otherPiece.currentMoveSet = otherPiece.getMoveSet();
                 for (Coordinates opCoords : otherPiece.currentMoveSet) {
                     if (targetCoordinates.equals(opCoords) && !otherPiece.color.equals(this.color)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean isInCheck()
+    {
+        for (Piece otherPiece : board.pieces) {
+            if (!otherPiece.equals(this)) {
+                for (Coordinates opCoords : otherPiece.currentMoveSet) {
+                    if (this.coordinates.equals(opCoords) && !otherPiece.color.equals(this.color)) {
                         return true;
                     }
                 }
