@@ -100,9 +100,6 @@ public abstract class Piece extends ImageView {
                 // Add the coordinate as a possible move
                 moveSet.add(targetCoordinates);
             }
-            if(targetPiece instanceof King){
-                System.out.println("Check");
-            }
         } else {
             // Add the coordinate as a possible move
             moveSet.add(targetCoordinates);

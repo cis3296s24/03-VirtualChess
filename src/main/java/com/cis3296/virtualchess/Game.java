@@ -87,7 +87,6 @@ public class Game {
             if(piece.color.equals("black")){
                 piece.isTurn = !piece.isTurn;
             }
-            piece.getMoveSet();
         }
 
         if(turnSystem.isCheckMate){

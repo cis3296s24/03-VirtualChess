@@ -123,7 +123,6 @@ public class King extends Piece {
 //                otherPiece.currentMoveSet = otherPiece.getMoveSet();
                 for (Coordinates opCoords : otherPiece.currentMoveSet) {
                     if (targetCoordinates.equals(opCoords) && !otherPiece.color.equals(this.color)) {
-                        System.out.println(this.color + " " + this.type + " path blocked by " + otherPiece.color + " " + otherPiece.type + " at " + opCoords);
                         return true;
                     }
                 }
