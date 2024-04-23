@@ -27,7 +27,16 @@ public class Stockfish {
 			// Install stockfish,
 			// Replace 'insert' with "/usr/local/bin/stockfish"
 			// Runtime.getRuntime().exec( 'insert' );
-			engineProcess = Runtime.getRuntime().exec("stockfish/stockfish-windows-x86-64-avx2.exe");
+			String PATH;
+			String osName = System.getProperty("os.name");
+			if (osName.toLowerCase().contains("mac")) {
+				PATH = "stockfish/stockfish-macos-x86-64-avx2";
+			} else if (osName.toLowerCase().contains("win")) {
+				PATH = "stockfish/stockfish-windows-x86-64-avx2.exe";
+			} else {
+				PATH = "stockfish/stockfish-ubuntu-x86-64-avx2";
+			}
+			engineProcess = Runtime.getRuntime().exec(PATH);
 			processReader = new BufferedReader(new InputStreamReader(
 					engineProcess.getInputStream()));
 			processWriter = new OutputStreamWriter(
