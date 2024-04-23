@@ -2,7 +2,6 @@ package com.cis3296.virtualchess.Entities.Pieces;
 
 import com.cis3296.virtualchess.Components.Board;
 import com.cis3296.virtualchess.Entities.Coordinates;
-import com.cis3296.virtualchess.Systems.TurnSystem;
 import javafx.event.Event;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -20,6 +19,7 @@ public abstract class Piece extends ImageView {
     public boolean moved;
     public boolean twoStepped;
     public ArrayList<Coordinates> currentMoveSet = new ArrayList<>();
+    public ArrayList<Coordinates> guardedSquares = new ArrayList<>();
     public boolean isChecking;
     public boolean inCheck;
 
@@ -71,7 +71,8 @@ public abstract class Piece extends ImageView {
      */
     public boolean canMove(int targetCol, int targetRow){
         Coordinates targetCoordinates = new Coordinates(targetCol, targetRow);
-        for(Coordinates coordinates : getMoveSet()){
+        this.currentMoveSet = this.getMoveSet();
+        for(Coordinates coordinates : currentMoveSet){
             if(coordinates.equals(targetCoordinates)){
                 return true;
             }
@@ -80,11 +81,25 @@ public abstract class Piece extends ImageView {
     }
 
     public void showMoves(Board board){
-        for(Coordinates coordinates : getMoveSet()){
+        this.currentMoveSet = this.getMoveSet();
+        for(Coordinates coordinates : currentMoveSet){
             board.showMoves(coordinates);
         }
     }
     public abstract ArrayList<Coordinates> getMoveSet();
+
+    public boolean isGuarded() {
+        for (Piece piece : board.pieces) {
+            if (!piece.equals(this)) {
+                for (Coordinates otherCoordinates : piece.guardedSquares) {
+                    if (this.coordinates.equals(otherCoordinates)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
     /**
      * This method confirms adds the coordinates to the piece move set if the moves
@@ -99,11 +114,27 @@ public abstract class Piece extends ImageView {
         }
         // Check to see if the square has a piece on it
         if(targetPiece != null){
-            // Check to see if the piece is not of the same color
-            if(!this.color.equals(targetPiece.color)){
-                // Add the coordinate as a possible move
-                moveSet.add(targetCoordinates);
+            // If this piece is a king
+            if (this instanceof King) {
+                if (!this.color.equals(targetPiece.color)) {
+                    if (!targetPiece.isGuarded()) {
+                        // Add the coordinate as a possible move
+                        moveSet.add(targetCoordinates);
+                    }
+                }
+                // These are the squares that a piece is guarding
+                guardedSquares.add(targetCoordinates);
             }
+            else {
+                // Check to see if the piece is not of the same color
+                if(!this.color.equals(targetPiece.color)){
+                    // Add the coordinate as a possible move
+                    moveSet.add(targetCoordinates);
+                }
+                // These are the squares that a piece is guarding
+                guardedSquares.add(targetCoordinates);
+            }
+
         } else {
             // Add the coordinate as a possible move
             moveSet.add(targetCoordinates);
