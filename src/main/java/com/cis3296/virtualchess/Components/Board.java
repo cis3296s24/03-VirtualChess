@@ -340,6 +340,13 @@ public class Board {
             // Set the new coordinates of the piece
             targetPiece.coordinates = destSquare.coordinates;
 
+            for (Piece piece : pieces) {
+                if (piece instanceof King king && king.isInCheck(king.coordinates)) {
+                    piece.inCheck = true;
+                    game.handleCheck();
+                }
+            }
+
             pieceCheck(targetPiece, destSquare, prevSquare);
 
             System.out.println(targetPiece.type + " to " + Coordinates.toChessCoordinates(destSquare.coordinates));

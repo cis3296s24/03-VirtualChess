@@ -103,13 +103,6 @@ public class Game {
             }
         }
 
-        for (Piece piece : chessBoard.pieces) {
-            if (piece instanceof King king && king.isInCheck(king.coordinates)) {
-                piece.inCheck = true;
-                handleCheck();
-            }
-        }
-
         if(turnSystem.isCheckMate){
             endGame();
         }
