@@ -4,6 +4,7 @@ import com.cis3296.virtualchess.Components.Board;
 import com.cis3296.virtualchess.Entities.Coordinates;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class King extends Piece {
 
@@ -139,7 +140,7 @@ public class King extends Piece {
                 if (piece instanceof Pawn)
                 {
                     for (Coordinates guarded : piece.guardedSquares) {
-                        if (guarded.equals(targetCoordinates) && !piece.color.equals(this.color)) {
+                        if (Objects.equals(guarded, targetCoordinates) && !piece.color.equals(this.color)) {
                             return true;
                         }
                     }

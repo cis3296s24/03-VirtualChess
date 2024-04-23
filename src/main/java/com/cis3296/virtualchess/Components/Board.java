@@ -322,25 +322,36 @@ public class Board {
         if(isValidMove(destSquare.coordinates.getCol(), destSquare.coordinates.getRow())){
             // Remove the piece from the square
             prevSquare.getChildren().remove(targetPiece);
+            targetPiece.guardedSquares.clear();
+
             // If the destination square has an opponent piece, remove it
-            if(destSquare.containsPiece){
-                Piece destPiece = getPieceAt(destSquare.coordinates);
+            Piece destPiece = getPieceAt(destSquare.coordinates);
+            if(destPiece != null){
+                destPiece.guardedSquares.clear();
+                destPiece.currentMoveSet.clear();
+                this.pieces.remove(destPiece);
                 destSquare.getChildren().remove(destPiece);
+                targetPiece.guardedSquares.clear();
+                targetPiece.currentMoveSet.clear();
             }
             // Add the piece to the new square
             destSquare.containsPiece = true;
             destSquare.getChildren().add(targetPiece);
-
             // Set the new coordinates of the piece
             targetPiece.coordinates = destSquare.coordinates;
 
-            targetPiece.currentMoveSet = targetPiece.getMoveSet();
+            for (Piece piece : pieces)
+            {
+                piece.currentMoveSet = piece.getMoveSet();
+            }
 
             pieceCheck(targetPiece, destSquare, prevSquare);
 
             System.out.println(targetPiece.type + " to " + Coordinates.toChessCoordinates(destSquare.coordinates));
             game.handleTurn();
-        } else{
+        }
+        // If you put the piece back down in the same place, don't print invalid move
+        else if (destSquare.coordinates != prevSquare.coordinates){
             System.out.println("Invalid Move");
         }
     }
@@ -395,7 +406,6 @@ public class Board {
 
             }
         }
-//        movingIntoCheck();
     }
 
     /**

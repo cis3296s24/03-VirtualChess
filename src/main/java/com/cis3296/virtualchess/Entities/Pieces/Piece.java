@@ -71,7 +71,8 @@ public abstract class Piece extends ImageView {
      */
     public boolean canMove(int targetCol, int targetRow){
         Coordinates targetCoordinates = new Coordinates(targetCol, targetRow);
-        for(Coordinates coordinates : getMoveSet()){
+        this.currentMoveSet = this.getMoveSet();
+        for(Coordinates coordinates : currentMoveSet){
             if(coordinates.equals(targetCoordinates)){
                 return true;
             }
@@ -80,7 +81,8 @@ public abstract class Piece extends ImageView {
     }
 
     public void showMoves(Board board){
-        for(Coordinates coordinates : getMoveSet()){
+        this.currentMoveSet = this.getMoveSet();
+        for(Coordinates coordinates : currentMoveSet){
             board.showMoves(coordinates);
         }
     }
