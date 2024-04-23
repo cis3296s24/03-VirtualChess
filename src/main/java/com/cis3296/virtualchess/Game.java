@@ -88,9 +88,19 @@ public class Game {
         }
 
         for (Piece piece : chessBoard.pieces) {
-            piece.guardedSquares.clear();
-            piece.currentMoveSet.clear();
-            piece.currentMoveSet = piece.getMoveSet();
+            if (!piece.isTurn) {
+                piece.guardedSquares.clear();
+                piece.currentMoveSet.clear();
+                piece.currentMoveSet = piece.getMoveSet();
+            }
+        }
+
+        for (Piece piece : chessBoard.pieces) {
+            if (piece.isTurn) {
+                piece.guardedSquares.clear();
+                piece.currentMoveSet.clear();
+                piece.currentMoveSet = piece.getMoveSet();
+            }
         }
 
         for (Piece piece : chessBoard.pieces) {

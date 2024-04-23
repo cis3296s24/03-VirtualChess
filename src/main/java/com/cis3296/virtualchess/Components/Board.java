@@ -340,11 +340,6 @@ public class Board {
             // Set the new coordinates of the piece
             targetPiece.coordinates = destSquare.coordinates;
 
-            for (Piece piece : pieces)
-            {
-                piece.currentMoveSet = piece.getMoveSet();
-            }
-
             pieceCheck(targetPiece, destSquare, prevSquare);
 
             System.out.println(targetPiece.type + " to " + Coordinates.toChessCoordinates(destSquare.coordinates));
