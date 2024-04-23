@@ -29,10 +29,13 @@ public class MainMenuController {
     /**
      * Creates the chess board
      */
-    public void initialize(){
+    public void initialize() throws IOException {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/menuImages/VirtualChess!.gif")));
         imageView.setImage(image);
         Database.getInstance();
+        //load settings on startup
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cis3296/virtualchess/settingsMenu.fxml"));
+        Parent settingsContent = loader.load();
     }
 
     public void switchToGameMode(ActionEvent event) throws IOException {
