@@ -167,7 +167,7 @@ public class King extends Piece {
     public boolean isInCheck(Coordinates kingCoordinates)
     {
         for (Piece otherPiece : board.pieces) {
-            if (!otherPiece.equals(this)) {
+            if (!otherPiece.coordinates.equals(kingCoordinates)) {
                 for (Coordinates opCoords : otherPiece.currentMoveSet) {
                     if (this.coordinates.equals(opCoords) && !otherPiece.color.equals(this.color) && otherPiece.canMove(opCoords.getCol(), opCoords.getRow())) {
                         return true;
