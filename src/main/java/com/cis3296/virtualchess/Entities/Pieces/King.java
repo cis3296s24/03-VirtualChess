@@ -164,12 +164,12 @@ public class King extends Piece {
         return false;
     }
 
-    public boolean isInCheck()
+    public boolean isInCheck(Coordinates kingCoordinates)
     {
         for (Piece otherPiece : board.pieces) {
             if (!otherPiece.equals(this)) {
                 for (Coordinates opCoords : otherPiece.currentMoveSet) {
-                    if (this.coordinates.equals(opCoords) && !otherPiece.color.equals(this.color)) {
+                    if (this.coordinates.equals(opCoords) && !otherPiece.color.equals(this.color) && otherPiece.canMove(opCoords.getCol(), opCoords.getRow())) {
                         return true;
                     }
                 }

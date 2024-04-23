@@ -94,7 +94,7 @@ public class Game {
         }
 
         for (Piece piece : chessBoard.pieces) {
-            if (piece instanceof King && ((King) piece).isInCheck()) {
+            if (piece instanceof King king && king.isInCheck(king.coordinates)) {
                 piece.inCheck = true;
                 handleCheck();
             }
