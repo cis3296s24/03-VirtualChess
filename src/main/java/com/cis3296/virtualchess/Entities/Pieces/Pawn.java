@@ -51,7 +51,9 @@ public class Pawn extends Piece {
             // Handle initial double step move
             if (!moved) {
                 targetCoordinates = new Coordinates(coordinates.getCol(), coordinates.getRow() + (direction * 2));
-                addCoordinates(moveSet, targetCoordinates);
+                if (isForwardPathClear(targetCoordinates)) {
+                    addCoordinates(moveSet, targetCoordinates);
+                }
             }
         }
 
