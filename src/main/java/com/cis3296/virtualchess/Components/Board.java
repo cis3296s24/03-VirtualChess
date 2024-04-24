@@ -330,9 +330,6 @@ public class Board {
         if(!isEatenPiece){
             /* CASE FOR MOVED PIECE */
 
-            // decrement the amount of times the piece moved
-            pieceMovingBack.timesMoved--;
-
             // if the piece has any eaten pieces put them back in the correct order
             if(!pieceMovingBack.eatenPieces.isEmpty()){
                 // look for the most recent eaten piece
@@ -355,6 +352,10 @@ public class Board {
             addPiece(oldSquare, pieceMovingBack);
             // Set the coordinates of the piece
             pieceMovingBack.coordinates = oldSquare.coordinates;
+
+            // decrement the amount of times the piece moved
+            pieceMovingBack.timesMoved--;
+
             // check the piece to regain any movement if necessary
             pieceCheck(pieceMovingBack, oldSquare, prevSquare);
 
@@ -382,6 +383,10 @@ public class Board {
     private void movePiece(BoardSquare destSquare){
         BoardSquare prevSquare = getSquareAt(targetPiece.coordinates);
         if(isValidMove(destSquare.coordinates.getCol(), destSquare.coordinates.getRow())){
+
+            // increment the amount of times the piece is moved
+            targetPiece.timesMoved++;
+
             // Remove the piece from the square
             prevSquare.getChildren().remove(targetPiece);
             targetPiece.guardedSquares.clear();
@@ -405,8 +410,6 @@ public class Board {
             // store the previous move before making the move
             Move currentMove = new Move(targetPiece, targetPiece.coordinates);
             moveStack.add(currentMove);
-            // increment the amount of times the piece is moved
-            targetPiece.timesMoved++;
 
             // Add the piece to the new square
             destSquare.containsPiece = true;
@@ -455,7 +458,7 @@ public class Board {
 
         // handle any rules after first movement of piece
         if(targetPiece.type.equals("pawn") || targetPiece.type.equals("king") || targetPiece.type.equals("rook")){
-            caseOfMove(destSquare);
+            caseOfMove(destSquare, targetPiece);
         }
         if(targetPiece.type.equals("pawn")) {
             Coordinates topLeft = new Coordinates(targetPiece.coordinates.getCol() - 1, targetPiece.coordinates.getRow() - 1);
@@ -468,14 +471,18 @@ public class Board {
                 BoardSquare square = getSquareAt(new Coordinates(targetPiece.coordinates.getCol(), targetPiece.coordinates.getRow() + 1));
                 System.out.println(square.coordinates);
                 if (!square.getChildren().isEmpty()) {
-                    square.getChildren().removeFirst();
+                    Piece piece = (Piece) square.getChildren().removeFirst();
+                    piece.otherPieceMoveWhenEaten = targetPiece.timesMoved;
+                    targetPiece.eatenPieces.add(piece);
                 }
             } else if (targetPiece.color.equals("black") &&
                     prevSquare.coordinates.getRow() == 4 &&
                     (prevSquare.coordinates.equals(topRight) || prevSquare.coordinates.equals(topLeft))) {
                 BoardSquare square = getSquareAt(new Coordinates(targetPiece.coordinates.getCol(), targetPiece.coordinates.getRow() - 1));
                 if (!square.getChildren().isEmpty()) {
-                    square.getChildren().removeFirst();
+                    Piece piece = (Piece) square.getChildren().removeFirst();
+                    piece.otherPieceMoveWhenEaten = targetPiece.timesMoved;
+                    targetPiece.eatenPieces.add(piece);
                 }
 
             }
@@ -513,25 +520,29 @@ public class Board {
     /**
      * Handles a boolean value after a piece makes its first move
      */
-    private void caseOfMove(BoardSquare destSquare){
+    private void caseOfMove(BoardSquare destSquare, Piece targetPiece){
+//        System.out.println("Moved: "+targetPiece.timesMoved);
         // Ensure the piece knows how many times they moved
-        if(targetPiece.timesMoved>0){
-            targetPiece.moved = true;
-        } else {
+        if(targetPiece.timesMoved == 0){
             // Used so the resets can be done
             // If the timesMoved is set back to zero, the piece should act like it hasn't move
             // Ex: pawn can only move twice on first move
             targetPiece.moved = false;
-            targetPiece.twoStepped = false;
+        } else {
+            targetPiece.moved = true;
         }
+
         if (targetPiece.type.equals("pawn")){
-            if(targetPiece.color.equals("white") && destSquare.coordinates.getRow() == 4) {
+            if((targetPiece.color.equals("white") && destSquare.coordinates.getRow() == 4)
+            || (targetPiece.color.equals("black") && destSquare.coordinates.getRow() == 3)) {
                 targetPiece.twoStepped = true;
-            }
-            else if(targetPiece.color.equals("black") && destSquare.coordinates.getRow() == 3){
-                targetPiece.twoStepped = true;
+            } else if((targetPiece.color.equals("white") && destSquare.coordinates.getRow() == 5)
+                    || (targetPiece.color.equals("black") && destSquare.coordinates.getRow() == 2)){
+                targetPiece.twoStepped = false;
             }
         }
+
+//        System.out.println(targetPiece.color+" "+targetPiece.type+" two Stepped: "+targetPiece.twoStepped);
     }
 
     /**
