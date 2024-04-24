@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- *
+ * UI Controller for the main menu screen
  */
 public class MainMenuController {
     private Stage stage;
@@ -30,7 +30,7 @@ public class MainMenuController {
     AnchorPane menu;
 
     /**
-     * Creates the chess board
+     * Creates the chess board, loads the GIF, and makes sure the database is initialized
      */
     public void initialize() throws IOException {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/menuImages/VirtualChess!.gif")));
@@ -41,6 +41,11 @@ public class MainMenuController {
         Parent settingsContent = loader.load();
     }
 
+    /**
+     * Button action for switching to the game mode screen
+     * @param event {@link ActionEvent} for the click
+     * @throws IOException Can throw if screen cant be loaded
+     */
     public void switchToGameMode(ActionEvent event) throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/gamemode.fxml")));
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -50,6 +55,11 @@ public class MainMenuController {
         stage.show();
     }
 
+    /**
+     * Button action for switching to the leaderboard screen
+     * @param event {@link ActionEvent} for the click
+     * @throws IOException Can throw if screen cant be loaded
+     */
     public void switchToLeaderboard(ActionEvent event) throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/leaderboard.fxml")));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -59,6 +69,11 @@ public class MainMenuController {
         stage.show();
     }
 
+    /**
+     * Button action for switching to the settings screen
+     * @param event {@link ActionEvent} for the click
+     * @throws IOException Can throw if screen cant be loaded
+     */
     public void switchToSettingsMenu(ActionEvent event) throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/settingsMenu.fxml")));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -68,6 +83,11 @@ public class MainMenuController {
         stage.show();
     }
 
+    /**
+     * Button action for switching to the tutorial screen
+     * @param event {@link ActionEvent} for the click
+     * @throws IOException Can throw if screen cant be loaded
+     */
     public void switchToTutorial(ActionEvent event) throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/Tutorial Screen.fxml")));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -76,6 +96,4 @@ public class MainMenuController {
         stage.setScene(scene);
         stage.show();
     }
-
-
 }
