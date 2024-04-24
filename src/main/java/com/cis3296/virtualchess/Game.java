@@ -79,11 +79,13 @@ public class Game {
             } else if (turnSystem.currentColor.equals("black") && piece.color.equals("black")) {
                 piece.twoStepped = false;
             }
-            if(piece.color.equals("white")){
-                piece.isTurn = !piece.isTurn;
-            }
-            if(piece.color.equals("black")){
-                piece.isTurn = !piece.isTurn;
+            // make sure the pieces cannot move if not their turn
+            if(piece.color.equals("white") && turnSystem.currentColor.equals("black")){
+                piece.isTurn = false;
+            } else if(piece.color.equals("black") && turnSystem.currentColor.equals("white")){
+                piece.isTurn = false;
+            } else {
+                piece.isTurn = true;
             }
         }
 

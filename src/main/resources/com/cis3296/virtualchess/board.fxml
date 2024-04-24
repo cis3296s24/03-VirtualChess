@@ -29,6 +29,14 @@
             </Text>
          <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
             <children>
+               <Button alignment="CENTER" cache="true" contentDisplay="TOP" mnemonicParsing="false" onAction="#undoMove" text="Undo Move" wrapText="true">
+                  <font>
+                     <Font name="System Bold" size="23.0" />
+                  </font>
+                  <VBox.margin>
+                     <Insets bottom="100.0" />
+                  </VBox.margin>
+               </Button>
                   <Button onAction="#settings" prefHeight="50.0" prefWidth="300.0" text="Settings">
                   <VBox.margin>
                      <Insets bottom="25.0" />

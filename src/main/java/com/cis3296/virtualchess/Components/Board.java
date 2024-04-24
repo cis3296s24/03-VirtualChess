@@ -2,6 +2,7 @@ package com.cis3296.virtualchess.Components;
 
 import com.cis3296.virtualchess.*;
 import com.cis3296.virtualchess.Entities.Coordinates;
+import com.cis3296.virtualchess.Entities.Move;
 import com.cis3296.virtualchess.Entities.Pieces.*;
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -14,6 +15,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Sphere;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Stack;
 
 public class Board {
     // In case we need to change these column/row/size values for any reason later on...
@@ -31,6 +34,8 @@ public class Board {
 
     private Piece targetPiece;
     private BoardSquare targetSquare;
+
+    private Stack<Move> moveStack = new Stack<>();
 
 
     //The border surround each of the board squares
@@ -313,6 +318,63 @@ public class Board {
     }
 
     /**
+     * Undoes the most recent move done on the board
+     * @param oldSquare the square the piece was on previously
+     * @param pieceMovingBack the piece moving back to the old square
+     * @param isEatenPiece if the piece is an eaten piece, it goes through a different process
+     */
+    public void undoPieceMove(BoardSquare oldSquare, Piece pieceMovingBack, boolean isEatenPiece){
+        BoardSquare prevSquare = getSquareAt(pieceMovingBack.coordinates);
+
+        // make sure it's not an eaten piece
+        if(!isEatenPiece){
+            /* CASE FOR MOVED PIECE */
+
+            // decrement the amount of times the piece moved
+            pieceMovingBack.timesMoved--;
+
+            // if the piece has any eaten pieces put them back in the correct order
+            if(!pieceMovingBack.eatenPieces.isEmpty()){
+                // look for the most recent eaten piece
+                Piece eatenPiece = pieceMovingBack.eatenPieces.peek();
+                if(eatenPiece != null){
+                    // ensure that the moment the eaten piece was eaten is the correct time it's put back
+                    if(eatenPiece.otherPieceMoveWhenEaten == pieceMovingBack.timesMoved){
+                        // take the piece from the stack of eaten pieces
+                        eatenPiece = pieceMovingBack.eatenPieces.pop();
+                        // get the destination square it had before
+                        BoardSquare destination = getSquareAt(eatenPiece.coordinates);
+                        // undo the move
+                        undoPieceMove(destination, eatenPiece, true);
+                    }
+                }
+            }
+            // Remove the piece from the square
+            prevSquare.getChildren().remove(pieceMovingBack);
+            // Add the piece to the previous square
+            addPiece(oldSquare, pieceMovingBack);
+            // Set the coordinates of the piece
+            pieceMovingBack.coordinates = oldSquare.coordinates;
+            // check the piece to regain any movement if necessary
+            pieceCheck(pieceMovingBack, oldSquare, prevSquare);
+
+            // ensure the right turn
+            game.handleTurn();
+        } else {
+            /* CASE FOR DELETED PIECE */
+
+            // add the piece back to the square
+            addPiece(oldSquare, pieceMovingBack);
+
+            // Set the new coordinates of the piece
+            pieceMovingBack.coordinates = oldSquare.coordinates;
+
+        }
+
+        System.out.println(pieceMovingBack.color+" "+pieceMovingBack.type + " back to " + Coordinates.toChessCoordinates(oldSquare.coordinates));
+    }
+
+    /**
      * This method ensures that the movement of a piece is valid,
      * then calls mouse event handlers to allow for drag-and-drop of piece
      * @param destSquare the square for the piece to be set on
@@ -327,6 +389,11 @@ public class Board {
             // If the destination square has an opponent piece, remove it
             Piece destPiece = getPieceAt(destSquare.coordinates);
             if(destPiece != null){
+                // Store the move the piece was eaten at
+                destPiece.otherPieceMoveWhenEaten = targetPiece.timesMoved;
+                // Store it in the eaten pieces
+                targetPiece.eatenPieces.add(destPiece);
+
                 destPiece.guardedSquares.clear();
                 destPiece.currentMoveSet.clear();
                 this.pieces.remove(destPiece);
@@ -334,6 +401,13 @@ public class Board {
                 targetPiece.guardedSquares.clear();
                 targetPiece.currentMoveSet.clear();
             }
+
+            // store the previous move before making the move
+            Move currentMove = new Move(targetPiece, targetPiece.coordinates);
+            moveStack.add(currentMove);
+            // increment the amount of times the piece is moved
+            targetPiece.timesMoved++;
+
             // Add the piece to the new square
             destSquare.containsPiece = true;
             destSquare.getChildren().add(targetPiece);
@@ -379,7 +453,7 @@ public class Board {
             }
         }
 
-        // handle any rules after first movement of pawn
+        // handle any rules after first movement of piece
         if(targetPiece.type.equals("pawn") || targetPiece.type.equals("king") || targetPiece.type.equals("rook")){
             caseOfMove(destSquare);
         }
@@ -437,11 +511,18 @@ public class Board {
     }
 
     /**
-     * Handles a boolean value after a pawn makes its first move
+     * Handles a boolean value after a piece makes its first move
      */
-    public void caseOfMove(BoardSquare destSquare){
-        if(!targetPiece.moved){
+    private void caseOfMove(BoardSquare destSquare){
+        // Ensure the piece knows how many times they moved
+        if(targetPiece.timesMoved>0){
             targetPiece.moved = true;
+        } else {
+            // Used so the resets can be done
+            // If the timesMoved is set back to zero, the piece should act like it hasn't move
+            // Ex: pawn can only move twice on first move
+            targetPiece.moved = false;
+            targetPiece.twoStepped = false;
         }
         if (targetPiece.type.equals("pawn")){
             if(targetPiece.color.equals("white") && destSquare.coordinates.getRow() == 4) {
@@ -494,6 +575,14 @@ public class Board {
             }
         }
         return board.toString();
+    }
+
+    /**
+     * Getter for the stack of moves made by pieces
+     * @return a Stack of Move
+     */
+    public Stack<Move> getMoveStack(){
+        return moveStack;
     }
 
 //    public void movingIntoCheck(){

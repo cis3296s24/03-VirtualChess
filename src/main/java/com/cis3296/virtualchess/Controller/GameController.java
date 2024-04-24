@@ -1,6 +1,10 @@
 package com.cis3296.virtualchess.Controller;
 
+import com.cis3296.virtualchess.Components.Board;
 import com.cis3296.virtualchess.Components.BoardSettings;
+import com.cis3296.virtualchess.Components.BoardSquare;
+import com.cis3296.virtualchess.Entities.Coordinates;
+import com.cis3296.virtualchess.Entities.Move;
 import com.cis3296.virtualchess.Game;
 import com.cis3296.virtualchess.Systems.TurnSystem;
 import javafx.animation.KeyFrame;
@@ -118,6 +122,27 @@ public class GameController {
         }
 
     }
+
+    /**
+     * Connected to a button on the board FXML file, this method calls a Board method to undo piece movement
+     */
+    public void undoMove(){
+        // get the board
+        Board chessBoard = game.chessBoard;
+        // get the previous move
+        if(!chessBoard.getMoveStack().empty()){
+            Move previousMove = chessBoard.getMoveStack().pop();
+            // get the last coordinates
+            Coordinates previousCoordinates = previousMove.getPreviousCoordinates();
+            // get the square at the coordinates
+            BoardSquare previousSquare = chessBoard.getSquareAt(previousCoordinates);
+            // signal that the piece is not an eaten piece
+            boolean isEatenPiece = false;
+            // set the piece back to the previous square
+            chessBoard.undoPieceMove(previousSquare, previousMove.getPiece(), isEatenPiece);
+        }
+    }
+
 
 }
 
