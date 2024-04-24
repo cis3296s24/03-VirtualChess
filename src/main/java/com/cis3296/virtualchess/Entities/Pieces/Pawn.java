@@ -13,6 +13,8 @@ public class Pawn extends Piece {
     private final int DOWN = 1;
     private final int direction;
     private PawnPromotionPopup popup;
+    public boolean wasPromoted;
+    public Piece piecePromotedTo;
     // directions are in respect to the pawn's location
     // i.e. black pawn's forward goes up, white pawn's "forward" goes down
 

@@ -436,7 +436,7 @@ public class Board {
     private void pieceCheck(Piece targetPiece, BoardSquare destSquare, BoardSquare prevSquare){
         // Pawn promotion
         if(targetPiece.type.equals("pawn")){
-            pawnPromotion();
+            pawnPromotion(targetPiece);
         }
 
         if(targetPiece.type.equals("king")){
@@ -474,6 +474,7 @@ public class Board {
                     Piece piece = (Piece) square.getChildren().removeFirst();
                     piece.otherPieceMoveWhenEaten = targetPiece.timesMoved;
                     targetPiece.eatenPieces.add(piece);
+                    System.out.println("did en passant for white");
                 }
             } else if (targetPiece.color.equals("black") &&
                     prevSquare.coordinates.getRow() == 4 &&
@@ -483,6 +484,7 @@ public class Board {
                     Piece piece = (Piece) square.getChildren().removeFirst();
                     piece.otherPieceMoveWhenEaten = targetPiece.timesMoved;
                     targetPiece.eatenPieces.add(piece);
+                    System.out.println("did en passant for black");
                 }
 
             }
@@ -549,13 +551,30 @@ public class Board {
     /**
      * Handles the promotion of the pawns once they reach the other side of the board
      */
-    public void pawnPromotion(){
+    public void pawnPromotion(Piece targetPiece){
         // The current row of the pawn
         int currentRow = targetPiece.coordinates.getRow();
         // If the pawn is at the opposite side then promote it
+        Pawn pawnToPromote = (Pawn) targetPiece;
         if(targetPiece.color.equals("white") && currentRow == 0 || targetPiece.color.equals("black") && currentRow == 7){
+            // CASE OF PAWN PROMOTION
+
+            // Get the destination
             BoardSquare currentSquare = getSquareAt(targetPiece.coordinates);
-            ((Pawn) targetPiece).promote(currentSquare, this);
+            // Promote the piece on the board
+            pawnToPromote.promote(currentSquare, this);
+            // set the promotion to true
+            pawnToPromote.wasPromoted = true;
+        } else if(pawnToPromote.wasPromoted == true) {
+            // CASE OF UNDOING PAWN PROMOTION
+
+            // Get the square the piece was promoted on
+            BoardSquare endSquare = getSquareAt(pawnToPromote.piecePromotedTo.coordinates);
+            System.out.println(targetPiece.coordinates);
+            // take the promoted piece off the square
+            endSquare.getChildren().remove(pawnToPromote.piecePromotedTo);
+            // signal that the pawn is not promoted
+            pawnToPromote.wasPromoted = false;
         }
     }
 

@@ -123,6 +123,10 @@ public class PawnPromotionPopup {
 
         // Close the pop-up window
         Stage popupStage = (Stage) queenButton.getScene().getWindow();
+
+        // let the pawn know what the piece was
+        pawn.piecePromotedTo = newQueen;
+
         popupStage.close();
     }
 
@@ -144,6 +148,10 @@ public class PawnPromotionPopup {
 
         // Close the pop-up window
         Stage popupStage = (Stage) rookButton.getScene().getWindow();
+
+        // let the pawn know what the piece was
+        pawn.piecePromotedTo = newRook;
+
         popupStage.close();
     }
 
@@ -165,6 +173,10 @@ public class PawnPromotionPopup {
 
         // Close the pop-up window
         Stage popupStage = (Stage) bishopButton.getScene().getWindow();
+
+        // let the pawn know what the piece was
+        pawn.piecePromotedTo = newBishop;
+
         popupStage.close();
     }
 
@@ -186,6 +198,10 @@ public class PawnPromotionPopup {
 
         // Close the pop-up window
         Stage popupStage = (Stage) knightButton.getScene().getWindow();
+
+        // let the pawn know what the piece was
+        pawn.piecePromotedTo = newKnight;
+
         popupStage.close();
     }
 
