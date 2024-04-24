@@ -3,6 +3,6 @@
 <properties>
 <comment>Configuration</comment>
 <entry key="hints">true</entry>
-<entry key="ai">false</entry>
+<entry key="ai">true</entry>
 <entry key="theme">Sandcastle</entry>
 </properties>
