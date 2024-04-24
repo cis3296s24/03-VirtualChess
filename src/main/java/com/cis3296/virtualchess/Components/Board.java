@@ -532,6 +532,7 @@ public class Board {
             targetPiece.moved = true;
         }
 
+        // if a pawn has made it's first turn, make sure it can't move twice again unless it's been reset
         if (targetPiece.type.equals("pawn")){
             if((targetPiece.color.equals("white") && destSquare.coordinates.getRow() == 4)
             || (targetPiece.color.equals("black") && destSquare.coordinates.getRow() == 3)) {
