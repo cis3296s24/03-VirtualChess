@@ -474,7 +474,6 @@ public class Board {
                     Piece piece = (Piece) square.getChildren().removeFirst();
                     piece.otherPieceMoveWhenEaten = targetPiece.timesMoved;
                     targetPiece.eatenPieces.add(piece);
-                    System.out.println("did en passant for white");
                 }
             } else if (targetPiece.color.equals("black") &&
                     prevSquare.coordinates.getRow() == 4 &&
@@ -484,7 +483,6 @@ public class Board {
                     Piece piece = (Piece) square.getChildren().removeFirst();
                     piece.otherPieceMoveWhenEaten = targetPiece.timesMoved;
                     targetPiece.eatenPieces.add(piece);
-                    System.out.println("did en passant for black");
                 }
 
             }
