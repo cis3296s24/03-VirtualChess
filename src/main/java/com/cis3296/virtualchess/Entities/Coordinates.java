@@ -2,6 +2,9 @@ package com.cis3296.virtualchess.Entities;
 
 import static com.cis3296.virtualchess.Components.Board.SQUARE_SIZE;
 
+/**
+ * Data class for storing row, column, x, and y of objects
+ */
 public class Coordinates {
     private int col, row; // The column and row of each location on the chessboard
     private int x, y; // The specific pixel location of each col and row
@@ -18,6 +21,10 @@ public class Coordinates {
         this.y = SQUARE_SIZE * row;
     }
 
+    /**
+     * Constructor for creating coordinates from real chess coordinates
+     * @param chessCoords String of actual chess coordinates ex. a2
+     */
     public Coordinates(String chessCoords) {
         if(chessCoords.length() != 2){
             System.out.println("Invalid coordinates");
@@ -50,41 +57,6 @@ public class Coordinates {
             }
             row = (8 - Integer.parseInt(chessCoords.substring(1, 2)));
         }
-        System.out.println(this.toString());
-    }
-
-    /**
-     * Sets all 4 coordinate values
-     * @param col is the desired new row-coordinate to be set
-     * @param row is the desired new row-coordinate to be set
-//     * @param x is the desired new y-coordinate to be set
-//     * @param y is the desired new y-coordinate to be set
-     */
-    public void setCoordinates(int col, int row) {
-        this.col = col;
-        this.row = row;
-        this.x = SQUARE_SIZE * col;
-        this.y = SQUARE_SIZE * row;
-    }
-
-    /**
-     * Setter for column and x coordinates
-     * @param col is the desired new row-coordinate to be set
-     * @param x is the desired new y-coordinate to be set
-     */
-    public void setColX(int col, int x) {
-        this.col = col;
-        this.x = x;
-    }
-
-    /**
-     * Setter for row and y coordinates
-     * @param row is the desired new row-coordinate to be set
-     * @param y is the desired new y-coordinate to be set
-     */
-    public void setRowY(int row, int y) {
-        this.row = row;
-        this.y = y;
     }
 
     /**
@@ -105,7 +77,7 @@ public class Coordinates {
 
     /**
      * Getter for the x-coordinate
-     * @return x
+     * @return The X position in pixels
      */
     public int getX() {
         return this.x;
@@ -113,17 +85,26 @@ public class Coordinates {
 
     /**
      * Getter for the y-coordinate
-     * @return y
+     * @return The Y position in pixels
      */
     public int getY() {
         return this.y;
     }
 
+    /**
+     * Formates the variables into a string
+     * @return String containing the row, column, x, and y of this coordinate
+     */
     @Override
     public String toString() {
         return "(Col:" + col + ", Row:" + row + ", X:" + x + ", Y:" + y + ")";
     }
 
+    /**
+     * Overrides the equals operator to compare the rows and columns
+     * @param obj Should always be a {@link Coordinates} object
+     * @return True if the rows and columns are the same, false otherwise
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Coordinates) {
@@ -134,6 +115,11 @@ public class Coordinates {
         return super.equals(obj);
     }
 
+    /**
+     * Converts our coordinate system to actual chess notation
+     * @param coordinates The coordinates to be converted
+     * @return A String containing the proper chess notation
+     */
     public static String toChessCoordinates(Coordinates coordinates) {
         String coordinatesString = "";
         switch(coordinates.getCol()) {
