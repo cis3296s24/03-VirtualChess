@@ -41,7 +41,7 @@ public class PieceTutorialController {
     TextArea descriptionTextArea;
 
     /**
-     *
+     * Button action for switching to the Pawn tutorial
      */
     public void switchToPawn() {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Pieces & Basic animated/PawnMove.gif")));
@@ -51,7 +51,9 @@ public class PieceTutorialController {
         descriptionLabel.setText("The pawn moves by one square forward but captures diagonally. It is the only piece that has a different method for moving and capturing.");
     }
 
-
+    /**
+     * Button action for switching to the Bishop tutorial
+     */
     public void switchToBishop() {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Pieces & Basic animated/BishopMove.gif")));
         Image additionalImage = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Bishopmovearrow.png")));
@@ -60,6 +62,9 @@ public class PieceTutorialController {
         descriptionLabel.setText("The bishop can move diagonally, but not forward, backward, or sideways. Each side starts with two bishops, one on a light square and one on a dark square.");
     }
 
+    /**
+     * Button action for switching to the Rook tutorial
+     */
     public void switchToRook()  {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Pieces & Basic animated/RookMove.gif")));
         Image additionalImage = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Rookmovearrow.png")));
@@ -68,6 +73,9 @@ public class PieceTutorialController {
         descriptionLabel.setText("The rook moves forwards, backward, and sideways any number of squares.");
     }
 
+    /**
+     * Button action for switching to the Knight tutorial
+     */
     public void switchToKnight()  {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Pieces & Basic animated/KnightMove.gif")));
         Image additionalImage = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Knightmovearrow.png")));
@@ -76,6 +84,9 @@ public class PieceTutorialController {
         descriptionLabel.setText("The knight doesn't go in a straight line. The knight moves two squares in one direction and then turns and goes one square to the side.");
     }
 
+    /**
+     * Button action for switching to the King tutorial
+     */
     public void switchToKing()  {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Pieces & Basic animated/KingMove.gif")));
         Image additionalImage = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/kingmovearrow.gif")));
@@ -84,6 +95,9 @@ public class PieceTutorialController {
         descriptionLabel.setText("The king can move to any square that’s directly next to it: up, down, sideways, or diagonal.");
     }
 
+    /**
+     * Button action for switching to the Queen tutorial
+     */
     public void switchToQueen()  {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Pieces & Basic animated/QueenMove.gif")));
         Image additionalImage = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/QueenMovearrow.gif")));
@@ -107,6 +121,9 @@ public class PieceTutorialController {
         stage.show();
     }
 
+    /**
+     * Button action for switching to the Board Setup tutorial
+     */
     public void switchToSetupBoard()  {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Pieces & Basic animated/SetupBoard.gif")));
         imageView.setImage(image);
@@ -120,12 +137,18 @@ public class PieceTutorialController {
                 "Don't forget, white moves first!.");
     }
 
+    /**
+     * Button action for switching to the Piece Capturing tutorial
+     */
     public void switchToCapturing()  {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Pieces & Basic animated/Capturing.gif")));
         imageView.setImage(image);
         descriptionLabel.setText("Capturing Opponent's pieces is the primary goal in chess. When a player makes a move, and it lands on a square where opponents piece is standing, that piece is captured by you.");
     }
 
+    /**
+     * Button action for switching to the Piece Values tutorial
+     */
     public void switchToPieceValue()  {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/SetupBoard.png")));
         imageView.setImage(image);
@@ -138,6 +161,9 @@ public class PieceTutorialController {
                 " kings = the whole game!");
     }
 
+    /**
+     * Button action for switching to the Check tutorial
+     */
     public void switchToCheck() {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Check/QueenCheck.png")));
         Image additionalImage = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Check/Pawncheck.png")));
@@ -148,6 +174,9 @@ public class PieceTutorialController {
         descriptionTextArea.setText("When a king is attacked, it is called check. Check can be viewed as saying ,Watch out! The king is attacked! Since a king can never be captured, the term check is used when a king is threatened.");
     }
 
+    /**
+     * Button action for switching to the Getting out of Check tutorial
+     */
     public void switchToGettingOutofCheck() {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Check/gettingoutofcheck1.png")));
         Image additionalImage = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Check/gettingoutofcheck2.png")));
@@ -156,6 +185,9 @@ public class PieceTutorialController {
         descriptionTextArea.setText("If a player is in check, they must get out of check! There are three ways to get out of check are to move out of check, block the check, or capture the piece putting you in check.You can capture the piece and get out of check. for example We must capture the queen with our king! There is no way to block the check and no way to move out of check, so we must capture on f2.");
     }
 
+    /**
+     * Button action for switching to the Checkmate tutorial
+     */
     public void switchToCheckMate() {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Check/Checkmate.gif")));
         Image additionalImage = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Check/Checkmate.png")));
@@ -167,6 +199,9 @@ public class PieceTutorialController {
                 "Checkmate automatically ends the game, regardless of how many pieces are left on the board for either player. In some cases, one player will sacrifice many of their strongest pieces in order to end the game immediately with checkmate.");
     }
 
+    /**
+     * Button action for switching to the Stalemate tutorial
+     */
     public void switchToStalemate() {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Check/Stalemate1.png")));
         Image additionalImage = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/Check/stalemate2.png")));
@@ -187,25 +222,31 @@ public class PieceTutorialController {
 
     }
 
+    /**
+     * Button action for switching to the Castling tutorial
+     */
     public void switchToCastling()  {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/SpecialMoves/Castling.gif")));
         imageView.setImage(image);
         descriptionLabel.setText("The king may move two squares to either side, with the rook moving to the other side of the king. Not legal if either piece has moved or if the king would move into, out of, or through check.");
     }
 
+    /**
+     * Button action for switching to the Pawn Promotion tutorial
+     */
     public void switchToPromotion()  {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/SpecialMoves/PawnPromotion.gif")));
         imageView.setImage(image);
         descriptionLabel.setText("Pawn promotion occurs when a pawn reaches the farthest rank from its original square—the eighth rank for White and first rank for Black. When this happens, the player can replace the pawn for a queen, a rook, a bishop, or a knight. ");
     }
 
+    /**
+     * Button action for switching to the En Passant tutorial
+     */
     public void switchToEnPassant()  {
         Image image = new Image(String.valueOf(getClass().getResource("/assets/Tutorialimages/SpecialMoves/Enpassant.gif")));
         imageView.setImage(image);
         descriptionLabel.setText("The en passant rule is a special pawn capturing move in chess.En passant is a French expression that translates to in passing, which is precisely how this capture works." +
                 "Pawns can usually capture only pieces that are directly and diagonally in front of them on an adjacent file. It moves to the captured piece's square and replaces it.");
     }
-
-
-
 }
