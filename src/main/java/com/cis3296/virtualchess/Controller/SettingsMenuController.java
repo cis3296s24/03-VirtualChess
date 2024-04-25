@@ -64,6 +64,11 @@ public class SettingsMenuController {
         hints.setSelected(Boolean.parseBoolean(hintsChecked));
     }
 
+    /**
+     *
+     * @param event {@link ActionEvent} for the click
+     * @throws IOException Can throw if screen cant be loaded
+     */
     public void backToMainMenu(ActionEvent event) throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/mainmenu.fxml")));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();

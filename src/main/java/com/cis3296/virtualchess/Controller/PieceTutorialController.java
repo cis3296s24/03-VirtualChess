@@ -109,7 +109,7 @@ public class PieceTutorialController {
     /**
      *
      * @param event {@link ActionEvent} for the click
-     * @ Can throw if screen cant be loaded
+     * @throws IOException Can throw if screen cant be loaded
      */
     @FXML
     public void switchToTutorial(ActionEvent event) throws IOException  {

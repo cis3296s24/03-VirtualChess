@@ -28,6 +28,11 @@ public class TutorialScreenController {
 
     }
 
+    /**
+     *
+     * @param event {@link ActionEvent} for the click
+     * @throws IOException Can throw if screen cant be loaded
+     */
     @FXML
     public void switchToPieceInfo(ActionEvent event) throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/Pieces.fxml")));
