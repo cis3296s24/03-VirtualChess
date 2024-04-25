@@ -15,16 +15,27 @@ import java.util.Objects;
  */
 public abstract class Piece extends ImageView {
 
+    // Coordinates of the piece
     public Coordinates coordinates;
+    // Color of the piece
     public String color;
+    // Type of the piece (i.e. pawn, queen...)
     public String type;
+    // Board that the piece is on
     public Board board;
+    // If it is this pieces turn or not
     public boolean isTurn;
+    // Has this piece moved yet
     public boolean moved;
+    // Has this piece done a double move(For pawn)
     public boolean twoStepped;
+    // The current valid moves for the piece
     public ArrayList<Coordinates> currentMoveSet = new ArrayList<>();
+    // The squares around the piece that are guarded
     public ArrayList<Coordinates> guardedSquares = new ArrayList<>();
+    // Is this piece checking another piece
     public boolean isChecking;
+    // Is this piece in check
     public boolean inCheck;
 
 
@@ -58,20 +69,27 @@ public abstract class Piece extends ImageView {
         setOnMouseDragged(Event::consume);
     }
 
+    /**
+     * Finds the images file by using the type and color
+     */
     public void setImage() {
         this.setPiece(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/assets/piecesNorm/" + this.color + "_" + this.type + ".png")), 90, 90, true, true));
     }
+
+    /**
+     * Sets the ImageView image using an image from resources
+     * @param image An image representing the piece
+     */
     public void setPiece(Image image) {
         this.setImage(image);
     }
 
     /**
      * Determines if a piece can move to a desired space or not
-     * No additional code is needed here as of now
      * Each child class will overwrite this method to distinguish different piece movement
      * @param targetCol is the targeted column for movement
      * @param targetRow is the targeted row for movement
-     * @return false by default, preventing erratic movement
+     * @return false by default, true if it can move
      */
     public boolean canMove(int targetCol, int targetRow){
         Coordinates targetCoordinates = new Coordinates(targetCol, targetRow);
@@ -84,14 +102,27 @@ public abstract class Piece extends ImageView {
         return false;
     }
 
+    /**
+     * Shows hints on the board for where the piece can move
+     * @param board The board the piece is on
+     */
     public void showMoves(Board board){
         this.currentMoveSet = this.getMoveSet();
         for(Coordinates coordinates : currentMoveSet){
             board.showMoves(coordinates);
         }
     }
+
+    /**
+     * Gets the moveset for a specific piece
+     * @return An arraylist containing the valid move {@link Coordinates} for a piece
+     */
     public abstract ArrayList<Coordinates> getMoveSet();
 
+    /**
+     * Checks whether the piece is guarded or not
+     * @return true if it is guarded, false otherwise
+     */
     public boolean isGuarded() {
         for (Piece piece : board.pieces) {
             if (!piece.equals(this)) {
@@ -108,8 +139,8 @@ public abstract class Piece extends ImageView {
     /**
      * This method confirms adds the coordinates to the piece move set if the moves
      * do not conflict with other pieces
-     * @param moveSet the ObservableList the coordinates get added to
-     * @param targetCoordinates the coordinates of the move being made
+     * @param moveSet the ArrayList the {@link Coordinates} get added to
+     * @param targetCoordinates the {@link Coordinates} of the move being made
      */
     public void addCoordinates(ArrayList<Coordinates> moveSet, Coordinates targetCoordinates){
         Piece targetPiece = board.getPieceAt(targetCoordinates);
