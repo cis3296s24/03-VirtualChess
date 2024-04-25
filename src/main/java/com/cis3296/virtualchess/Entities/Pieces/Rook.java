@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 /**
  * Models the moveset of the rook piece
- * Extends from {@link Piece}
  */
 public class Rook extends Piece {
 
@@ -23,6 +22,12 @@ public class Rook extends Piece {
         setImage();
     }
 
+    /**
+     * Checks north, east, south, and west for valid position to add to the moveset
+     * @param moveSet An arraylist containing {@link Coordinates} that represents valid moves for the piece
+     * @param rowOffset Direction up or down
+     * @param colOffset Direction side to side
+     */
     public void checkDirection(ArrayList<Coordinates> moveSet, int rowOffset, int colOffset) {
         int row = coordinates.getRow() + rowOffset;
         int col = coordinates.getCol() + colOffset;
@@ -67,6 +72,10 @@ public class Rook extends Piece {
         return moveSet;
     }
 
+    /**
+     * Generates a string for the FEN representation of this piece
+     * @return A string containing the lowercase first letter if black or capital if white
+     */
     @Override
     public String toString() {
         if(color.equals("white")){

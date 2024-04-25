@@ -8,7 +8,6 @@ import java.util.Objects;
 
 /**
  * Models the moveset of the king piece
- * Extends from {@link Piece}
  */
 public class King extends Piece {
 

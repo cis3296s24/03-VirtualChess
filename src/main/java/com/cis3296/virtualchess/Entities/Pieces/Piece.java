@@ -9,7 +9,10 @@ import javafx.scene.image.ImageView;
 import java.util.ArrayList;
 import java.util.Objects;
 
-
+/**
+ * Models a basic piece and what it can do
+ * Extends Image View so that it can have an image on it
+ */
 public abstract class Piece extends ImageView {
 
     public Coordinates coordinates;

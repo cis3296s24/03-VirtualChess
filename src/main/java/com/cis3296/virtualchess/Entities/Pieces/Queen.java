@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 /**
  * Models the moveset of the queen piece
- * Extends from {@link Piece}
  */
 public class Queen extends Piece {
 
@@ -22,8 +21,8 @@ public class Queen extends Piece {
     }
 
     /**
-    * Determines the possible moves that a bishop can make based on its current position.
-    * @return a list of possible coordinates the bishop can move to.
+    * Determines the possible moves that a queen can make based on its current position.
+    * @return a list of possible coordinates the queen can move to.
     */
     @Override
     public ArrayList<Coordinates> getMoveSet() {
@@ -79,6 +78,12 @@ public class Queen extends Piece {
         return moveSet;
     }
 
+    /**
+     * Checks north, east, south, and west for valid position to add to the moveset
+     * @param moveSet An arraylist containing {@link Coordinates} that represents valid moves for the piece
+     * @param rowOffset Direction up or down
+     * @param colOffset Direction side to side
+     */
     public void checkDirection(ArrayList<Coordinates> moveSet, int rowOffset, int colOffset) {
         int row = coordinates.getRow() + rowOffset;
         int col = coordinates.getCol() + colOffset;
@@ -103,14 +108,18 @@ public class Queen extends Piece {
 
     /**
      * Checks whether the target coordinates are within the bounds of the board.
-     * @param row the row of the target coordinates.
-     * @param col the column of the target coordinates.
+     * @param row the row of the target {@link Coordinates}.
+     * @param col the column of the target {@link Coordinates}.
      * @return true if the coordinates are within bounds, false otherwise.
      */
     private boolean isValidMove(int row, int col) {
         return row >= 0 && row < 8 && col >= 0 && col < 8;
     }
 
+    /**
+     * Generates a string for the FEN representation of this piece
+     * @return A string containing the lowercase first letter if black or capital if white
+     */
     @Override
     public String toString() {
         if(color.equals("white")){

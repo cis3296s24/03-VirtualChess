@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 /**
  * Models the moveset of the bishop piece
- * Extends from {@link Piece}
  */
 public class Bishop extends Piece {
     /**

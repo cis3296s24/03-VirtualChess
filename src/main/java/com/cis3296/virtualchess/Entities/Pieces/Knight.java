@@ -7,13 +7,12 @@ import com.cis3296.virtualchess.Components.Board;
 
 /**
  * Models the moveset of the knight piece
- * Extends from {@link Piece}
  */
 public class Knight extends Piece {
 
     /**
      * Constructor for a Knight type piece
-     * @param coordinates are the coordinates of the Knight on the board
+     * @param coordinates are the {@link Coordinates} of the Knight on the board
      * @param color chooses the color of the piece
      */
     public Knight(Coordinates coordinates, String color, Board board, boolean isTurn){
@@ -24,7 +23,7 @@ public class Knight extends Piece {
 
     /**
      * This method determines the possible moves that a knight can move based on their current position
-     * @return a move set with possible coordinates to move
+     * @return an arraylist move set with possible {@link Coordinates} to move
      */
     @Override
     public ArrayList<Coordinates> getMoveSet() {
@@ -62,6 +61,10 @@ public class Knight extends Piece {
         return moveSet;
     }
 
+    /**
+     * Generates a string for the FEN representation of this piece
+     * @return A string containing the lowercase first letter if black or capital if white
+     */
     @Override
     public String toString() {
         if(color.equals("white")){
