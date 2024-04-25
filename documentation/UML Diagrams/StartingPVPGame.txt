@@ -1,0 +1,60 @@
+title Starting a Player vs Player Game
+
+participant MainMenu
+participant ModeSelectionScreen
+participant Game
+participant Board
+participant TurnSystem
+participant Player1
+participant Player2
+
+
+activate MainMenu
+MainMenu->ModeSelectionScreen: startGame()
+deactivate MainMenu
+
+activate ModeSelectionScreen
+ModeSelectionScreen->Game: startPvPGame(player1Name, player2Name)
+activate Game
+deactivate ModeSelectionScreen
+space 
+destroy ModeSelectionScreen
+
+Game-->Player1: new Player()
+activate Player1
+Game-->Player2: new Player()
+activate Player2
+Game-->TurnSystem: new TurnSystem(Player1, Player2, Game)
+activate TurnSystem
+Game-->Board: new Board(Gridpane, BoardSettings, Game)
+activate Board
+
+
+loop game.end != true
+
+Game->Game: handleTurn()
+activate Game
+Game->TurnSystem: changeTurn()
+deactivate Game
+
+end
+
+Game->MainMenu: goToMainMenu()
+deactivate Game
+activate MainMenu
+
+deactivate Board
+deactivate TurnSystem
+deactivate Player1
+deactivate Player2
+space 
+
+destroy Board
+destroy TurnSystem
+destroy Player1
+destroy Player2
+destroy Game
+
+deactivateafter MainMenu
+space 
+destroy MainMenu
