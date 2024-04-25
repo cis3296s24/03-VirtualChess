@@ -2,14 +2,10 @@ package com.cis3296.virtualchess.Entities.Pieces.PieceUtilities;
 
 import com.cis3296.virtualchess.Components.Board;
 import com.cis3296.virtualchess.Components.BoardSquare;
-import com.cis3296.virtualchess.Entities.Coordinates;
 import com.cis3296.virtualchess.Entities.Pieces.*;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
@@ -18,6 +14,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import java.util.Objects;
 
+/**
+ * Handles the pawn promotion logic
+ */
 public class PawnPromotionPopup {
 
     private Pawn pawn;
