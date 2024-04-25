@@ -6,7 +6,12 @@ import com.cis3296.virtualchess.Entities.Coordinates;
 
 import java.util.ArrayList;
 
+/**
+ * Models the moveset of the rook piece
+ * Extends from {@link Piece}
+ */
 public class Rook extends Piece {
+
     /**
      * Constructor for a Rook type piece
      * @param coordinates are the coordinates of the Rook on the board

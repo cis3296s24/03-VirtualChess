@@ -4,7 +4,12 @@ import com.cis3296.virtualchess.Entities.Coordinates;
 import com.cis3296.virtualchess.Components.Board;
 import java.util.ArrayList;
 
+/**
+ * Models the moveset of the queen piece
+ * Extends from {@link Piece}
+ */
 public class Queen extends Piece {
+
     /**
      * Constructor for a Queen type piece
      * @param coordinates are the coordinates of the Queen on the board

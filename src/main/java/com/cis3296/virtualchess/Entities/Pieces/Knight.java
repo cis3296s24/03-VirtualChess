@@ -5,6 +5,10 @@ import com.cis3296.virtualchess.Entities.Coordinates;
 import java.util.ArrayList;
 import com.cis3296.virtualchess.Components.Board;
 
+/**
+ * Models the moveset of the knight piece
+ * Extends from {@link Piece}
+ */
 public class Knight extends Piece {
 
     /**

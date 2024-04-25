@@ -7,6 +7,10 @@ import com.cis3296.virtualchess.Entities.Pieces.PieceUtilities.PawnPromotionPopu
 
 import java.util.ArrayList;
 
+/**
+ * Models the moveset of the pawn piece
+ * Extends from {@link Piece}
+ */
 public class Pawn extends Piece {
 
     private final int UP = -1;

@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import java.util.ArrayList;
 import java.util.Objects;
 
+
 public abstract class Piece extends ImageView {
 
     public Coordinates coordinates;
