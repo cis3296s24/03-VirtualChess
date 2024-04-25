@@ -15,16 +15,15 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Objects;
-import java.util.Properties;
 
 import static com.cis3296.virtualchess.Components.BoardSettings.setConfig;
 
+/**
+ * UI Controller for the settings screen
+ */
 public class SettingsMenuController {
-
 
     @FXML
     public ComboBox ThemeDropDown;
@@ -42,7 +41,10 @@ public class SettingsMenuController {
     private Scene scene;
     private Parent root;
 
-
+    /**
+     * Loads all the config options from the config file to display past options.
+     * Sets up current themes for the theme dropdown
+     */
     public void initialize(){
         String[] themes = {
                 BoardStyle.SANDCASTLE.styleName,
@@ -65,7 +67,7 @@ public class SettingsMenuController {
     }
 
     /**
-     *
+     * Button action for switching back to the main menu
      * @param event {@link ActionEvent} for the click
      * @throws IOException Can throw if screen cant be loaded
      */
@@ -78,17 +80,25 @@ public class SettingsMenuController {
         stage.show();
     }
 
-
+    /**
+     * Sets the theme in the config file
+     */
     @FXML
     private void setTheme(){
         setConfig(BoardSettings.THEME_CONFIG_ACCESS_STRING, ThemeDropDown.getValue().toString());
     }
 
+    /**
+     * Sets the hints option in the config file
+     */
     @FXML
     private void setHints(){
         setConfig(BoardSettings.HINTS_CONFIG_ACCESS_STRING, String.valueOf(hints.isSelected()));
     }
 
+    /**
+     * Sets whether the undo button is shown in the config file
+     */
     @FXML
     private void setUndoButton(){
         setConfig(BoardSettings.UNDO_CONFIG_ACCESS_STRING, String.valueOf(undo.isSelected()));
