@@ -434,32 +434,109 @@ public class Board {
     }
 
     private void pieceCheck(Piece targetPiece, BoardSquare destSquare, BoardSquare prevSquare){
+        // handle any rules after first movement of piece
+        if(targetPiece.type.equals("pawn") || targetPiece.type.equals("king") || targetPiece.type.equals("rook")){
+            caseOfMove(destSquare, targetPiece);
+        }
+
         // Pawn promotion
         if(targetPiece.type.equals("pawn")){
             pawnPromotion(targetPiece);
         }
 
         if(targetPiece.type.equals("king")){
-            Coordinates rightRookCoord = new Coordinates(destSquare.coordinates.getCol()+1, destSquare.coordinates.getRow());
-            Coordinates leftRookCoord = new Coordinates(destSquare.coordinates.getCol()-2, destSquare.coordinates.getRow());
-            Piece rightRook = getPieceAt(rightRookCoord);
-            Piece leftRook = getPieceAt(leftRookCoord);
-            if(rightRook != null && !rightRook.moved && rightRook.type.equals("rook")){
-                BoardSquare square = getSquareAt(new Coordinates(destSquare.coordinates.getCol()-1, destSquare.coordinates.getRow()));
-                square.getChildren().remove(rightRook);
-                square.getChildren().add(rightRook);
-            }
-            if(leftRook != null && !leftRook.moved && leftRook.type.equals("rook")){
-                BoardSquare square = getSquareAt(new Coordinates(destSquare.coordinates.getCol()+1, destSquare.coordinates.getRow()));
-                square.getChildren().remove(leftRook);
-                square.getChildren().add(leftRook);
+            // cast the king piece
+            King king = (King) targetPiece;
+
+            // coordinates the king can castle at
+            Coordinates whiteKingLeftCastle = new Coordinates(2,7);
+            Coordinates whiteKingRightCastle = new Coordinates(6,7);
+            Coordinates blackKingLeftCastle = new Coordinates(2,0);
+            Coordinates blackKingRightCastle = new Coordinates(6,0);
+
+            // only can castle when king is at these coordinates
+            if(destSquare.coordinates.equals(whiteKingRightCastle)
+                || destSquare.coordinates.equals(whiteKingLeftCastle)
+                || destSquare.coordinates.equals(blackKingLeftCastle)
+                || destSquare.coordinates.equals(blackKingRightCastle)){
+                /* CASE OF CASTLING*/
+
+                // only can do castle if the king has not castled
+                if(!king.castled){
+                    // find the right and left rooks
+                    Coordinates rightRookCoord = new Coordinates(destSquare.coordinates.getCol()+1, destSquare.coordinates.getRow());
+                    Coordinates leftRookCoord = new Coordinates(destSquare.coordinates.getCol()-2, destSquare.coordinates.getRow());
+                    // store the rooks for later use
+                    king.rightRook = (Rook) getPieceAt(rightRookCoord);
+                    king.leftRook = (Rook) getPieceAt(leftRookCoord);
+                    // as long as the rooks aren't null and haven't moved, they can castle
+                    if(king.rightRook != null && !king.rightRook.moved && king.rightRook.type.equals("rook")){
+                        // store the current rook coordinates and get the square it's on
+                        king.rightRook.coordBeforeCastle = rightRookCoord;
+                        BoardSquare oldSquare = getSquareAt(rightRookCoord);
+                        // find the rook's new destination coords and square
+                        Coordinates destinationCoord = new Coordinates(destSquare.coordinates.getCol()-1, destSquare.coordinates.getRow());
+                        king.rightRook.coordinates = destinationCoord;
+                        BoardSquare newSquare = getSquareAt(destinationCoord);
+                        // remove it from the old square and put it on the new one
+                        oldSquare.getChildren().remove(king.rightRook);
+                        addPiece(newSquare,king.rightRook);
+                        // let the king and the rook know it's been castled
+                        king.castled = true;
+                        king.rightRook.castled = true;
+                    }
+                    if(king.leftRook != null && !king.leftRook.moved && king.leftRook.type.equals("rook")){
+                        // store the current rook coordinates and get the square it's on
+                        king.leftRook.coordBeforeCastle = leftRookCoord;
+                        BoardSquare oldSquare = getSquareAt(leftRookCoord);
+                        // find the rook's new destination coords and square
+                        Coordinates destinationCoord = new Coordinates(destSquare.coordinates.getCol()+1, destSquare.coordinates.getRow());
+                        king.leftRook.coordinates = destinationCoord;
+                        BoardSquare newSquare = getSquareAt(destinationCoord);
+                        // remove it from the old square and put it on the new one
+                        oldSquare.getChildren().remove(king.leftRook);
+                        addPiece(newSquare,king.leftRook);
+                        // let the king and the rook know it's been castled
+                        king.castled = true;
+                        king.leftRook.castled = true;
+                    }
+                }
+            } else if(!king.moveAfterCastle) {
+                /* CASE OF UNDOING CASTLING*/
+
+                // make sure a rook has been castled
+                if(king.rightRook != null && king.rightRook.castled){
+                    // get the square the rook is currently on
+                    BoardSquare currentSquare = new BoardSquare(king.rightRook.coordinates);
+                    // get the old square it was before castle
+                    BoardSquare oldSquare = getSquareAt(king.rightRook.coordBeforeCastle);
+                    // remove the rook from the current square
+                    currentSquare.getChildren().remove(king.rightRook);
+                    // add it back to the old one
+                    addPiece(oldSquare,king.rightRook);
+                    // set the rooks coord again
+                    king.rightRook.coordinates = king.rightRook.coordBeforeCastle;
+                    // signal that the castle was reset
+                    king.castled = false;
+                    king.rightRook.castled = false;
+                } else if(king.leftRook != null && king.leftRook.castled){
+                    // get the square the rook is currently on
+                    BoardSquare currentSquare = new BoardSquare(king.leftRook.coordinates);
+                    // get the old square it was before castle
+                    BoardSquare oldSquare = getSquareAt(king.leftRook.coordBeforeCastle);
+                    // remove the rook from the current square
+                    currentSquare.getChildren().remove(king.leftRook);
+                    // add it back to the old one
+                    addPiece(oldSquare,king.leftRook);
+                    // set the rooks coord again
+                    king.leftRook.coordinates = king.leftRook.coordBeforeCastle;
+                    // signal that the castle was reset
+                    king.castled = false;
+                    king.leftRook.castled = false;
+                }
             }
         }
 
-        // handle any rules after first movement of piece
-        if(targetPiece.type.equals("pawn") || targetPiece.type.equals("king") || targetPiece.type.equals("rook")){
-            caseOfMove(destSquare, targetPiece);
-        }
         if(targetPiece.type.equals("pawn")) {
             Coordinates topLeft = new Coordinates(targetPiece.coordinates.getCol() - 1, targetPiece.coordinates.getRow() - 1);
             Coordinates topRight = new Coordinates(targetPiece.coordinates.getCol() + 1, targetPiece.coordinates.getRow() - 1);
@@ -543,7 +620,18 @@ public class Board {
             }
         }
 
-//        System.out.println(targetPiece.color+" "+targetPiece.type+" two Stepped: "+targetPiece.twoStepped);
+        // any cases for special king moves
+        if(targetPiece.type.equals("king")){
+            // cast it to king
+            King king = (King) targetPiece;
+            // if the king has moved after it castled, it will not undo castle until it has regressed to a certain move
+            if(king.timesMoved>1 && king.castled){
+                king.moveAfterCastle = true;
+            } else {
+                king.moveAfterCastle = false;
+            }
+        }
+
     }
 
     /**
@@ -568,7 +656,6 @@ public class Board {
 
             // Get the square the piece was promoted on
             BoardSquare endSquare = getSquareAt(pawnToPromote.piecePromotedTo.coordinates);
-            System.out.println(targetPiece.coordinates);
             // take the promoted piece off the square
             endSquare.getChildren().remove(pawnToPromote.piecePromotedTo);
             // signal that the pawn is not promoted

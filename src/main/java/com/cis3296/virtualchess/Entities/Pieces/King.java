@@ -8,6 +8,10 @@ import java.util.Objects;
 
 public class King extends Piece {
 
+    public Rook leftRook;
+    public Rook rightRook;
+    public boolean castled = false;
+    public boolean moveAfterCastle = false;
 
     /**
      * Constructor for a King type piece
