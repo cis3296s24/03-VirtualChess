@@ -27,6 +27,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Controller for Game UI
@@ -151,25 +152,30 @@ public class GameController {
     /**
      * Connected to a button on the board FXML file, this method calls a Board method to undo piece movement
      */
-    public void undoMove(){
+    public void undoMoveButton(){
         if(Boolean.parseBoolean(Settings.getConfig(Settings.UNDO_CONFIG_ACCESS_STRING))){
-            // get the board
-            Board chessBoard = game.chessBoard;
-            // get the previous move
-            if(!chessBoard.getMoveStack().empty()){
-                Move previousMove = chessBoard.getMoveStack().pop();
-                // get the last coordinates
-                Coordinates previousCoordinates = previousMove.getPreviousCoordinates();
-                // get the square at the coordinates
-                BoardSquare previousSquare = chessBoard.getSquareAt(previousCoordinates);
-                // signal that the piece is not an eaten piece
-                boolean isEatenPiece = false;
-                // set the piece back to the previous square
-                chessBoard.undoPieceMove(previousSquare, previousMove.getPiece(), isEatenPiece);
+            undoMove();
+            if(Boolean.parseBoolean(Settings.getConfig(Settings.AI_CONFIG_ACCESS_STRING))){
+                undoMove();
             }
         }
     }
 
-
+    private void undoMove(){
+        // get the board
+        Board chessBoard = game.chessBoard;
+        // get the previous move
+        if(!chessBoard.getMoveStack().empty()){
+            Move previousMove = chessBoard.getMoveStack().pop();
+            // get the last coordinates
+            Coordinates previousCoordinates = previousMove.getPreviousCoordinates();
+            // get the square at the coordinates
+            BoardSquare previousSquare = chessBoard.getSquareAt(previousCoordinates);
+            // signal that the piece is not an eaten piece
+            boolean isEatenPiece = false;
+            // set the piece back to the previous square
+            chessBoard.undoPieceMove(previousSquare, previousMove.getPiece(), isEatenPiece);
+        }
+    }
 }
 
