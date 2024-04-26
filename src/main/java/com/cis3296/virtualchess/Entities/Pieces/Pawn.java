@@ -12,9 +12,6 @@ import java.util.ArrayList;
  */
 public class Pawn extends Piece {
 
-    private final int UP = -1;
-    private final int DOWN = 1;
-    private final int direction;
     private PawnPromotionPopup popup;
     // directions are in respect to the pawn's location
     // i.e. black pawn's forward goes up, white pawn's "forward" goes down
@@ -28,11 +25,7 @@ public class Pawn extends Piece {
         super(coordinates, color, board, isTurn);
         this.type = "pawn";
         setImage();
-        if(color.equals("white")){
-            direction = UP;
-        } else {
-            direction = DOWN;
-        }
+
         this.popup = new PawnPromotionPopup(this);
     }
 

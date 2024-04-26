@@ -98,7 +98,7 @@ public class Game {
         for (Piece piece : chessBoard.pieces) {
             piece.guardedSquares.clear();
             piece.currentMoveSet.clear();
-            piece.currentMoveSet = piece.getMoveSet();
+            piece.currentMoveSet = piece.getMoveSetSuper();
         }
 
         for (Piece piece : chessBoard.pieces) {

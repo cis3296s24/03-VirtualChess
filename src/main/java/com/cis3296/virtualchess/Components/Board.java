@@ -86,12 +86,15 @@ public class Board {
                 square.setOnDragDropped(dragEvent -> {
                     movePiece(square);
                 });
-//                square.setOnMouseClicked(mouseEvent -> pieceOnInteract(mouseEvent, getPieceAt(square.coordinates)));
             }
         }
-        addPieces();
+        if(Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.KV_CONFIG_ACCESS_STRING))){
+            addPiecesSimple();
+        } else{
+            addPieces();
+        }
         for (Piece piece : this.pieces) {
-            piece.currentMoveSet = piece.getMoveSet();
+            piece.currentMoveSet = piece.getMoveSetSuper();
         }
     }
 
@@ -220,6 +223,79 @@ public class Board {
             }
         }
 
+    }
+
+    private void addPiecesSimple(){
+        boolean blackTurn = false;
+        boolean whiteTurn = true;
+        for(BoardSquare square : boardSquares){
+            if(square.coordinates.getRow() == 7){
+                if(square.coordinates.getCol() == 0 || square.coordinates.getCol() == 6){
+                    Piece rookW = new Rook(square.coordinates, "white", this, whiteTurn);
+                    addPiece(square, rookW);
+                }
+
+                if(square.coordinates.getCol() == 2){
+                    Piece queenW = new Queen(square.coordinates, "white", this, whiteTurn);
+                    addPiece(square, queenW);
+                }
+                if(square.coordinates.getCol() == 4){
+                    kingW = new King(square.coordinates, "white", this, whiteTurn);
+                    addPiece(square, kingW);
+                }
+
+            }
+            if(square.coordinates.getRow() == 6){
+                if(square.coordinates.getCol() == 1 || square.coordinates.getCol() == 7){
+                    Piece knightW = new Knight(square.coordinates, "white", this, whiteTurn);
+                    addPiece(square, knightW);
+                }
+                if(square.coordinates.getCol() == 3 || square.coordinates.getCol() == 5){
+                    Piece bishopW = new Bishop(square.coordinates, "white", this, whiteTurn);
+                    addPiece(square, bishopW);
+                }
+            }
+            if(square.coordinates.getRow() == 5){
+                if(square.coordinates.getCol() % 2 == 0) {
+                    Piece pawnW = new Pawn(square.coordinates, "white", this, whiteTurn);
+                    addPiece(square, pawnW);
+                }
+            }
+
+            if(square.coordinates.getRow() == 2){
+                if(square.coordinates.getCol() == 1 || square.coordinates.getCol() == 3 || square.coordinates.getCol() == 5 || square.coordinates.getCol() == 7) {
+                    Piece pawnB = new Pawn(square.coordinates, "black", this, blackTurn);
+                    addPiece(square, pawnB);
+                }
+            }
+            if(square.coordinates.getRow() == 1){
+                if(square.coordinates.getCol() == 0 || square.coordinates.getCol() == 6){
+                    Piece knightB = new Knight(square.coordinates, "black", this, blackTurn);
+                    addPiece(square, knightB);
+                }
+                if(square.coordinates.getCol() == 2 || square.coordinates.getCol() == 4){
+                    Piece bishopB = new Bishop(square.coordinates, "black", this, blackTurn);
+                    addPiece(square, bishopB);
+                }
+            }
+            if(square.coordinates.getRow() == 0){
+                if(square.coordinates.getCol() == 1 || square.coordinates.getCol() == 7){
+                    Piece rookB = new Rook(square.coordinates, "black", this, blackTurn);
+                    addPiece(square, rookB);
+                }
+
+                if(square.coordinates.getCol() == 3){
+                    Piece queenB = new Queen(square.coordinates, "black", this, blackTurn);
+                    addPiece(square, queenB);
+                }
+                if(square.coordinates.getCol() == 5){
+                    Piece kingB = new King(square.coordinates, "black", this, blackTurn);
+                    addPiece(square, kingB);
+                }
+
+            }
+
+        }
     }
 
     /**
@@ -375,7 +451,7 @@ public class Board {
 
             for (Piece piece : pieces)
             {
-                piece.currentMoveSet = piece.getMoveSet();
+                piece.currentMoveSet = piece.getMoveSetSuper();
             }
 
             pieceCheck(targetPiece, destSquare, prevSquare);

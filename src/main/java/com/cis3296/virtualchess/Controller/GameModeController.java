@@ -39,6 +39,7 @@ public class GameModeController {
         stage.setScene(scene);
         stage.show();
         BoardSettings.setConfig(BoardSettings.AI_CONFIG_ACCESS_STRING, "false");
+        BoardSettings.setConfig(BoardSettings.KV_CONFIG_ACCESS_STRING, "false");
     }
 
     /**
@@ -55,6 +56,7 @@ public class GameModeController {
         stage.setScene(scene);
         stage.show();
         BoardSettings.setConfig(BoardSettings.AI_CONFIG_ACCESS_STRING, "true");
+        BoardSettings.setConfig(BoardSettings.KV_CONFIG_ACCESS_STRING, "false");
     }
 
     /**

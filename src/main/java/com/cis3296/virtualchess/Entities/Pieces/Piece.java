@@ -1,6 +1,7 @@
 package com.cis3296.virtualchess.Entities.Pieces;
 
 import com.cis3296.virtualchess.Components.Board;
+import com.cis3296.virtualchess.Components.BoardSettings;
 import com.cis3296.virtualchess.Entities.Coordinates;
 import javafx.event.Event;
 import javafx.scene.image.Image;
@@ -37,6 +38,11 @@ public abstract class Piece extends ImageView {
     public boolean isChecking;
     // Is this piece in check
     public boolean inCheck;
+    private final int UP = -1;
+    private final int DOWN = 1;
+    public int direction;
+
+    public boolean isSimple = false;
 
 
     /**
@@ -52,6 +58,16 @@ public abstract class Piece extends ImageView {
         moved = false;
         isChecking = false;
         inCheck = false;
+        if(color.equals("white")){
+            direction = UP;
+        } else {
+            direction = DOWN;
+        }
+        if(Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.KV_CONFIG_ACCESS_STRING))){
+            isSimple = true;
+        } else {
+            isSimple = false;
+        }
         setDragHandlers();
     }
 
@@ -64,7 +80,6 @@ public abstract class Piece extends ImageView {
             startFullDrag();
             event.consume();
         });
-
 
         setOnMouseDragged(Event::consume);
     }
@@ -93,7 +108,8 @@ public abstract class Piece extends ImageView {
      */
     public boolean canMove(int targetCol, int targetRow){
         Coordinates targetCoordinates = new Coordinates(targetCol, targetRow);
-        this.currentMoveSet = this.getMoveSet();
+        this.currentMoveSet = this.getMoveSetSuper();
+
         for(Coordinates coordinates : currentMoveSet){
             if(coordinates.equals(targetCoordinates)){
                 return true;
@@ -102,12 +118,29 @@ public abstract class Piece extends ImageView {
         return false;
     }
 
+    private ArrayList<Coordinates> getSimpleMoveSet() {
+        ArrayList<Coordinates> simpleMoveSet = new ArrayList<>();
+        Coordinates targetCoordinates;
+
+        int[] diagonalOffsets = {-1, 1};
+        for (int offset : diagonalOffsets) {
+            targetCoordinates = new Coordinates(coordinates.getCol() + offset, coordinates.getRow() + direction);
+            Piece diagPiece = board.getPieceAt(targetCoordinates);
+            if (diagPiece != null && !diagPiece.color.equals(this.color)) {
+                addCoordinates(simpleMoveSet, new Coordinates(targetCoordinates.getCol() + offset, targetCoordinates.getRow() + direction));
+            } else{
+                addCoordinates(simpleMoveSet, targetCoordinates);
+            }
+        }
+        return simpleMoveSet;
+    }
+
     /**
      * Shows hints on the board for where the piece can move
      * @param board The board the piece is on
      */
     public void showMoves(Board board){
-        this.currentMoveSet = this.getMoveSet();
+        this.currentMoveSet = this.getMoveSetSuper();
         for(Coordinates coordinates : currentMoveSet){
             board.showMoves(coordinates);
         }
@@ -118,6 +151,14 @@ public abstract class Piece extends ImageView {
      * @return An arraylist containing the valid move {@link Coordinates} for a piece
      */
     public abstract ArrayList<Coordinates> getMoveSet();
+
+    public ArrayList<Coordinates> getMoveSetSuper(){
+        if(!isSimple){
+            return this.getMoveSet();
+        } else {
+            return this.getSimpleMoveSet();
+        }
+    }
 
     /**
      * Checks whether the piece is guarded or not
