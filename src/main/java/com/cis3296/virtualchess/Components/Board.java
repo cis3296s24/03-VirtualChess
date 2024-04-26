@@ -89,7 +89,7 @@ public class Board {
                 boardSquares.add(square);
                 // Sets the Drag handler so that when a piece is dropped on the board it moves the piece there
                 square.setOnDragDropped(dragEvent -> {
-                    movePiece(square);
+                    moveFromTo(targetPiece.coordinates, square.coordinates);
                 });
 //                square.setOnMouseClicked(mouseEvent -> pieceOnInteract(mouseEvent, getPieceAt(square.coordinates)));
             }
@@ -325,14 +325,35 @@ public class Board {
         Piece fromPiece = getPieceAt(from);
         Piece toPiece = getPieceAt(to);
         if(fromPiece != null && isValidMove(to.getCol(), to.getRow(), fromPiece)){
+
+            // increment the amount of times the piece is moved
+            fromPiece.timesMoved++;
+
             // Remove the piece from the square
             fromSquare.getChildren().remove(fromPiece);
+            fromPiece.guardedSquares.clear();
+
             // If the destination square has an opponent piece, remove it
             if(toPiece != null){
-                getPieceAt(to).guardedSquares.clear();
-                getPieceAt(to).currentMoveSet.clear();
+                // Store the move the piece was eaten at
+                toPiece.otherPieceMoveWhenEaten = targetPiece.timesMoved;
+                // Store it in the eaten pieces
+                targetPiece.eatenPieces.add(toPiece);
+
+                toPiece.guardedSquares.clear();
+                toPiece.currentMoveSet.clear();
+
+                pieces.remove(toPiece);
                 toSquare.getChildren().remove(toPiece);
+
+                fromPiece.guardedSquares.clear();
+                fromPiece.currentMoveSet.clear();
             }
+
+            // store the previous move before making the move
+            Move currentMove = new Move(fromPiece, fromPiece.coordinates);
+            moveStack.add(currentMove);
+
             // Add the piece to the new square
             toSquare.containsPiece = true;
             toSquare.getChildren().add(fromPiece);
@@ -340,7 +361,11 @@ public class Board {
             // Set the new coordinates of the piece
             fromPiece.coordinates = toSquare.coordinates;
 
-//            pieceCheck(fromPiece, toSquare);
+            for (Piece piece : pieces) {
+                piece.currentMoveSet = piece.getMoveSet();
+            }
+
+            pieceCheck(fromPiece, toSquare, fromSquare);
 
             System.out.println(fromPiece.type + " to " + Coordinates.toChessCoordinates(to));
             game.handleTurn();
@@ -450,8 +475,7 @@ public class Board {
             // Set the new coordinates of the piece
             targetPiece.coordinates = destSquare.coordinates;
 
-            for (Piece piece : pieces)
-            {
+            for (Piece piece : pieces) {
                 piece.currentMoveSet = piece.getMoveSet();
             }
 
@@ -473,16 +497,6 @@ public class Board {
      * @param prevSquare The {@link BoardSquare} that the piece is being moved from
      */
     private void pieceCheck(Piece targetPiece, BoardSquare destSquare, BoardSquare prevSquare){
-        // handle any rules after first movement of piece
-        if(targetPiece.type.equals("pawn") || targetPiece.type.equals("king") || targetPiece.type.equals("rook")){
-            caseOfMove(destSquare, targetPiece);
-        }
-
-        // Pawn promotion
-        if(targetPiece.type.equals("pawn")){
-            pawnPromotion(targetPiece);
-        }
-
         // Castling
         if(targetPiece.type.equals("king")){
             caseOfMove(destSquare, targetPiece);
