@@ -14,14 +14,18 @@ import static com.cis3296.virtualchess.Components.BoardStyle.*;
  */
 public class BoardSettings {
 
+    // Board Settings
     // Access String for getting the theme
     public static final String THEME_CONFIG_ACCESS_STRING = "theme";
     // Access String for getting if the undo button is shown
     public static final String UNDO_CONFIG_ACCESS_STRING = "undo";
     // Access String for getting if the game should show hints
     public static final String HINTS_CONFIG_ACCESS_STRING = "hints";
+
+    // Gamemode settings
     // Access String for getting if the game is using AI
     public static final String AI_CONFIG_ACCESS_STRING = "ai";
+    public static final String KV_CONFIG_ACCESS_STRING = "kensversion";
 
     // Properties where these are stored at runtime
     private static Properties prop = new Properties();
