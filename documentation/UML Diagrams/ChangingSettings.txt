@@ -1,0 +1,31 @@
+title Changing Settings
+
+participant MainMenu
+participant SettingsScreen
+
+activate MainMenu
+MainMenu->SettingsScreen: goToSettings()
+deactivate MainMenu
+
+activate SettingsScreen
+SettingsScreen->BoardStyle:getThemes()
+activate BoardStyle
+
+SettingsScreen<--BoardStyle: themesList
+deactivate BoardStyle
+
+SettingsScreen->SettingsScreen: selectTheme()
+
+SettingsScreen->SettingsScreen: setTheme()
+
+SettingsScreen->MainMenu: goToMainMenu()
+deactivate SettingsScreen
+space
+destroy SettingsScreen
+
+activate MainMenu
+space
+deactivate MainMenu
+space 
+destroy MainMenu
+destroy BoardStyle
