@@ -4,6 +4,9 @@ import com.cis3296.virtualchess.Entities.Coordinates;
 import com.cis3296.virtualchess.Components.Board;
 import java.util.ArrayList;
 
+/**
+ * Models the moveset of the bishop piece
+ */
 public class Bishop extends Piece {
     /**
      * Constructor for a Bishop type piece
@@ -19,7 +22,7 @@ public class Bishop extends Piece {
 
     /**
      * Determines the possible moves that a bishop can make based on its current position.
-     * @return a list of possible coordinates the bishop can move to.
+     * @return a list of possible {@link Coordinates} the bishop can move to.
      */
     @Override
     public ArrayList<Coordinates> getMoveSet() {
@@ -75,6 +78,10 @@ public class Bishop extends Piece {
         return row >= 0 && row < 8 && col >= 0 && col < 8;
     }
 
+    /**
+     * Generates a string for the FEN representation of this piece
+     * @return A string containing the lowercase first letter if black or capital if white
+     */
     @Override
     public String toString() {
         if(color.equals("white")){

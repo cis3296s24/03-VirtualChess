@@ -18,6 +18,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * UI Controller for the leaderboard screen
+ */
 public class LeaderBoardController {
 
     @FXML
@@ -37,7 +40,11 @@ public class LeaderBoardController {
     @FXML
     public AnchorPane menu;
 
-
+    /**
+     * Called when the screen is loaded.
+     * Sets up factories for each of the fields so that when an arraylist is given to it,
+     * it can autoload the values into the right columns
+     */
     public void initialize(){
         idColumn.setCellValueFactory(
                 new PropertyValueFactory<LeaderBoardEntry, String>("id")
@@ -57,6 +64,11 @@ public class LeaderBoardController {
         table.setItems(Database.getAllEntries());
     }
 
+    /**
+     * Button action for switching to the main screen
+     * @param event {@link ActionEvent} for the click
+     * @throws IOException Can throw if screen cant be loaded
+     */
     public void backToMainMenu(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/mainmenu.fxml")));
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();

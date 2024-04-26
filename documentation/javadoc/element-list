@@ -1,0 +1,8 @@
+module:com.cis3296.virtualchess
+com.cis3296.virtualchess
+com.cis3296.virtualchess.Components
+com.cis3296.virtualchess.Controller
+com.cis3296.virtualchess.Entities
+com.cis3296.virtualchess.Entities.Pieces
+com.cis3296.virtualchess.Entities.Pieces.PieceUtilities
+com.cis3296.virtualchess.Systems

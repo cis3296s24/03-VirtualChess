@@ -7,8 +7,8 @@ import java.io.OutputStreamWriter;
 
 /**
  * A simple and efficient client to run Stockfish from Java
- * @author Rahul A R
- * I(Nick Rucinski) worked on cleaning it up and extending it
+ * Originally from Rahul A R on GitHub
+ * Nick Rucinski worked on cleaning it up and extending it
  */
 public class Stockfish {
 
@@ -18,6 +18,7 @@ public class Stockfish {
 
 	/**
 	 * Starts Stockfish engine as a process and initializes it
+	 * Checks for the users OS and launches the correct version if available
 	 * @return True on success. False otherwise
 	 */
 	public boolean startEngine() {
@@ -28,6 +29,7 @@ public class Stockfish {
 			// Replace 'insert' with "/usr/local/bin/stockfish"
 			// Runtime.getRuntime().exec( 'insert' );
 			String PATH;
+			// Find the right OS
 			String osName = System.getProperty("os.name");
 			if (osName.toLowerCase().contains("mac")) {
 				PATH = "stockfish/stockfish-macos-x86-64-avx2";
@@ -36,14 +38,17 @@ public class Stockfish {
 			} else {
 				PATH = "stockfish/stockfish-ubuntu-x86-64-avx2";
 			}
+			// Startup Stockfish
 			engineProcess = Runtime.getRuntime().exec(PATH);
-			processReader = new BufferedReader(new InputStreamReader(
+			processReader  = new BufferedReader(new InputStreamReader(
 					engineProcess.getInputStream()));
 			processWriter = new OutputStreamWriter(
 					engineProcess.getOutputStream());
 		} catch (Exception e) {
+			// Failed to open
 			return false;
 		}
+		// Everything okay
 		return true;
 	}
 
@@ -61,9 +66,9 @@ public class Stockfish {
 	}
 
 	/**
-	 * Takes in any valid UCI command and executes it
+	 * Takes in any valid UCI command and executes it. Adds a newline character automatically
 	 *
-	 * @param command
+	 * @param command A UCI command to be sent to stockfish
 	 */
 	public void sendCommand(String command) {
 		try {
@@ -75,27 +80,36 @@ public class Stockfish {
 		}
 	}
 
+	/**
+	 * Sends the command to start a new game with UCI
+	 */
 	public void setUCINewGame() {
 		sendCommand("ucinewgame");
 	}
 
+	/**
+	 * Sets the positions on the board
+	 * @param fen A FEN string that represents the board
+	 */
 	public void setPosition(String fen){
 		String buffer = "position fen " + fen;
 		sendCommand(buffer);
 	}
 
-	public String getMove(int waitTime){
-		String buffer = "go movetime " + waitTime;
-		sendCommand(buffer);
-		return getOutput(waitTime + 20);
-	}
+	/**
+	 * Gets a move from Stockfish and parses it into coordinates if found
+	 * @param fen A FEN string that represents the board
+	 * @param waitTime The amount of time that Stockfish should wait before responding
+	 * @return The coordinates from and two to move
+	 * ex. a2a4 is move white pawn up two squares.
+	 * or null if the move in not received
+	 */
 	public String getBestMove(String fen, int waitTime) {
 		sendCommand("position fen " + fen);
 		sendCommand("go depth 1 movetime " + waitTime);
 
 		// Wait for the output to be ready
 		String output = getOutput(waitTime + 20);
-		System.out.println("Best move RAW: " + output);
 
 		// Split the output to find the best move
 		String[] lines = output.split("\n");
@@ -144,7 +158,7 @@ public class Stockfish {
 	 * Draws the current state of the chess board
 	 * 
 	 * @param fen
-	 *            Position string
+	 *            Position string with using FEN
 	 */
 	public void drawBoard(String fen) {
 		sendCommand("position fen " + fen);

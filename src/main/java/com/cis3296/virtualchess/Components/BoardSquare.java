@@ -3,9 +3,14 @@ package com.cis3296.virtualchess.Components;
 import com.cis3296.virtualchess.Entities.Coordinates;
 import javafx.scene.layout.StackPane;
 
+/**
+ * Data class for representing a square on the chess board
+ */
 public class BoardSquare extends StackPane {
 
+    // Coordinates of this square
     public Coordinates coordinates;
+    // Whether or not it contains a piece
     public boolean containsPiece;
 
     /**

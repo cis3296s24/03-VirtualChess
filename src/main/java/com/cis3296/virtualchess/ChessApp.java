@@ -10,7 +10,15 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * Handles loading the main menu and starting and stopping the database
+ */
 public class ChessApp extends Application {
+    /**
+     * Starts the Chess App and starts the database
+     * @param stage {@link Stage} where everything will be drawn
+     * @throws IOException If the mainmenu file fails to load this will be thrown
+     */
     @Override
     public void start(Stage stage) throws IOException {
         Database.getInstance();
@@ -25,6 +33,10 @@ public class ChessApp extends Application {
         }
     }
 
+    /**
+     * Closes the database when the app closes
+     * Any other logic that involves the user closing the window can go here
+     */
     @Override
     public void stop() {
         Database.closeDatabase();

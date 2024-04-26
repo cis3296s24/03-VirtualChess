@@ -1,21 +1,21 @@
 package com.cis3296.virtualchess.Controller;
 
 import com.cis3296.virtualchess.Components.BoardSettings;
-import com.cis3296.virtualchess.Entities.Player;
-import com.cis3296.virtualchess.Systems.TurnSystem;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * Controller for the Game Mode UI
+ */
 public class GameModeController {
 
     @FXML
@@ -25,12 +25,11 @@ public class GameModeController {
     private Scene scene;
     private Parent root;
 
-
-
-    public void initialize(){
-
-    }
-
+    /**
+     * Button action for switching to the Player vs Player screen
+     * @param event {@link ActionEvent} for the click
+     * @throws IOException Can throw if screen cant be loaded
+     */
     @FXML
     public void switchToSelectionPVP(ActionEvent event) throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/playerSelectionScreenPVP.fxml")));
@@ -42,6 +41,11 @@ public class GameModeController {
         BoardSettings.setConfig(BoardSettings.AI_CONFIG_ACCESS_STRING, "false");
     }
 
+    /**
+     * Button action for switching to the Player vs Computer screen
+     * @param event {@link ActionEvent} for the click
+     * @throws IOException Can throw if screen cant be loaded
+     */
     @FXML
     public void switchToSelectionPVC(ActionEvent event) throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/playerSelectionScreenPVC.fxml")));
@@ -53,6 +57,11 @@ public class GameModeController {
         BoardSettings.setConfig(BoardSettings.AI_CONFIG_ACCESS_STRING, "true");
     }
 
+    /**
+     * Button action for switching to the main screen
+     * @param event {@link ActionEvent} for the click
+     * @throws IOException Can throw if screen cant be loaded
+     */
     @FXML
     public void switchToMainMenu(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/mainmenu.fxml")));
