@@ -396,7 +396,6 @@ public class Board {
         BoardSquare fromSquare = getSquareAt(from);
         BoardSquare toSquare = getSquareAt(to);
         Piece fromPiece = getPieceAt(from);
-        Piece toPiece = getPieceAt(to);
         if(fromPiece != null && isValidMove(to.getCol(), to.getRow(), fromPiece)){
 
             // increment the amount of times the piece is moved
@@ -406,18 +405,15 @@ public class Board {
             fromSquare.getChildren().remove(fromPiece);
             fromPiece.guardedSquares.clear();
 
-            // If the destination square has an opponent piece, remove it
-            if(toPiece != null){
-                // Store the move the piece was eaten at
-                toPiece.otherPieceMoveWhenEaten = targetPiece.timesMoved;
-                // Store it in the eaten pieces
-                targetPiece.eatenPieces.add(toPiece);
-
-                toPiece.guardedSquares.clear();
-                toPiece.currentMoveSet.clear();
-
-                pieces.remove(toPiece);
-                toSquare.getChildren().remove(toPiece);
+            if(fromPiece.isSimple){
+                Coordinates test1 = new Coordinates(to.getCol() - from.getCol(), to.getRow() - from.getRow());
+                if(test1.getCol() == 2 || test1.getCol() == -2){
+                    Coordinates test2 = new Coordinates(to.getCol() - test1.getCol()/2, to.getRow() - test1.getRow()/2);
+                    System.out.println(test2);
+                    takePieceAt(test2);
+                }
+            } else{
+                takePieceAt(to);
             }
 
             // store the previous move before making the move
@@ -444,6 +440,25 @@ public class Board {
             System.out.println("Invalid Move");
         }
     }
+
+    private void takePieceAt(Coordinates targetCoordinates){
+        BoardSquare toSquare = getSquareAt(targetCoordinates);
+        Piece toPiece = getPieceAt(targetCoordinates);
+        // If the destination square has an opponent piece, remove it
+        if(toPiece != null){
+            // Store the move the piece was eaten at
+            toPiece.otherPieceMoveWhenEaten = targetPiece.timesMoved;
+            // Store it in the eaten pieces
+            targetPiece.eatenPieces.add(toPiece);
+
+            toPiece.guardedSquares.clear();
+            toPiece.currentMoveSet.clear();
+
+            pieces.remove(toPiece);
+            toSquare.getChildren().remove(toPiece);
+        }
+    }
+
 
     /**
      * Undoes the most recent move done on the board
