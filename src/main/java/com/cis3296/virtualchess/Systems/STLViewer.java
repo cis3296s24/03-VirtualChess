@@ -9,7 +9,6 @@ import javafx.scene.shape.TriangleMesh;
 import javafx.stage.Stage;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
-import javafx.scene.input.ScrollEvent;
 
 import java.io.File;
 import java.io.FileInputStream;

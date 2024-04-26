@@ -27,6 +27,9 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * Controller for Game UI
+ */
 public class GameController {
 
     public VBox board;
@@ -41,6 +44,8 @@ public class GameController {
     private Text currentTurnText;
 
     private TurnSystem turnSystem;
+
+    // Game that is to be created when this UI starts
     Game game;
 
     /**
@@ -49,6 +54,7 @@ public class GameController {
     public void initialize(){
         this.game = new Game(chessBoard);
         this.turnSystem = TurnSystem.getInstance();
+        // "Refresh Rate" of the timers
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), event -> updateTime()));
         timeline.setCycleCount(Timeline.INDEFINITE); // Repeat indefinitely
         timeline.play();
@@ -68,12 +74,20 @@ public class GameController {
         });
     }
 
+    /**
+     * Update the timers on the screen each 0.1 seconds(Defined in the timeline)
+     */
     public void updateTime(){
         turnSystem.getWhiteTime(timerTextWhite);
 
         turnSystem.getBlackTime(timerTextBlack);
     }
 
+    /**
+     * Button action for leaving the game and going to the main screen
+     * @param event {@link ActionEvent} for the click
+     * @throws IOException Throws if it cannot load the fxml file
+     */
     public void leaveGame(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/mainmenu.fxml")));
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -85,6 +99,9 @@ public class GameController {
 
     }
 
+    /**
+     * Button action for displaying the settings
+     */
     public void settings(){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cis3296/virtualchess/settingsMenu.fxml"));

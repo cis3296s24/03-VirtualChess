@@ -2,7 +2,6 @@ package com.cis3296.virtualchess.Components;
 
 import com.cis3296.virtualchess.*;
 import com.cis3296.virtualchess.Entities.Coordinates;
-import com.cis3296.virtualchess.Entities.Move;
 import com.cis3296.virtualchess.Entities.Pieces.*;
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -15,24 +14,34 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Sphere;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Stack;
 
+/**
+ * An 8x8 Grid the contains all the {@link BoardSquare} and {@link Piece} to play a game of chess
+ */
 public class Board {
-    // In case we need to change these column/row/size values for any reason later on...
+
+    // Amount of squares in the rows and columns
     public final int MAX_COL = 8, MAX_ROW = 8;
+    // Square Size in pixels
     public static final int SQUARE_SIZE = 100;
 
+    // An array list holding all the board square. Can be indexed using getSquareAt
     public ArrayList<BoardSquare> boardSquares = new ArrayList<>();
-    private final ArrayList<StackPane> moves = new ArrayList<>();
+    // An array list holding all the pieces. Can be indexed using getPieceAt
     public ArrayList<Piece> pieces = new ArrayList<>();
+
+    private final ArrayList<StackPane> moves = new ArrayList<>();
 
     private Piece kingW;
 
+    // Reference to game being passed in
     private final Game game;
+    // The settings for the board/game
     private final BoardSettings settings;
 
+    // Piece that is being held in the drag
     private Piece targetPiece;
+    // Not being used currently but would function similarly to targetPiece
     private BoardSquare targetSquare;
 
     private Stack<Move> moveStack = new Stack<>();
@@ -50,10 +59,11 @@ public class Board {
 
     /**
      *  Constructor for the Chess Board
-     * @param chessBoard - A gridPane representing the chessboard
+     * @param chessBoard A gridPane representing the chessboard
+     * @param settings Any Settings to be used in the board
+     * @param game Reference to the game that created this board
      */
     public Board(GridPane chessBoard, BoardSettings settings, Game game){
-
         this.settings = settings;
         init(chessBoard);
         this.game = game;
@@ -61,7 +71,7 @@ public class Board {
 
     /**
      * Goes through each of the tiles in the board and sets them up to be displayed
-     * @param chessBoard - A GridPane representing the chessboard
+     * @param chessBoard A GridPane representing the chessboard
      */
     private void init(GridPane chessBoard){
         for(int col = 0; col < MAX_COL; col++){
@@ -75,6 +85,7 @@ public class Board {
                 chessBoard.add(square, col, row, 1, 1);
 
                 boardSquares.add(square);
+                // Sets the Drag handler so that when a piece is dropped on the board it moves the piece there
                 square.setOnDragDropped(dragEvent -> {
                     movePiece(square);
                 });
@@ -87,12 +98,22 @@ public class Board {
         }
     }
 
+    /**
+     * Indexes into the {@link Board#boardSquares} arraylist to get the desired square
+     * @param coordinates The {@link Coordinates} where you want to access a board square
+     * @return The {@link BoardSquare} at the coordinates or null if not found
+     */
     public BoardSquare getSquareAt(Coordinates coordinates) {
         int index = coordinates.getCol() * 8 + coordinates.getRow();
         if(index >= boardSquares.size() || index < 0) return null;
         return boardSquares.get(index);
     }
 
+    /**
+     * Gets the square at the coordinates and looks for pieces as children to that square
+     * @param coordinates {@link Coordinates} for where to look for a piece
+     * @return {@link Piece} at the coordinates or null if the square doesn't have a piece
+     */
     public Piece getPieceAt(Coordinates coordinates) {
         BoardSquare square = getSquareAt(coordinates);
 
@@ -111,8 +132,8 @@ public class Board {
     }
 
     /**
-     *  Sets the color of a given square
-     * @param square - The square that's color will be changed
+     * Sets the color of a given square
+     * @param square The {@link BoardSquare} that's color will be changed
      */
     private void setSquareColor(BoardSquare square){
         if((square.coordinates.getCol()+square.coordinates.getRow())%2==0){
@@ -204,23 +225,38 @@ public class Board {
 
     }
 
+    /**
+     * Goes through all the {@link BoardSquare} on the {@link Board} and sets the colors of them
+     * This is used when changing the theme in settings to make sure the new color is applied
+     */
     public void rerenderBoard() {
         for (BoardSquare square : boardSquares) {
             setSquareColor(square);
         }
     }
 
+    /**
+     * Adds a given {@link Piece} to a given {@link BoardSquare}
+     * Only For setup
+     * @param square the target boardsquare
+     * @param piece the piece that will be added
+     */
     public void addPiece(BoardSquare square, Piece piece){
         pieces.add(piece);
         square.getChildren().add(piece);
         square.containsPiece = true;
 
-        // each piece needs to be able to be dragged and dropped
+        // Each piece needs to be able to be dragged and dropped
         piece.setOnDragDetected(event -> {
             pieceOnInteract(event, piece);
         });
     }
 
+    /**
+     * The method that is run when a piece is picked up
+     * @param event A {@link Event}
+     * @param piece The {@link Piece} that is being dragged
+     */
     private void pieceOnInteract(Event event, Piece piece){
         if(piece.isTurn){
             targetPiece = piece;
@@ -239,12 +275,22 @@ public class Board {
     }
 
     /**
-     * Checks to see if the move being made is valid
-     * @return true if the move is valid, false if not
+     * Checks if the move to a square is valid
+     * @param col Destination {@link BoardSquare} column
+     * @param row Destination {@link BoardSquare} row
+     * @return true if the move is valid false otherwise
      */
     public boolean isValidMove(int col, int row) {
         return targetPiece.canMove(col, row) && isValidCoordinate(col, row);
     }
+
+    /**
+     * Another version of isValidMove that uses the targetPiece
+     * @param col Destination {@link BoardSquare} column
+     * @param row Destination {@link BoardSquare} row
+     * @param targetPiece The {@link Piece} that is being moved
+     * @return true if the move is valid false otherwise
+     */
     public boolean isValidMove(int col, int row, Piece targetPiece) {
         if(targetPiece != null){
             return targetPiece.canMove(col, row) && isValidCoordinate(col, row);
@@ -254,14 +300,23 @@ public class Board {
     }
 
     /**
-     * Checks to see if the coordinates are valid coordinates on the GridPane
-     * @param col column the piece is being dragged over
-     * @param row row the piece is being dragged over
+     * Checks to see if the coordinates are valid on the board
+     * @param col column the {@link Piece} is being dragged over
+     * @param row row the {@link Piece} is being dragged over
      * @return true if valid, false if not valid
      */
     public boolean isValidCoordinate(int col, int row) {
-        return col >= 0 && col < MAX_COL && row >= 0 && row < MAX_ROW;
+        return  col >= 0 &&
+                col < MAX_COL &&
+                        row >= 0 &&
+                        row < MAX_ROW;
     }
+
+    /**
+     * Moves a {@link Piece} from one {@link Coordinates} to another
+     * @param from the coordinates where the piece is moving from
+     * @param to the coordinates where the piece is moving to
+     */
     public void moveFromTo(Coordinates from, Coordinates to){
         BoardSquare fromSquare = getSquareAt(from);
         BoardSquare toSquare = getSquareAt(to);
@@ -285,30 +340,6 @@ public class Board {
 
 //            pieceCheck(fromPiece, toSquare);
 
-            //            if(targetPiece.type.equals("pawn")) {
-//                Coordinates topLeft = new Coordinates(targetPiece.coordinates.getCol() - 1, targetPiece.coordinates.getRow() - 1);
-//                Coordinates topRight = new Coordinates(targetPiece.coordinates.getCol() + 1, targetPiece.coordinates.getRow() - 1);
-//                Coordinates bottomLeft = new Coordinates(targetPiece.coordinates.getCol() - 1, targetPiece.coordinates.getRow() + 1);
-//                Coordinates bottomRight = new Coordinates(targetPiece.coordinates.getCol() + 1, targetPiece.coordinates.getRow() + 1);
-//                if (targetPiece.color.equals("white") &&
-//                        prevSquare.coordinates.getRow() == 3 &&
-//                        (prevSquare.coordinates.equals(bottomRight) || prevSquare.coordinates.equals(bottomLeft))) {
-//                    BoardSquare square = getSquareAt(new Coordinates(targetPiece.coordinates.getCol(), targetPiece.coordinates.getRow() + 1));
-//                    System.out.println(square.coordinates);
-//                    if (!square.getChildren().isEmpty()) {
-//                        square.getChildren().removeFirst();
-//                    }
-//                } else if (targetPiece.color.equals("black") &&
-//                        prevSquare.coordinates.getRow() == 4 &&
-//                        (prevSquare.coordinates.equals(topRight) || prevSquare.coordinates.equals(topLeft))) {
-//                    BoardSquare square = getSquareAt(new Coordinates(targetPiece.coordinates.getCol(), targetPiece.coordinates.getRow() - 1));
-//                    if (!square.getChildren().isEmpty()) {
-//                        square.getChildren().removeFirst();
-//                    }
-//
-//                }
-//            }
-
             System.out.println(fromPiece.type + " to " + Coordinates.toChessCoordinates(to));
             game.handleTurn();
 
@@ -318,67 +349,9 @@ public class Board {
     }
 
     /**
-     * Undoes the most recent move done on the board
-     * @param oldSquare the square the piece was on previously
-     * @param pieceMovingBack the piece moving back to the old square
-     * @param isEatenPiece if the piece is an eaten piece, it goes through a different process
-     */
-    public void undoPieceMove(BoardSquare oldSquare, Piece pieceMovingBack, boolean isEatenPiece){
-        BoardSquare prevSquare = getSquareAt(pieceMovingBack.coordinates);
-
-        // make sure it's not an eaten piece
-        if(!isEatenPiece){
-            /* CASE FOR MOVED PIECE */
-
-            // if the piece has any eaten pieces put them back in the correct order
-            if(!pieceMovingBack.eatenPieces.isEmpty()){
-                // look for the most recent eaten piece
-                Piece eatenPiece = pieceMovingBack.eatenPieces.peek();
-                if(eatenPiece != null){
-                    // ensure that the moment the eaten piece was eaten is the correct time it's put back
-                    if(eatenPiece.otherPieceMoveWhenEaten == pieceMovingBack.timesMoved){
-                        // take the piece from the stack of eaten pieces
-                        eatenPiece = pieceMovingBack.eatenPieces.pop();
-                        // get the destination square it had before
-                        BoardSquare destination = getSquareAt(eatenPiece.coordinates);
-                        // undo the move
-                        undoPieceMove(destination, eatenPiece, true);
-                    }
-                }
-            }
-            // Remove the piece from the square
-            prevSquare.getChildren().remove(pieceMovingBack);
-            // Add the piece to the previous square
-            addPiece(oldSquare, pieceMovingBack);
-            // Set the coordinates of the piece
-            pieceMovingBack.coordinates = oldSquare.coordinates;
-
-            // decrement the amount of times the piece moved
-            pieceMovingBack.timesMoved--;
-
-            // check the piece to regain any movement if necessary
-            pieceCheck(pieceMovingBack, oldSquare, prevSquare);
-
-            // ensure the right turn
-            game.handleTurn();
-        } else {
-            /* CASE FOR DELETED PIECE */
-
-            // add the piece back to the square
-            addPiece(oldSquare, pieceMovingBack);
-
-            // Set the new coordinates of the piece
-            pieceMovingBack.coordinates = oldSquare.coordinates;
-
-        }
-
-        System.out.println(pieceMovingBack.color+" "+pieceMovingBack.type + " back to " + Coordinates.toChessCoordinates(oldSquare.coordinates));
-    }
-
-    /**
      * This method ensures that the movement of a piece is valid,
      * then calls mouse event handlers to allow for drag-and-drop of piece
-     * @param destSquare the square for the piece to be set on
+     * @param destSquare the {@link BoardSquare} for the piece to be set on
      */
     private void movePiece(BoardSquare destSquare){
         BoardSquare prevSquare = getSquareAt(targetPiece.coordinates);
@@ -433,6 +406,12 @@ public class Board {
         }
     }
 
+    /**
+     * Checks various condition on a piece when moving to a square
+     * @param targetPiece The {@link Piece} that is being moved
+     * @param destSquare The {@link BoardSquare} that the piece is being moved to
+     * @param prevSquare The {@link BoardSquare} that the piece is being moved from
+     */
     private void pieceCheck(Piece targetPiece, BoardSquare destSquare, BoardSquare prevSquare){
         // handle any rules after first movement of piece
         if(targetPiece.type.equals("pawn") || targetPiece.type.equals("king") || targetPiece.type.equals("rook")){
@@ -444,100 +423,33 @@ public class Board {
             pawnPromotion(targetPiece);
         }
 
+        // Castling
         if(targetPiece.type.equals("king")){
-            // cast the king piece
-            King king = (King) targetPiece;
-
-            // coordinates the king can castle at
-            Coordinates whiteKingLeftCastle = new Coordinates(2,7);
-            Coordinates whiteKingRightCastle = new Coordinates(6,7);
-            Coordinates blackKingLeftCastle = new Coordinates(2,0);
-            Coordinates blackKingRightCastle = new Coordinates(6,0);
-
-            // only can castle when king is at these coordinates
-            if(destSquare.coordinates.equals(whiteKingRightCastle)
-                || destSquare.coordinates.equals(whiteKingLeftCastle)
-                || destSquare.coordinates.equals(blackKingLeftCastle)
-                || destSquare.coordinates.equals(blackKingRightCastle)){
-                /* CASE OF CASTLING*/
-
-                // only can do castle if the king has not castled
-                if(!king.castled){
-                    // find the right and left rooks
-                    Coordinates rightRookCoord = new Coordinates(destSquare.coordinates.getCol()+1, destSquare.coordinates.getRow());
-                    Coordinates leftRookCoord = new Coordinates(destSquare.coordinates.getCol()-2, destSquare.coordinates.getRow());
-                    // store the rooks for later use
-                    king.rightRook = (Rook) getPieceAt(rightRookCoord);
-                    king.leftRook = (Rook) getPieceAt(leftRookCoord);
-                    // as long as the rooks aren't null and haven't moved, they can castle
-                    if(king.rightRook != null && !king.rightRook.moved && king.rightRook.type.equals("rook")){
-                        // store the current rook coordinates and get the square it's on
-                        king.rightRook.coordBeforeCastle = rightRookCoord;
-                        BoardSquare oldSquare = getSquareAt(rightRookCoord);
-                        // find the rook's new destination coords and square
-                        Coordinates destinationCoord = new Coordinates(destSquare.coordinates.getCol()-1, destSquare.coordinates.getRow());
-                        king.rightRook.coordinates = destinationCoord;
-                        BoardSquare newSquare = getSquareAt(destinationCoord);
-                        // remove it from the old square and put it on the new one
-                        oldSquare.getChildren().remove(king.rightRook);
-                        addPiece(newSquare,king.rightRook);
-                        // let the king and the rook know it's been castled
-                        king.castled = true;
-                        king.rightRook.castled = true;
-                    }
-                    if(king.leftRook != null && !king.leftRook.moved && king.leftRook.type.equals("rook")){
-                        // store the current rook coordinates and get the square it's on
-                        king.leftRook.coordBeforeCastle = leftRookCoord;
-                        BoardSquare oldSquare = getSquareAt(leftRookCoord);
-                        // find the rook's new destination coords and square
-                        Coordinates destinationCoord = new Coordinates(destSquare.coordinates.getCol()+1, destSquare.coordinates.getRow());
-                        king.leftRook.coordinates = destinationCoord;
-                        BoardSquare newSquare = getSquareAt(destinationCoord);
-                        // remove it from the old square and put it on the new one
-                        oldSquare.getChildren().remove(king.leftRook);
-                        addPiece(newSquare,king.leftRook);
-                        // let the king and the rook know it's been castled
-                        king.castled = true;
-                        king.leftRook.castled = true;
-                    }
-                }
-            } else if(!king.moveAfterCastle) {
-                /* CASE OF UNDOING CASTLING*/
-
-                // make sure a rook has been castled
-                if(king.rightRook != null && king.rightRook.castled){
-                    // get the square the rook is currently on
-                    BoardSquare currentSquare = new BoardSquare(king.rightRook.coordinates);
-                    // get the old square it was before castle
-                    BoardSquare oldSquare = getSquareAt(king.rightRook.coordBeforeCastle);
-                    // remove the rook from the current square
-                    currentSquare.getChildren().remove(king.rightRook);
-                    // add it back to the old one
-                    addPiece(oldSquare,king.rightRook);
-                    // set the rooks coord again
-                    king.rightRook.coordinates = king.rightRook.coordBeforeCastle;
-                    // signal that the castle was reset
-                    king.castled = false;
-                    king.rightRook.castled = false;
-                } else if(king.leftRook != null && king.leftRook.castled){
-                    // get the square the rook is currently on
-                    BoardSquare currentSquare = new BoardSquare(king.leftRook.coordinates);
-                    // get the old square it was before castle
-                    BoardSquare oldSquare = getSquareAt(king.leftRook.coordBeforeCastle);
-                    // remove the rook from the current square
-                    currentSquare.getChildren().remove(king.leftRook);
-                    // add it back to the old one
-                    addPiece(oldSquare,king.leftRook);
-                    // set the rooks coord again
-                    king.leftRook.coordinates = king.leftRook.coordBeforeCastle;
-                    // signal that the castle was reset
-                    king.castled = false;
-                    king.leftRook.castled = false;
-                }
+            caseOfMove(destSquare);
+            Coordinates rightRookCoord = new Coordinates(destSquare.coordinates.getCol()+1, destSquare.coordinates.getRow());
+            Coordinates leftRookCoord = new Coordinates(destSquare.coordinates.getCol()-2, destSquare.coordinates.getRow());
+            Piece rightRook = getPieceAt(rightRookCoord);
+            Piece leftRook = getPieceAt(leftRookCoord);
+            if(rightRook != null && !rightRook.moved && rightRook.type.equals("rook")){
+                BoardSquare square = getSquareAt(new Coordinates(destSquare.coordinates.getCol()-1, destSquare.coordinates.getRow()));
+                square.getChildren().remove(rightRook);
+                square.getChildren().add(rightRook);
+            }
+            if(leftRook != null && !leftRook.moved && leftRook.type.equals("rook")){
+                BoardSquare square = getSquareAt(new Coordinates(destSquare.coordinates.getCol()+1, destSquare.coordinates.getRow()));
+                square.getChildren().remove(leftRook);
+                square.getChildren().add(leftRook);
             }
         }
 
+        if(targetPiece.type.equals("rook")){
+            caseOfMove(destSquare);
+        }
+
+        // Pawn extra checks
         if(targetPiece.type.equals("pawn")) {
+            pawnPromotion();
+            caseOfMove(destSquare);
             Coordinates topLeft = new Coordinates(targetPiece.coordinates.getCol() - 1, targetPiece.coordinates.getRow() - 1);
             Coordinates topRight = new Coordinates(targetPiece.coordinates.getCol() + 1, targetPiece.coordinates.getRow() - 1);
             Coordinates bottomLeft = new Coordinates(targetPiece.coordinates.getCol() - 1, targetPiece.coordinates.getRow() + 1);
@@ -567,14 +479,24 @@ public class Board {
     }
 
     /**
-     * This method takes the coordinates of the current piece being dragged and shows the
-     * @param coordinates on the board
+     * This method takes the coordinates of the current piece being dragged and shows them on the board
+     * @param coordinates The {@link Coordinates} of the {@link BoardSquare} to show the move at
      */
     public void showMoves(Coordinates coordinates){
         BoardSquare square = getSquareAt(coordinates);
         if(square == null){
             return;
         }
+        StackPane hint = drawHint();
+        square.getChildren().add(hint);
+        moves.add(hint);
+    }
+
+    /**
+     * Creates the circle hint that is shown when dragging
+     * @return the {@link StackPane} representing the hint
+     */
+    public StackPane drawHint(){
         // All of this for drawing the move hints
         Circle circle1 = new Circle(10, 10, 10);
         circle1.setFill(Color.BLACK);
@@ -582,10 +504,12 @@ public class Board {
         StackPane stackPane = new StackPane();
         StackPane.setMargin(circle1, new Insets(5, 5, 5, 5));
         stackPane.getChildren().addAll(circle1, sphere);
-        square.getChildren().add(stackPane);
-        moves.add(stackPane);
+        return stackPane;
     }
 
+    /**
+     * Removes all the shown moves on the board
+     */
     public void removeShownMoves(){
         for(StackPane sp : moves){
             BoardSquare boardSquare = (BoardSquare) sp.getParent();
@@ -663,6 +587,11 @@ public class Board {
         }
     }
 
+    /**
+     * Goes through each of the pieces of the board and builds a FEN string from them
+     * @see Stockfish for printing the board
+     * @return A FEN String representing the board
+     */
     @Override
     public String toString() {
         StringBuilder board = new StringBuilder();
@@ -700,56 +629,4 @@ public class Board {
     public Stack<Move> getMoveStack(){
         return moveStack;
     }
-
-//    public void movingIntoCheck(){
-//        // Get all pieces
-//        for(Piece piece: pieces){
-//            // Search for king pieces only
-//            if(piece.type.equals("king") && piece.color.equals("white")) {
-//                // cast piece to king
-//                King whiteKing = (King) piece;
-//                // Other piece = all pieces
-//                for (Piece otherPiece : pieces) {
-//                    // Other piece is not white king (all other pieces)
-//                    if (!otherPiece.equals(whiteKing)) {
-//                        otherPiece.currentMoveSet = otherPiece.getMoveSet();
-//                        for (Coordinates wKingCoords : whiteKing.currentMoveSet) {
-//                            for (Coordinates opCoords : otherPiece.currentMoveSet) {
-//                                if (wKingCoords.equals(opCoords)) {
-//                                    if (otherPiece.color.equals("black")) {
-//                                        System.out.println(whiteKing.color + " " + whiteKing.type + " path blocked by " + otherPiece.color + " " + otherPiece.type + " at " + opCoords);
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            } else if (piece.color.equals("black") && piece.type.equals("king")) {
-//                // Cast the king piece
-//                King blackKing = (King) piece;
-//                // get the current move set of black king
-//                blackKing.currentMoveSet = blackKing.getMoveSet();
-//                // look through the pieces again
-//                for(Piece otherPiece: pieces){
-//                    // ensure we are not looking at the same king we just casted
-//                    if(!otherPiece.equals(blackKing)){
-//                        // get the move set of the other piece
-//                        otherPiece.currentMoveSet = otherPiece.getMoveSet();
-//                        // go through each move in the king's move set
-//                        for(Coordinates bKingCoords: blackKing.currentMoveSet){
-//                            // go through each move in the other piece's move set
-//                            for(Coordinates opCoords: otherPiece.currentMoveSet){
-//                                // if they're equal then "insert code" (king's path is blocked)
-//                                if(bKingCoords.equals(opCoords)){
-//                                    if(otherPiece.color.equals("white")){
-//                                        System.out.println(blackKing.color+" "+blackKing.type+" path blocked by "+otherPiece.color+" "+otherPiece.type+" at "+opCoords);
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
 }

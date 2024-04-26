@@ -6,6 +6,9 @@ import com.cis3296.virtualchess.Entities.Coordinates;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * Models the moveset of the king piece
+ */
 public class King extends Piece {
 
     public Rook leftRook;
@@ -27,8 +30,7 @@ public class King extends Piece {
 
     /**
      * Determines the possible moves for a King based on its current position.
-     *
-     * @return An array list of possible coordinates the King can move to.
+     * @return An array list of possible {@link Coordinates} the King can move to.
      */
     @Override
     public ArrayList<Coordinates> getMoveSet() {
@@ -40,8 +42,7 @@ public class King extends Piece {
 
     /**
      * Adds possible moves in all directions around the King.
-     *
-     * @param moveSet The list to add the coordinates to.
+     * @param moveSet The list to add the {@link Coordinates} to.
      */
     private void addKingMoves(ArrayList<Coordinates> moveSet) {
         int[][] directions = { {-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, 1}, {-1, -1}, {1, 1}, {1, -1} };
@@ -53,6 +54,10 @@ public class King extends Piece {
         }
     }
 
+    /**
+     * Adds castling moves to the moveset if it can castle
+     * @param moveSet An arraylist containing {@link Coordinates} that represent the moves the piece can take
+     */
     private void addCastlingMoves(ArrayList<Coordinates> moveSet) {
         // Check for left castling
         if (!moved && canCastleLeft()) {
@@ -64,6 +69,10 @@ public class King extends Piece {
         }
     }
 
+    /**
+     * Checks if the king can castle to the left side of the board
+     * @return true if it can, false otherwise
+     */
     private boolean canCastleLeft() {
         Coordinates rookPosition = new Coordinates(this.coordinates.getCol() - 4, this.coordinates.getRow());
         Piece piece = board.getPieceAt(rookPosition);
@@ -95,6 +104,10 @@ public class King extends Piece {
         return true;
     }
 
+    /**
+     * Checks if the king can castle to the right side of the board
+     * @return true if it can, false otherwise
+     */
     private boolean canCastleRight() {
         Coordinates rookPosition = new Coordinates(this.coordinates.getCol() + 3, this.coordinates.getRow());
         Piece piece = board.getPieceAt(rookPosition);
@@ -126,15 +139,11 @@ public class King extends Piece {
         return true;
     }
 
-    @Override
-    public String toString() {
-        if(color.equals("white")){
-            return "K";
-        } else{
-            return "k";
-        }
-    }
-
+    /**
+     * Checks whether the king will be moving into check at the coordinates
+     * @param targetCoordinates {@link Coordinates} representing where the king is moving
+     * @return true if it is moving into check, false otherwise
+     */
     public boolean movingIntoCheck(Coordinates targetCoordinates){
         // For all Pieces on the board
         for (Piece piece : board.pieces) {
@@ -168,6 +177,10 @@ public class King extends Piece {
         return false;
     }
 
+    /**
+     * Checks if the king is currently in check
+     * @return true if the king is in check, false otherwise
+     */
     public boolean isInCheck()
     {
         for (Piece otherPiece : board.pieces) {
@@ -180,5 +193,18 @@ public class King extends Piece {
             }
         }
         return false;
+    }
+
+    /**
+     * Generates a string for the FEN representation of this piece
+     * @return A string containing the lowercase first letter if black or capital if white
+     */
+    @Override
+    public String toString() {
+        if(color.equals("white")){
+            return "K";
+        } else{
+            return "k";
+        }
     }
 }

@@ -16,6 +16,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * UI Controller for the player selection screen
+ */
 public class PlayerSelectionScreenController {
 
     @FXML
@@ -31,12 +34,12 @@ public class PlayerSelectionScreenController {
     private Scene scene;
     private Parent root;
 
-
-
-    public void initialize(){
-
-    }
-
+    /**
+     * Button action for switching to the game screen
+     * Puts the player names into the turn system
+     * @param event {@link ActionEvent} for the click
+     * @throws IOException Can throw if screen cant be loaded
+     */
     @FXML
     public void switchToGame(ActionEvent event) throws IOException {
         TurnSystem ts = TurnSystem.getInstance();
@@ -81,6 +84,11 @@ public class PlayerSelectionScreenController {
         }
     }
 
+    /**
+     * Button action for switching to the game mode selection screen
+     * @param event
+     * @throws IOException
+     */
     @FXML
     public void switchToGamemode(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/gamemode.fxml")));

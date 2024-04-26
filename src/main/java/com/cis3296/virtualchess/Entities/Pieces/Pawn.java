@@ -7,6 +7,9 @@ import com.cis3296.virtualchess.Entities.Pieces.PieceUtilities.PawnPromotionPopu
 
 import java.util.ArrayList;
 
+/**
+ * Models the moveset of the pawn piece
+ */
 public class Pawn extends Piece {
 
     private final int UP = -1;
@@ -37,14 +40,12 @@ public class Pawn extends Piece {
 
     /**
      * Determines the possible moves that a pawn can make based on its current position.
-     * @return a list of possible coordinates the pawn can move to.
+     * @return a list of possible {@link Coordinates} the pawn can move to.
      */
     @Override
     public ArrayList<Coordinates> getMoveSet() {
         ArrayList<Coordinates> moveSet = new ArrayList<>();
         Coordinates targetCoordinates;
-
-
 
         // Handle single forward movement
         targetCoordinates = new Coordinates(coordinates.getCol(), coordinates.getRow() + direction);
@@ -92,7 +93,7 @@ public class Pawn extends Piece {
 
     /**
      * Checks if the pawn's forward path is clear of other pieces.
-     * @param targetCoordinates the desired forward coordinates.
+     * @param targetCoordinates the desired forward {@link Coordinates}.
      * @return true if the path is clear, false otherwise.
      */
     public boolean isForwardPathClear(Coordinates targetCoordinates) {
@@ -102,7 +103,7 @@ public class Pawn extends Piece {
 
     /**
      * Checks if the pawn can move diagonally (for capturing pieces).
-     * @param targetCoordinates the desired diagonal coordinates.
+     * @param targetCoordinates the desired diagonal {@link Coordinates}.
      * @return true if the pawn can move diagonally, false otherwise.
      */
     public boolean canMoveDiagonally(Coordinates targetCoordinates) {
@@ -112,12 +113,18 @@ public class Pawn extends Piece {
 
     /**
      * Method to promote the pawn
+     * @param currentSquare {@link BoardSquare} where the pawn is currently located
+     * @param board {@link Board} the pawn is on
      */
     public void promote(BoardSquare currentSquare, Board board) {
         // Display buttons from PawnPromotionPopup class
         popup.displayPromotionButtons(currentSquare, board);
     }
 
+    /**
+     * Generates a string for the FEN representation of this piece
+     * @return A string containing the lowercase first letter if black or capital if white
+     */
     @Override
     public String toString() {
         if(color.equals("white")){
