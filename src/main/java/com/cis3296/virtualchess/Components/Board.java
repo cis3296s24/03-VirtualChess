@@ -92,7 +92,7 @@ public class Board {
 //                square.setOnMouseClicked(mouseEvent -> pieceOnInteract(mouseEvent, getPieceAt(square.coordinates)));
             }
         }
-        if(Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.KV_CONFIG_ACCESS_STRING))){
+        if(Boolean.parseBoolean(Settings.getConfig(Settings.KV_CONFIG_ACCESS_STRING))){
             addPiecesSimple();
         } else{
             addPieces();
@@ -502,6 +502,8 @@ public class Board {
 
         System.out.println(pieceMovingBack.color+" "+pieceMovingBack.type + " back to " + Coordinates.toChessCoordinates(oldSquare.coordinates));
     }
+
+
 
     /**
      * This method ensures that the movement of a piece is valid,

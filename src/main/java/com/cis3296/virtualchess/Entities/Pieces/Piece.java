@@ -1,7 +1,7 @@
 package com.cis3296.virtualchess.Entities.Pieces;
 
 import com.cis3296.virtualchess.Components.Board;
-import com.cis3296.virtualchess.Components.BoardSettings;
+import com.cis3296.virtualchess.Components.Settings;
 import com.cis3296.virtualchess.Entities.Coordinates;
 import javafx.event.Event;
 import javafx.scene.image.Image;
@@ -70,7 +70,7 @@ public abstract class Piece extends ImageView {
         } else {
             direction = DOWN;
         }
-        if(Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.KV_CONFIG_ACCESS_STRING))){
+        if(Boolean.parseBoolean(Settings.getConfig(Settings.KV_CONFIG_ACCESS_STRING))){
             isSimple = true;
         } else {
             isSimple = false;
@@ -136,7 +136,11 @@ public abstract class Piece extends ImageView {
             targetCoordinates = new Coordinates(coordinates.getCol() + offset, coordinates.getRow() + direction);
             Piece diagPiece = board.getPieceAt(targetCoordinates);
             if (diagPiece != null && !diagPiece.color.equals(this.color)) {
-                addCoordinates(simpleMoveSet, new Coordinates(targetCoordinates.getCol() + offset, targetCoordinates.getRow() + direction));
+                Coordinates jumpCoords = new Coordinates(targetCoordinates.getCol() + offset, targetCoordinates.getRow() + direction);
+                Piece jumpPiece = board.getPieceAt(jumpCoords);
+                if(jumpPiece == null){
+                    addCoordinates(simpleMoveSet, jumpCoords);
+                }
             } else{
                 addCoordinates(simpleMoveSet, targetCoordinates);
             }
