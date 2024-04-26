@@ -71,4 +71,14 @@ public class GameModeController {
         stage.setScene(scene);
         stage.show();
     }
+
+    public void kensVersion(ActionEvent event) throws IOException {
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/playerSelectionScreenPVP.fxml")));
+        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        scene = new Scene(root);
+        scene.getStylesheets().add(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css").toExternalForm());
+        stage.setScene(scene);
+        stage.show();
+        BoardSettings.setConfig(BoardSettings.KV_CONFIG_ACCESS_STRING, "true");
+    }
 }
