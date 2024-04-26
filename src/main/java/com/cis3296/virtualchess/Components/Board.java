@@ -4,7 +4,6 @@ import com.cis3296.virtualchess.*;
 import com.cis3296.virtualchess.Entities.Coordinates;
 import com.cis3296.virtualchess.Entities.Move;
 import com.cis3296.virtualchess.Entities.Pieces.*;
-import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -39,7 +38,7 @@ public class Board {
     // Reference to game being passed in
     private final Game game;
     // The settings for the board/game
-    private final BoardSettings settings;
+    private final Settings settings;
 
     // Piece that is being held in the drag
     private Piece targetPiece;
@@ -47,7 +46,6 @@ public class Board {
     private BoardSquare targetSquare;
 
     private Stack<Move> moveStack = new Stack<>();
-
 
     //The border surround each of the board squares
     private final Border border = new Border(
@@ -65,7 +63,7 @@ public class Board {
      * @param settings Any Settings to be used in the board
      * @param game Reference to the game that created this board
      */
-    public Board(GridPane chessBoard, BoardSettings settings, Game game){
+    public Board(GridPane chessBoard, Settings settings, Game game){
         this.settings = settings;
         init(chessBoard);
         this.game = game;
@@ -91,7 +89,6 @@ public class Board {
                 square.setOnDragDropped(dragEvent -> {
                     moveFromTo(targetPiece.coordinates, square.coordinates);
                 });
-//                square.setOnMouseClicked(mouseEvent -> pieceOnInteract(mouseEvent, getPieceAt(square.coordinates)));
             }
         }
         addPieces();
@@ -142,7 +139,7 @@ public class Board {
             square.setBackground(
                     new Background(
                             new BackgroundFill(
-                                    settings.currentBoardStyle.squareColor1,
+                                    settings.currentStyle.squareColor1,
                                     CornerRadii.EMPTY,
                                     Insets.EMPTY
                             )
@@ -152,7 +149,7 @@ public class Board {
             square.setBackground(
                     new Background(
                             new BackgroundFill(
-                                    settings.currentBoardStyle.squareColor2,
+                                    settings.currentStyle.squareColor2,
                                     CornerRadii.EMPTY,
                                     Insets.EMPTY
                             )
@@ -262,14 +259,12 @@ public class Board {
     private void pieceOnInteract(Event event, Piece piece){
         if(piece.isTurn){
             targetPiece = piece;
-//            if(event instanceof DragEvent){
-                Dragboard db = piece.startDragAndDrop(TransferMode.MOVE);
-                db.setDragView(piece.getImage());
-                ClipboardContent content = new ClipboardContent();
-                content.putString(""); // You can put any content here if needed
-                db.setContent(content);
-//            }
-            if(Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.HINTS_CONFIG_ACCESS_STRING))){
+            Dragboard db = piece.startDragAndDrop(TransferMode.MOVE);
+            db.setDragView(piece.getImage());
+            ClipboardContent content = new ClipboardContent();
+            content.putString(""); // You can put any content here if needed
+            db.setContent(content);
+            if(Boolean.parseBoolean(Settings.getConfig(Settings.HINTS_CONFIG_ACCESS_STRING))){
                 piece.showMoves(this);
             }
             event.consume();

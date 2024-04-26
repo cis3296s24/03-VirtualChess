@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
  * Themes for the board.
  * Contains preset BoardStyles
  */
-public class BoardStyle {
+public class Style {
 
     // The name of the style
     public String styleName;
@@ -16,42 +16,42 @@ public class BoardStyle {
     public Color squareColor2;
 
     // A Tan Theme
-    public static final BoardStyle SANDCASTLE = new BoardStyle(
+    public static final Style SANDCASTLE = new Style(
             "Sandcastle",
             Color.web("#e4c16f"),
             Color.web("#b88b4a")
     );
 
     // A Teal Theme
-    public static final BoardStyle CORAL = new BoardStyle(
+    public static final Style CORAL = new Style(
             "Coral",
             Color.web("#b1e4b9"),
             Color.web("#70a2a3")
     );
 
     // A Dark Purple Theme
-    public static final BoardStyle DUSK = new BoardStyle(
+    public static final Style DUSK = new Style(
             "Dusk",
             Color.web("#cbb7ae"),
             Color.web("#716677")
     );
 
     // A White and Yellow Theme
-    public static final BoardStyle WHEAT = new BoardStyle(
+    public static final Style WHEAT = new Style(
             "Wheat",
             Color.web("#eaefce"),
             Color.web("#bbbe65")
     );
 
     // A Blue Theme
-    public static final BoardStyle MARINE = new BoardStyle(
+    public static final Style MARINE = new Style(
             "Marine",
             Color.web("#9dacff"),
             Color.web("#6f74d2")
     );
 
     // A Green Theme
-    public static final BoardStyle EMERALD = new BoardStyle(
+    public static final Style EMERALD = new Style(
             "Emerald",
             Color.web("#adbd90"),
             Color.web("#6e8f72")
@@ -63,7 +63,7 @@ public class BoardStyle {
      * @param color1 Black King Color
      * @param color2 White King Color
      */
-    public BoardStyle(String name, Color color1, Color color2){
+    public Style(String name, Color color1, Color color2){
         this.styleName = name;
         this.squareColor1 = color1;
         this.squareColor2 = color2;

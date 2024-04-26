@@ -1,7 +1,7 @@
 package com.cis3296.virtualchess.Controller;
 
-import com.cis3296.virtualchess.Components.BoardSettings;
-import com.cis3296.virtualchess.Components.BoardStyle;
+import com.cis3296.virtualchess.Components.Settings;
+import com.cis3296.virtualchess.Components.Style;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -18,7 +18,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
-import static com.cis3296.virtualchess.Components.BoardSettings.setConfig;
+import static com.cis3296.virtualchess.Components.Settings.setConfig;
 
 /**
  * UI Controller for the settings screen
@@ -47,22 +47,22 @@ public class SettingsMenuController {
      */
     public void initialize(){
         String[] themes = {
-                BoardStyle.SANDCASTLE.styleName,
-                BoardStyle.CORAL.styleName,
-                BoardStyle.DUSK.styleName,
-                BoardStyle.WHEAT.styleName,
-                BoardStyle.MARINE.styleName,
-                BoardStyle.EMERALD.styleName,
+                Style.SANDCASTLE.styleName,
+                Style.CORAL.styleName,
+                Style.DUSK.styleName,
+                Style.WHEAT.styleName,
+                Style.MARINE.styleName,
+                Style.EMERALD.styleName,
         };
         ThemeDropDown.getItems().addAll(FXCollections.observableArrayList(themes));
 
-        String lastTheme = BoardSettings.getConfig(BoardSettings.THEME_CONFIG_ACCESS_STRING);
-        ThemeDropDown.setValue(BoardSettings.getStyleFromString(lastTheme).styleName);
+        String lastTheme = Settings.getConfig(Settings.THEME_CONFIG_ACCESS_STRING);
+        ThemeDropDown.setValue(Settings.getStyleFromString(lastTheme).styleName);
 
-        String undoChecked = BoardSettings.getConfig(BoardSettings.UNDO_CONFIG_ACCESS_STRING);
+        String undoChecked = Settings.getConfig(Settings.UNDO_CONFIG_ACCESS_STRING);
         undo.setSelected(Boolean.parseBoolean(undoChecked));
 
-        String hintsChecked = BoardSettings.getConfig(BoardSettings.HINTS_CONFIG_ACCESS_STRING);
+        String hintsChecked = Settings.getConfig(Settings.HINTS_CONFIG_ACCESS_STRING);
         hints.setSelected(Boolean.parseBoolean(hintsChecked));
     }
 
@@ -85,7 +85,7 @@ public class SettingsMenuController {
      */
     @FXML
     private void setTheme(){
-        setConfig(BoardSettings.THEME_CONFIG_ACCESS_STRING, ThemeDropDown.getValue().toString());
+        setConfig(Settings.THEME_CONFIG_ACCESS_STRING, ThemeDropDown.getValue().toString());
     }
 
     /**
@@ -93,7 +93,7 @@ public class SettingsMenuController {
      */
     @FXML
     private void setHints(){
-        setConfig(BoardSettings.HINTS_CONFIG_ACCESS_STRING, String.valueOf(hints.isSelected()));
+        setConfig(Settings.HINTS_CONFIG_ACCESS_STRING, String.valueOf(hints.isSelected()));
     }
 
     /**
@@ -101,7 +101,7 @@ public class SettingsMenuController {
      */
     @FXML
     private void setUndoButton(){
-        setConfig(BoardSettings.UNDO_CONFIG_ACCESS_STRING, String.valueOf(undo.isSelected()));
+        setConfig(Settings.UNDO_CONFIG_ACCESS_STRING, String.valueOf(undo.isSelected()));
     }
 
 }

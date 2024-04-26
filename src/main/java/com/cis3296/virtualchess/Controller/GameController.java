@@ -1,7 +1,7 @@
 package com.cis3296.virtualchess.Controller;
 
 import com.cis3296.virtualchess.Components.Board;
-import com.cis3296.virtualchess.Components.BoardSettings;
+import com.cis3296.virtualchess.Components.Settings;
 import com.cis3296.virtualchess.Components.BoardSquare;
 import com.cis3296.virtualchess.Entities.Coordinates;
 import com.cis3296.virtualchess.Entities.Move;
@@ -121,7 +121,7 @@ public class GameController {
 
             SettingsMenuController controller = loader.getController();
             controller.backButton.setOnAction(event -> {
-                BoardSettings.setConfig(BoardSettings.THEME_CONFIG_ACCESS_STRING, controller.ThemeDropDown.getValue().toString());
+                Settings.setConfig(Settings.THEME_CONFIG_ACCESS_STRING, controller.ThemeDropDown.getValue().toString());
 
                 game.getTheme();
                 game.chessBoard.rerenderBoard();
