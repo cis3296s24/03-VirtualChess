@@ -9,7 +9,7 @@
 <br />
 <div align="center">
 
-<h3 align="center">Virtual Chess</h3>
+<h2 align="center">Virtual Chess</h2>
 
   <p align="center">
     <br />
@@ -42,6 +42,7 @@
       <ul>
         <li><a href="#installation">Installation</a></li>
         <li><a href="#contributing">Contributing</a></li>
+        <li><a href="#documentation">Documentation</a></li>
       </ul>
     </li>
 
@@ -52,7 +53,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## Abstract
-A Java chess application with player vs player and player vs computer modes
+Virtual Chess is a Java based application that allows two players to play against each other and also allows a single user to play a game against a computer opponent. Users have the options to select customizable settings such as a turn timer of adjustable length, the option to undo moves, and option to select their favourite theme for the chess board. Users can also turn on hints for an ideal move while playing the game. After finishing the game, users can also see their results from the leaderboard. For users, who are new to chess have the option to learn chess from this application. Our application provides a good user experiece, and is ideal for players from all skill levels.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -60,13 +61,13 @@ A Java chess application with player vs player and player vs computer modes
 
 Aidan Cuff
 
-Ken Fonseca
+Kenneth Fonseca
 
 Matt Gibson
 
 Nick Rucinski
 
-Token Ahmed
+Toker Ahmed
 
 ## Downloads
 
@@ -74,7 +75,7 @@ Token Ahmed
    https://www.oracle.com/java/technologies/downloads/#java21
 2. Go to the releases and download the latest release
    https://github.com/cis3296s24/03-VirtualChess/releases
-3. Run the chess.jar 
+3. Run the chess.jar and play! 
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -106,6 +107,11 @@ How to contribute to the project
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+### Documentation
+
+Click here to view the full documentation for Virtual Chess: https://github.com/cis3296s24/03-VirtualChess/tree/main/documentation
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 [contributors-shield]: https://img.shields.io/github/contributors/cis3296s24/03-VirtualChess.svg?style=for-the-badge
 [contributors-url]: https://github.com/cis3296s24/03-VirtualChess/graphs/contributors
