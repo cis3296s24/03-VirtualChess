@@ -1,6 +1,6 @@
 package com.cis3296.virtualchess.Controller;
 
-import com.cis3296.virtualchess.Components.BoardSettings;
+import com.cis3296.virtualchess.Components.Settings;
 import com.cis3296.virtualchess.Entities.Player;
 import com.cis3296.virtualchess.Systems.TurnSystem;
 import javafx.event.ActionEvent;
@@ -43,7 +43,7 @@ public class PlayerSelectionScreenController {
     @FXML
     public void switchToGame(ActionEvent event) throws IOException {
         TurnSystem ts = TurnSystem.getInstance();
-        if(Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.AI_CONFIG_ACCESS_STRING))){
+        if(Boolean.parseBoolean(Settings.getConfig(Settings.AI_CONFIG_ACCESS_STRING))){
             if(!player1name.getText().isBlank()){
                 ts.setWhitePlayer(new Player(player1name.getText()));
                 ts.setBlackPlayer(new Player("Computer"));

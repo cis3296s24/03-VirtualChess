@@ -2,6 +2,7 @@ package com.cis3296.virtualchess.Components;
 
 import com.cis3296.virtualchess.*;
 import com.cis3296.virtualchess.Entities.Coordinates;
+import com.cis3296.virtualchess.Entities.Move;
 import com.cis3296.virtualchess.Entities.Pieces.*;
 import javafx.event.Event;
 import javafx.geometry.Insets;
@@ -13,6 +14,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Sphere;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 /**
  * An 8x8 Grid the contains all the {@link BoardSquare} and {@link Piece} to play a game of chess
@@ -36,13 +38,14 @@ public class Board {
     // Reference to game being passed in
     private final Game game;
     // The settings for the board/game
-    private final BoardSettings settings;
+    private final Settings settings;
 
     // Piece that is being held in the drag
     private Piece targetPiece;
     // Not being used currently but would function similarly to targetPiece
     private BoardSquare targetSquare;
 
+    private Stack<Move> moveStack = new Stack<>();
 
     //The border surround each of the board squares
     private final Border border = new Border(
@@ -60,7 +63,7 @@ public class Board {
      * @param settings Any Settings to be used in the board
      * @param game Reference to the game that created this board
      */
-    public Board(GridPane chessBoard, BoardSettings settings, Game game){
+    public Board(GridPane chessBoard, Settings settings, Game game){
         this.settings = settings;
         init(chessBoard);
         this.game = game;
@@ -84,8 +87,9 @@ public class Board {
                 boardSquares.add(square);
                 // Sets the Drag handler so that when a piece is dropped on the board it moves the piece there
                 square.setOnDragDropped(dragEvent -> {
-                    movePiece(square);
+                    moveFromTo(targetPiece.coordinates, square.coordinates);
                 });
+//                square.setOnMouseClicked(mouseEvent -> pieceOnInteract(mouseEvent, getPieceAt(square.coordinates)));
             }
         }
         if(Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.KV_CONFIG_ACCESS_STRING))){
@@ -140,7 +144,7 @@ public class Board {
             square.setBackground(
                     new Background(
                             new BackgroundFill(
-                                    settings.currentBoardStyle.squareColor1,
+                                    settings.currentStyle.squareColor1,
                                     CornerRadii.EMPTY,
                                     Insets.EMPTY
                             )
@@ -150,7 +154,7 @@ public class Board {
             square.setBackground(
                     new Background(
                             new BackgroundFill(
-                                    settings.currentBoardStyle.squareColor2,
+                                    settings.currentStyle.squareColor2,
                                     CornerRadii.EMPTY,
                                     Insets.EMPTY
                             )
@@ -333,14 +337,12 @@ public class Board {
     private void pieceOnInteract(Event event, Piece piece){
         if(piece.isTurn){
             targetPiece = piece;
-//            if(event instanceof DragEvent){
-                Dragboard db = piece.startDragAndDrop(TransferMode.MOVE);
-                db.setDragView(piece.getImage());
-                ClipboardContent content = new ClipboardContent();
-                content.putString(""); // You can put any content here if needed
-                db.setContent(content);
-//            }
-            if(Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.HINTS_CONFIG_ACCESS_STRING))){
+            Dragboard db = piece.startDragAndDrop(TransferMode.MOVE);
+            db.setDragView(piece.getImage());
+            ClipboardContent content = new ClipboardContent();
+            content.putString(""); // You can put any content here if needed
+            db.setContent(content);
+            if(Boolean.parseBoolean(Settings.getConfig(Settings.HINTS_CONFIG_ACCESS_STRING))){
                 piece.showMoves(this);
             }
             event.consume();
@@ -396,14 +398,32 @@ public class Board {
         Piece fromPiece = getPieceAt(from);
         Piece toPiece = getPieceAt(to);
         if(fromPiece != null && isValidMove(to.getCol(), to.getRow(), fromPiece)){
+
+            // increment the amount of times the piece is moved
+            fromPiece.timesMoved++;
+
             // Remove the piece from the square
             fromSquare.getChildren().remove(fromPiece);
+            fromPiece.guardedSquares.clear();
+
             // If the destination square has an opponent piece, remove it
             if(toPiece != null){
-                getPieceAt(to).guardedSquares.clear();
-                getPieceAt(to).currentMoveSet.clear();
+                // Store the move the piece was eaten at
+                toPiece.otherPieceMoveWhenEaten = targetPiece.timesMoved;
+                // Store it in the eaten pieces
+                targetPiece.eatenPieces.add(toPiece);
+
+                toPiece.guardedSquares.clear();
+                toPiece.currentMoveSet.clear();
+
+                pieces.remove(toPiece);
                 toSquare.getChildren().remove(toPiece);
             }
+
+            // store the previous move before making the move
+            Move currentMove = new Move(fromPiece, fromPiece.coordinates);
+            moveStack.add(currentMove);
+
             // Add the piece to the new square
             toSquare.containsPiece = true;
             toSquare.getChildren().add(fromPiece);
@@ -411,7 +431,11 @@ public class Board {
             // Set the new coordinates of the piece
             fromPiece.coordinates = toSquare.coordinates;
 
-//            pieceCheck(fromPiece, toSquare);
+            for (Piece piece : pieces) {
+                piece.currentMoveSet = piece.getMoveSet();
+            }
+
+            pieceCheck(fromPiece, toSquare, fromSquare);
 
             System.out.println(fromPiece.type + " to " + Coordinates.toChessCoordinates(to));
             game.handleTurn();
@@ -422,6 +446,64 @@ public class Board {
     }
 
     /**
+     * Undoes the most recent move done on the board
+     * @param oldSquare the square the piece was on previously
+     * @param pieceMovingBack the piece moving back to the old square
+     * @param isEatenPiece if the piece is an eaten piece, it goes through a different process
+     */
+    public void undoPieceMove(BoardSquare oldSquare, Piece pieceMovingBack, boolean isEatenPiece){
+        BoardSquare prevSquare = getSquareAt(pieceMovingBack.coordinates);
+
+        // make sure it's not an eaten piece
+        if(!isEatenPiece){
+            /* CASE FOR MOVED PIECE */
+
+            // if the piece has any eaten pieces put them back in the correct order
+            if(!pieceMovingBack.eatenPieces.isEmpty()){
+                // look for the most recent eaten piece
+                Piece eatenPiece = pieceMovingBack.eatenPieces.peek();
+                if(eatenPiece != null){
+                    // ensure that the moment the eaten piece was eaten is the correct time it's put back
+                    if(eatenPiece.otherPieceMoveWhenEaten == pieceMovingBack.timesMoved){
+                        // take the piece from the stack of eaten pieces
+                        eatenPiece = pieceMovingBack.eatenPieces.pop();
+                        // get the destination square it had before
+                        BoardSquare destination = getSquareAt(eatenPiece.coordinates);
+                        // undo the move
+                        undoPieceMove(destination, eatenPiece, true);
+                    }
+                }
+            }
+            // Remove the piece from the square
+            prevSquare.getChildren().remove(pieceMovingBack);
+            // Add the piece to the previous square
+            addPiece(oldSquare, pieceMovingBack);
+            // Set the coordinates of the piece
+            pieceMovingBack.coordinates = oldSquare.coordinates;
+
+            // decrement the amount of times the piece moved
+            pieceMovingBack.timesMoved--;
+
+            // check the piece to regain any movement if necessary
+            pieceCheck(pieceMovingBack, oldSquare, prevSquare);
+
+            // ensure the right turn
+            game.handleTurn();
+        } else {
+            /* CASE FOR DELETED PIECE */
+
+            // add the piece back to the square
+            addPiece(oldSquare, pieceMovingBack);
+
+            // Set the new coordinates of the piece
+            pieceMovingBack.coordinates = oldSquare.coordinates;
+
+        }
+
+        System.out.println(pieceMovingBack.color+" "+pieceMovingBack.type + " back to " + Coordinates.toChessCoordinates(oldSquare.coordinates));
+    }
+
+    /**
      * This method ensures that the movement of a piece is valid,
      * then calls mouse event handlers to allow for drag-and-drop of piece
      * @param destSquare the {@link BoardSquare} for the piece to be set on
@@ -429,6 +511,10 @@ public class Board {
     private void movePiece(BoardSquare destSquare){
         BoardSquare prevSquare = getSquareAt(targetPiece.coordinates);
         if(isValidMove(destSquare.coordinates.getCol(), destSquare.coordinates.getRow())){
+
+            // increment the amount of times the piece is moved
+            targetPiece.timesMoved++;
+
             // Remove the piece from the square
             prevSquare.getChildren().remove(targetPiece);
             targetPiece.guardedSquares.clear();
@@ -436,6 +522,11 @@ public class Board {
             // If the destination square has an opponent piece, remove it
             Piece destPiece = getPieceAt(destSquare.coordinates);
             if(destPiece != null){
+                // Store the move the piece was eaten at
+                destPiece.otherPieceMoveWhenEaten = targetPiece.timesMoved;
+                // Store it in the eaten pieces
+                targetPiece.eatenPieces.add(destPiece);
+
                 destPiece.guardedSquares.clear();
                 destPiece.currentMoveSet.clear();
                 this.pieces.remove(destPiece);
@@ -443,14 +534,18 @@ public class Board {
                 targetPiece.guardedSquares.clear();
                 targetPiece.currentMoveSet.clear();
             }
+
+            // store the previous move before making the move
+            Move currentMove = new Move(targetPiece, targetPiece.coordinates);
+            moveStack.add(currentMove);
+
             // Add the piece to the new square
             destSquare.containsPiece = true;
             destSquare.getChildren().add(targetPiece);
             // Set the new coordinates of the piece
             targetPiece.coordinates = destSquare.coordinates;
 
-            for (Piece piece : pieces)
-            {
+            for (Piece piece : pieces) {
                 piece.currentMoveSet = piece.getMoveSetSuper();
             }
 
@@ -474,7 +569,7 @@ public class Board {
     private void pieceCheck(Piece targetPiece, BoardSquare destSquare, BoardSquare prevSquare){
         // Castling
         if(targetPiece.type.equals("king")){
-            caseOfMove(destSquare);
+            caseOfMove(destSquare, targetPiece);
             Coordinates rightRookCoord = new Coordinates(destSquare.coordinates.getCol()+1, destSquare.coordinates.getRow());
             Coordinates leftRookCoord = new Coordinates(destSquare.coordinates.getCol()-2, destSquare.coordinates.getRow());
             Piece rightRook = getPieceAt(rightRookCoord);
@@ -492,13 +587,13 @@ public class Board {
         }
 
         if(targetPiece.type.equals("rook")){
-            caseOfMove(destSquare);
+            caseOfMove(destSquare, targetPiece);
         }
 
         // Pawn extra checks
         if(targetPiece.type.equals("pawn")) {
-            pawnPromotion();
-            caseOfMove(destSquare);
+            pawnPromotion(targetPiece);
+            caseOfMove(destSquare, targetPiece);
             Coordinates topLeft = new Coordinates(targetPiece.coordinates.getCol() - 1, targetPiece.coordinates.getRow() - 1);
             Coordinates topRight = new Coordinates(targetPiece.coordinates.getCol() + 1, targetPiece.coordinates.getRow() - 1);
             Coordinates bottomLeft = new Coordinates(targetPiece.coordinates.getCol() - 1, targetPiece.coordinates.getRow() + 1);
@@ -509,14 +604,18 @@ public class Board {
                 BoardSquare square = getSquareAt(new Coordinates(targetPiece.coordinates.getCol(), targetPiece.coordinates.getRow() + 1));
                 System.out.println(square.coordinates);
                 if (!square.getChildren().isEmpty()) {
-                    square.getChildren().removeFirst();
+                    Piece piece = (Piece) square.getChildren().removeFirst();
+                    piece.otherPieceMoveWhenEaten = targetPiece.timesMoved;
+                    targetPiece.eatenPieces.add(piece);
                 }
             } else if (targetPiece.color.equals("black") &&
                     prevSquare.coordinates.getRow() == 4 &&
                     (prevSquare.coordinates.equals(topRight) || prevSquare.coordinates.equals(topLeft))) {
                 BoardSquare square = getSquareAt(new Coordinates(targetPiece.coordinates.getCol(), targetPiece.coordinates.getRow() - 1));
                 if (!square.getChildren().isEmpty()) {
-                    square.getChildren().removeFirst();
+                    Piece piece = (Piece) square.getChildren().removeFirst();
+                    piece.otherPieceMoveWhenEaten = targetPiece.timesMoved;
+                    targetPiece.eatenPieces.add(piece);
                 }
 
             }
@@ -564,32 +663,71 @@ public class Board {
     }
 
     /**
-     * Handles a boolean value after a pawn makes its first move
+     * Handles a boolean value after a piece makes its first move
      */
-    public void caseOfMove(BoardSquare destSquare){
-        if(!targetPiece.moved){
+    private void caseOfMove(BoardSquare destSquare, Piece targetPiece){
+//        System.out.println("Moved: "+targetPiece.timesMoved);
+        // Ensure the piece knows how many times they moved
+        if(targetPiece.timesMoved == 0){
+            // Used so the resets can be done
+            // If the timesMoved is set back to zero, the piece should act like it hasn't move
+            // Ex: pawn can only move twice on first move
+            targetPiece.moved = false;
+        } else {
             targetPiece.moved = true;
         }
+
+        // if a pawn has made it's first turn, make sure it can't move twice again unless it's been reset
         if (targetPiece.type.equals("pawn")){
-            if(targetPiece.color.equals("white") && destSquare.coordinates.getRow() == 4) {
+            if((targetPiece.color.equals("white") && destSquare.coordinates.getRow() == 4)
+            || (targetPiece.color.equals("black") && destSquare.coordinates.getRow() == 3)) {
                 targetPiece.twoStepped = true;
-            }
-            else if(targetPiece.color.equals("black") && destSquare.coordinates.getRow() == 3){
-                targetPiece.twoStepped = true;
+            } else if((targetPiece.color.equals("white") && destSquare.coordinates.getRow() == 5)
+                    || (targetPiece.color.equals("black") && destSquare.coordinates.getRow() == 2)){
+                targetPiece.twoStepped = false;
             }
         }
+
+        // any cases for special king moves
+        if(targetPiece.type.equals("king")){
+            // cast it to king
+            King king = (King) targetPiece;
+            // if the king has moved after it castled, it will not undo castle until it has regressed to a certain move
+            if(king.timesMoved>1 && king.castled){
+                king.moveAfterCastle = true;
+            } else {
+                king.moveAfterCastle = false;
+            }
+        }
+
     }
 
     /**
      * Handles the promotion of the pawns once they reach the other side of the board
      */
-    public void pawnPromotion(){
+    public void pawnPromotion(Piece targetPiece){
         // The current row of the pawn
         int currentRow = targetPiece.coordinates.getRow();
         // If the pawn is at the opposite side then promote it
+        Pawn pawnToPromote = (Pawn) targetPiece;
         if(targetPiece.color.equals("white") && currentRow == 0 || targetPiece.color.equals("black") && currentRow == 7){
+            // CASE OF PAWN PROMOTION
+
+            // Get the destination
             BoardSquare currentSquare = getSquareAt(targetPiece.coordinates);
-            ((Pawn) targetPiece).promote(currentSquare, this);
+            // Promote the piece on the board
+            pawnToPromote.promote(currentSquare, this);
+            // set the promotion to true
+            pawnToPromote.wasPromoted = true;
+        } else if(pawnToPromote.wasPromoted == true) {
+            // CASE OF UNDOING PAWN PROMOTION
+
+            // Get the square the piece was promoted on
+            BoardSquare endSquare = getSquareAt(pawnToPromote.piecePromotedTo.coordinates);
+            // take the promoted piece off the square
+            endSquare.getChildren().remove(pawnToPromote.piecePromotedTo);
+            // signal that the pawn is not promoted
+            pawnToPromote.wasPromoted = false;
         }
     }
 
@@ -626,5 +764,13 @@ public class Board {
             }
         }
         return board.toString();
+    }
+
+    /**
+     * Getter for the stack of moves made by pieces
+     * @return a Stack of Move
+     */
+    public Stack<Move> getMoveStack(){
+        return moveStack;
     }
 }

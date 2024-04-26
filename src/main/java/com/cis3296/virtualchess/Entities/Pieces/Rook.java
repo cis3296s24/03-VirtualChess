@@ -11,6 +11,8 @@ import java.util.ArrayList;
  */
 public class Rook extends Piece {
 
+    public Coordinates coordBeforeCastle;
+    public boolean castled = false;
     /**
      * Constructor for a Rook type piece
      * @param coordinates are the coordinates of the Rook on the board

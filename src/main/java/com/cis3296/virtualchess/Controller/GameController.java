@@ -1,6 +1,10 @@
 package com.cis3296.virtualchess.Controller;
 
-import com.cis3296.virtualchess.Components.BoardSettings;
+import com.cis3296.virtualchess.Components.Board;
+import com.cis3296.virtualchess.Components.Settings;
+import com.cis3296.virtualchess.Components.BoardSquare;
+import com.cis3296.virtualchess.Entities.Coordinates;
+import com.cis3296.virtualchess.Entities.Move;
 import com.cis3296.virtualchess.Game;
 import com.cis3296.virtualchess.Systems.TurnSystem;
 import javafx.animation.KeyFrame;
@@ -12,6 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -22,6 +27,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Controller for Game UI
@@ -29,6 +35,9 @@ import java.util.Objects;
 public class GameController {
 
     public VBox board;
+
+    @FXML
+    public Button undo;
     @FXML
     GridPane chessBoard = new GridPane();
 
@@ -56,6 +65,8 @@ public class GameController {
         timeline.play();
         currentTurnText.setText("Current Turn:\n" + turnSystem.getCurrentPlayer().name);
         turnSystem.setCurrentPlayerText(currentTurnText);
+
+        undo.setVisible(Boolean.parseBoolean(Settings.getConfig(Settings.UNDO_CONFIG_ACCESS_STRING)));
 
         // Add drag-and-drop event handlers to the chessboard GridPane
         chessBoard.setOnDragOver(event -> {
@@ -117,16 +128,18 @@ public class GameController {
 
             SettingsMenuController controller = loader.getController();
             controller.backButton.setOnAction(event -> {
-                BoardSettings.setConfig(BoardSettings.THEME_CONFIG_ACCESS_STRING, controller.ThemeDropDown.getValue().toString());
+                Settings.setConfig(Settings.THEME_CONFIG_ACCESS_STRING, controller.ThemeDropDown.getValue().toString());
 
                 game.getTheme();
                 game.chessBoard.rerenderBoard();
 
                 settingsPopup.close();
+                undo.setVisible(Boolean.parseBoolean(Settings.getConfig(Settings.UNDO_CONFIG_ACCESS_STRING)));
             });
 
             settingsPopup.setOnCloseRequest(event -> {
                 Platform.runLater(settingsPopup::close);
+                undo.setVisible(Boolean.parseBoolean(Settings.getConfig(Settings.UNDO_CONFIG_ACCESS_STRING)));
             });
 
             settingsPopup.showAndWait();
@@ -136,5 +149,33 @@ public class GameController {
 
     }
 
+    /**
+     * Connected to a button on the board FXML file, this method calls a Board method to undo piece movement
+     */
+    public void undoMoveButton(){
+        if(Boolean.parseBoolean(Settings.getConfig(Settings.UNDO_CONFIG_ACCESS_STRING))){
+            undoMove();
+            if(Boolean.parseBoolean(Settings.getConfig(Settings.AI_CONFIG_ACCESS_STRING))){
+                undoMove();
+            }
+        }
+    }
+
+    private void undoMove(){
+        // get the board
+        Board chessBoard = game.chessBoard;
+        // get the previous move
+        if(!chessBoard.getMoveStack().empty()){
+            Move previousMove = chessBoard.getMoveStack().pop();
+            // get the last coordinates
+            Coordinates previousCoordinates = previousMove.getPreviousCoordinates();
+            // get the square at the coordinates
+            BoardSquare previousSquare = chessBoard.getSquareAt(previousCoordinates);
+            // signal that the piece is not an eaten piece
+            boolean isEatenPiece = false;
+            // set the piece back to the previous square
+            chessBoard.undoPieceMove(previousSquare, previousMove.getPiece(), isEatenPiece);
+        }
+    }
 }
 

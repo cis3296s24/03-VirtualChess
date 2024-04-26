@@ -1,8 +1,8 @@
 package com.cis3296.virtualchess;
 
 import com.cis3296.virtualchess.Components.Board;
-import com.cis3296.virtualchess.Components.BoardSettings;
-import com.cis3296.virtualchess.Components.BoardStyle;
+import com.cis3296.virtualchess.Components.Settings;
+import com.cis3296.virtualchess.Components.Style;
 import com.cis3296.virtualchess.Entities.Coordinates;
 import com.cis3296.virtualchess.Entities.Pieces.King;
 import com.cis3296.virtualchess.Entities.Pieces.Piece;
@@ -21,7 +21,7 @@ public class Game {
     // The ChessBoard itself
     public Board chessBoard;
     // Settings for the board
-    public BoardSettings boardSettings = new BoardSettings(BoardStyle.SANDCASTLE);
+    public Settings settings = new Settings(Style.SANDCASTLE);
     // The stockfish process
     private Stockfish stockfish = new Stockfish();
     // The Board represented in FEN
@@ -38,9 +38,9 @@ public class Game {
         getTheme();
         this.turnSystem = TurnSystem.getInstance();
         this.turnSystem.start();
-        this.chessBoard = new Board(chessBoard, boardSettings, this);
+        this.chessBoard = new Board(chessBoard, settings, this);
         this.FEN = this.chessBoard.toString();
-        if(Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.AI_CONFIG_ACCESS_STRING))) setupStockfish();
+        if(Boolean.parseBoolean(Settings.getConfig(Settings.AI_CONFIG_ACCESS_STRING))) setupStockfish();
     }
 
     /**
@@ -54,11 +54,11 @@ public class Game {
     }
 
     /**
-     * Access the {@link BoardSettings} to get the theme and sets the current theme to that
+     * Access the {@link Settings} to get the theme and sets the current theme to that
      */
     public void getTheme() {
-        String theme = BoardSettings.getConfig(BoardSettings.THEME_CONFIG_ACCESS_STRING);
-        boardSettings.currentBoardStyle = BoardSettings.getStyleFromString(theme);
+        String theme = Settings.getConfig(Settings.THEME_CONFIG_ACCESS_STRING);
+        settings.currentStyle = Settings.getStyleFromString(theme);
     }
 
     /**
@@ -67,13 +67,13 @@ public class Game {
     public void handleTurn() {
         turnSystem.changeTurn();
 
-        if(Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.AI_CONFIG_ACCESS_STRING))){
+        if(Boolean.parseBoolean(Settings.getConfig(Settings.AI_CONFIG_ACCESS_STRING))){
             Platform.runLater(() ->{
                 String move;
                 FEN = this.chessBoard.toString();
                 stockfish.drawBoard(FEN);
                 if(turnSystem.currentColor.equals("black")){
-                    move = stockfish.getBestMove(FEN, 100);
+                    move = stockfish.getBestMove(FEN, 1000);
 
                     System.out.println(move);
                     this.chessBoard.moveFromTo(new Coordinates(move.substring(0, 2)), new Coordinates(move.substring(2, 4)));
@@ -87,11 +87,13 @@ public class Game {
             } else if (turnSystem.currentColor.equals("black") && piece.color.equals("black")) {
                 piece.twoStepped = false;
             }
-            if(piece.color.equals("white")){
-                piece.isTurn = !piece.isTurn;
-            }
-            if(piece.color.equals("black")){
-                piece.isTurn = !piece.isTurn;
+            // make sure the pieces cannot move if not their turn
+            if(piece.color.equals("white") && turnSystem.currentColor.equals("black")){
+                piece.isTurn = false;
+            } else if(piece.color.equals("black") && turnSystem.currentColor.equals("white")){
+                piece.isTurn = false;
+            } else {
+                piece.isTurn = true;
             }
         }
 
@@ -132,7 +134,7 @@ public class Game {
     public void endGame(){
         Database.insert(turnSystem.getWhitePlayer(), turnSystem.getBlackPlayer(), "Lose", "Win");
         turnSystem.stop();
-        if(Boolean.parseBoolean(BoardSettings.getConfig(BoardSettings.AI_CONFIG_ACCESS_STRING))){
+        if(Boolean.parseBoolean(Settings.getConfig(Settings.AI_CONFIG_ACCESS_STRING))){
             stockfish.stopEngine();
         }
     }
