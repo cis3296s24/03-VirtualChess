@@ -29,7 +29,7 @@
             </Text>
          <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
             <children>
-               <Button alignment="CENTER" cache="true" contentDisplay="TOP" mnemonicParsing="false" onAction="#undoMove" text="Undo Move" wrapText="true">
+               <Button fx:id="undo" alignment="CENTER" cache="true" contentDisplay="TOP" mnemonicParsing="false" onAction="#undoMove" text="Undo Move" wrapText="true">
                   <font>
                      <Font name="System Bold" size="23.0" />
                   </font>
