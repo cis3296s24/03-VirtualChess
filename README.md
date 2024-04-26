@@ -75,7 +75,12 @@ Toker Ahmed
    https://www.oracle.com/java/technologies/downloads/#java21
 2. Go to the releases and download the latest release
    https://github.com/cis3296s24/03-VirtualChess/releases
-3. Run the chess.jar and play! 
+3. Run the chess.jar and play!
+4. If you plan to use Stockfish you may need to download the Stockfish executable from
+   https://stockfishchess.org/download/
+   As of now, there are executables for some Macs, Windows, and Ubuntu currently
+   If you need to add one place it in the Stockfish folder in the same directory as
+   VirtualChess.jar and rename it the same as one of the other ones
 
 <!-- GETTING STARTED -->
 ## Getting Started
