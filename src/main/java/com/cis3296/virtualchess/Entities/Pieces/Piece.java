@@ -8,6 +8,7 @@ import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Stack;
 
 /**
  * Models a basic piece and what it can do
@@ -37,6 +38,12 @@ public abstract class Piece extends ImageView {
     public boolean isChecking;
     // Is this piece in check
     public boolean inCheck;
+    // the amount of moves the piece has made
+    public int timesMoved;
+    // any pieces the piece has taken
+    public Stack<Piece> eatenPieces = new Stack<>();
+    // if the piece gets eaten, this is where it stores the move that the other piece was at
+    public int otherPieceMoveWhenEaten;
 
 
     /**
@@ -53,6 +60,8 @@ public abstract class Piece extends ImageView {
         isChecking = false;
         inCheck = false;
         setDragHandlers();
+        timesMoved = 0;
+        otherPieceMoveWhenEaten = 0;
     }
 
     /**

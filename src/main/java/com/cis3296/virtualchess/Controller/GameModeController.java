@@ -1,6 +1,6 @@
 package com.cis3296.virtualchess.Controller;
 
-import com.cis3296.virtualchess.Components.BoardSettings;
+import com.cis3296.virtualchess.Components.Settings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -38,7 +38,7 @@ public class GameModeController {
         scene.getStylesheets().add(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
-        BoardSettings.setConfig(BoardSettings.AI_CONFIG_ACCESS_STRING, "false");
+        Settings.setConfig(Settings.AI_CONFIG_ACCESS_STRING, "false");
     }
 
     /**
@@ -54,7 +54,7 @@ public class GameModeController {
         scene.getStylesheets().add(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
-        BoardSettings.setConfig(BoardSettings.AI_CONFIG_ACCESS_STRING, "true");
+        Settings.setConfig(Settings.AI_CONFIG_ACCESS_STRING, "true");
     }
 
     /**

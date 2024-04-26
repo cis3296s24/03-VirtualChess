@@ -7,12 +7,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-import static com.cis3296.virtualchess.Components.BoardStyle.*;
+import static com.cis3296.virtualchess.Components.Style.*;
 
 /**
  * Data Class for storing settings about the board/game
  */
-public class BoardSettings {
+public class Settings {
 
     // Access String for getting the theme
     public static final String THEME_CONFIG_ACCESS_STRING = "theme";
@@ -27,22 +27,22 @@ public class BoardSettings {
     private static Properties prop = new Properties();
 
     // The current theme that is set
-    public BoardStyle currentBoardStyle;
+    public Style currentStyle;
 
     /**
      * Constructor for BoardSettings. Sets the current theme
      * @param currentStyle The starting theme
      */
-    public BoardSettings(BoardStyle currentStyle){
-        this.currentBoardStyle = currentStyle;
+    public Settings(Style currentStyle){
+        this.currentStyle = currentStyle;
     }
 
     /**
-     * Static method for converting a string name to a theme({@link BoardStyle})
+     * Static method for converting a string name to a theme({@link Style})
      * @param theme String representing a theme
      * @return The theme from the string
      */
-    public static BoardStyle getStyleFromString(String theme){
+    public static Style getStyleFromString(String theme){
         return switch (theme) {
             case "Sandcastle" -> SANDCASTLE;
             case "Coral" -> CORAL;
