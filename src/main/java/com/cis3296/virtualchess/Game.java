@@ -73,7 +73,7 @@ public class Game {
                 FEN = this.chessBoard.toString();
                 stockfish.drawBoard(FEN);
                 if(turnSystem.currentColor.equals("black")){
-                    move = stockfish.getBestMove(FEN, 100);
+                    move = stockfish.getBestMove(FEN, 1000);
 
                     System.out.println(move);
                     this.chessBoard.moveFromTo(new Coordinates(move.substring(0, 2)), new Coordinates(move.substring(2, 4)));
