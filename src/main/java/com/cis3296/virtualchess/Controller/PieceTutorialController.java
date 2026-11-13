@@ -1,20 +1,16 @@
 package com.cis3296.virtualchess.Controller;
 
+import com.cis3296.virtualchess.Components.Screens;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
 
 /**
  * UI Controller for the four Learn Chess topic pages (Pieces, Basic Concepts, Check, Special Moves).
@@ -24,6 +20,7 @@ import java.util.Objects;
  */
 public class PieceTutorialController {
 
+    private static final Logger log = LoggerFactory.getLogger(PieceTutorialController.class);
     private static final String IMAGE_FOLDER = "/assets/Tutorialimages/";
 
     // Picture slots, left to right. Pages with fewer pictures leave the extra fields null.
@@ -78,24 +75,23 @@ public class PieceTutorialController {
         return new ImageView[]{imageView, additionalImageView, additionalImageView2};
     }
 
+    // A missing picture leaves its slot empty (and is logged) rather than breaking the whole topic
     private Image loadImage(String path) {
-        URL url = Objects.requireNonNull(getClass().getResource(IMAGE_FOLDER + path), "Missing tutorial image " + path);
+        URL url = getClass().getResource(IMAGE_FOLDER + path);
+        if (url == null) {
+            log.warn("Tutorial image {} is missing from the build", IMAGE_FOLDER + path);
+            return null;
+        }
         return new Image(url.toExternalForm());
     }
 
     /**
      * Button action for going back to the Learn Chess menu
      * @param event {@link ActionEvent} for the click
-     * @throws IOException Can throw if screen cant be loaded
      */
     @FXML
-    public void switchToTutorial(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/Tutorial Screen.fxml")));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css")).toExternalForm());
-        stage.setScene(scene);
-        stage.show();
+    public void switchToTutorial(ActionEvent event) {
+        Screens.show(event, Screens.LEARN_CHESS);
     }
 
     // ---- Pieces ----

@@ -4,10 +4,13 @@ import com.cis3296.virtualchess.engine.ChessGame;
 import com.cis3296.virtualchess.engine.Color;
 import com.cis3296.virtualchess.engine.GameResult;
 import com.cis3296.virtualchess.engine.Move;
+import com.cis3296.virtualchess.engine.Notation;
 import com.cis3296.virtualchess.engine.Square;
 import com.cis3296.virtualchess.Systems.Database;
 import com.cis3296.virtualchess.Systems.TurnSystem;
 import javafx.application.Platform;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -17,8 +20,13 @@ import java.util.List;
  * <p>
  * The screen calls {@link #play}, {@link #undo}, and {@link #resign} in response to the player, and gets
  * the {@code onChange} callback whenever it should redraw.
+ * <p>
+ * If the computer opponent fails (Stockfish missing at the start, or crashing or misbehaving mid-game), the
+ * game carries on as two players at one board rather than getting stuck on the computer's turn.
  */
 public class Game {
+
+    private static final Logger log = LoggerFactory.getLogger(Game.class);
 
     // The computer always plays Black; the player selection screen only names the human (White) player
     private static final Color COMPUTER_COLOR = Color.BLACK;
@@ -28,7 +36,8 @@ public class Game {
     private final TurnSystem turnSystem = TurnSystem.getInstance();
     private final Runnable onChange;
     private final boolean computerRequested;
-    private Stockfish stockfish; // null unless playing the computer and the engine started
+    private Stockfish stockfish; // null unless playing the computer and the engine is working
+    private Runnable onComputerFailure = () -> { };
     private boolean resultRecorded;
     private boolean closed;
 
@@ -46,12 +55,24 @@ public class Game {
             if (engine.startEngine()) {
                 engine.setUCINewGame();
                 stockfish = engine;
+            } else {
+                log.warn("Playing the computer was chosen, but Stockfish couldn't be started; "
+                        + "this game is two players at one board instead");
             }
         }
+        log.info("Game started ({})", isVsComputer() ? "player vs computer" : "two players");
     }
 
     public ChessGame chessGame() {
         return chessGame;
+    }
+
+    /**
+     * @param handler called if the computer opponent stops working mid-game (after which the game continues
+     *                as two players at one board), so the screen can tell the player
+     */
+    public void setOnComputerFailure(Runnable handler) {
+        this.onComputerFailure = handler;
     }
 
     /**
@@ -87,9 +108,15 @@ public class Game {
 
     /**
      * Plays a legal move, then lets the computer reply if it's its turn.
+     *
+     * @throws IllegalArgumentException if the move isn't legal
      */
     public void play(Move move) {
+        String san = Notation.toSan(chessGame.position(), move); // also rejects illegal moves
+        int moveNumber = chessGame.position().fullmoveNumber();
+        boolean white = chessGame.sideToMove() == Color.WHITE;
         chessGame.play(move);
+        log.debug("Move {}{} {}", moveNumber, white ? "." : "...", san);
         afterChange();
         if (isComputerTurn() && !chessGame.isOver()) {
             requestComputerMove();
@@ -112,9 +139,12 @@ public class Game {
         if (!canUndo()) {
             return;
         }
-        chessGame.undo();
+        Move undone = chessGame.undo();
         if (isComputerTurn() && chessGame.canUndo()) {
-            chessGame.undo();
+            Move playerMove = chessGame.undo();
+            log.debug("Took back {} and the computer's reply {}", playerMove, undone);
+        } else {
+            log.debug("Took back {}", undone);
         }
         afterChange();
     }
@@ -126,6 +156,7 @@ public class Game {
         if (chessGame.isOver()) {
             return;
         }
+        log.info("{} resigned", chessGame.sideToMove() == Color.WHITE ? "White" : "Black");
         chessGame.resign(chessGame.sideToMove());
         afterChange();
     }
@@ -135,6 +166,9 @@ public class Game {
      */
     public void leave() {
         closed = true;
+        if (!chessGame.isOver()) {
+            log.info("Left an unfinished game after {} moves; it won't be recorded", chessGame.moves().size());
+        }
         turnSystem.stop();
         if (stockfish != null) {
             stockfish.stopEngine();
@@ -160,11 +194,28 @@ public class Game {
             }
             String bestMove = stockfish.getBestMove(chessGame.position().toFen(), COMPUTER_THINK_MILLIS);
             if (bestMove == null) {
-                System.err.println("Stockfish didn't return a move for " + chessGame.position().toFen());
+                computerFailed("Stockfish didn't return a move");
                 return;
             }
-            play(Move.parse(bestMove));
+            try {
+                play(Move.parse(bestMove));
+            } catch (IllegalArgumentException e) {
+                log.error("Stockfish's move \"{}\" isn't legal in {}", bestMove, chessGame.position().toFen(), e);
+                computerFailed("Stockfish sent an illegal move");
+            }
         });
+    }
+
+    /**
+     * The computer stopped working mid-game: carry on as two players at one board, rather than leaving the
+     * game stuck waiting for a move that will never come.
+     */
+    private void computerFailed(String reason) {
+        log.error("{}; continuing as two players at one board", reason);
+        stockfish.stopEngine();
+        stockfish = null;
+        afterChange();
+        onComputerFailure.run();
     }
 
     private void recordResult() {
@@ -173,6 +224,7 @@ public class Game {
         }
         resultRecorded = true;
         GameResult result = chessGame.result();
+        log.info("Game over after {} moves: {} ({})", chessGame.moves().size(), result.describe(), result.score());
         Database.insert(turnSystem.getWhitePlayer(), turnSystem.getBlackPlayer(),
                 leaderboardResult(result, Color.WHITE), leaderboardResult(result, Color.BLACK));
     }

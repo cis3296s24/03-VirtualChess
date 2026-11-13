@@ -1,23 +1,18 @@
 package com.cis3296.virtualchess.Controller;
 
+import com.cis3296.virtualchess.Components.Screens;
 import com.cis3296.virtualchess.Components.Settings;
 import com.cis3296.virtualchess.Entities.LeaderBoardEntry;
 import com.cis3296.virtualchess.Systems.Database;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * UI Controller for the leaderboard screen
@@ -27,57 +22,44 @@ public class LeaderBoardController {
     @FXML
     public Button backButton;
     @FXML
-    public TableView table;
+    public TableView<LeaderBoardEntry> table;
     @FXML
-    public TableColumn idColumn;
+    public TableColumn<LeaderBoardEntry, String> idColumn;
     @FXML
-    public TableColumn Player1Column;
+    public TableColumn<LeaderBoardEntry, String> Player1Column;
     @FXML
-    public TableColumn Player1ResultColumn;
+    public TableColumn<LeaderBoardEntry, String> Player1ResultColumn;
     @FXML
-    public TableColumn Player2Column;
+    public TableColumn<LeaderBoardEntry, String> Player2Column;
     @FXML
-    public TableColumn Player2ResultColumn;
+    public TableColumn<LeaderBoardEntry, String> Player2ResultColumn;
     @FXML
     public Pane menu;
 
     /**
-     * Called when the screen is loaded.
-     * Sets up factories for each of the fields so that when an arraylist is given to it,
-     * it can autoload the values into the right columns
+     * Connects each column to its field and loads the games. If the database can't be read, the table just
+     * shows its "no games" message (the problem is logged by {@link Database}).
      */
-    public void initialize(){
-        idColumn.setCellValueFactory(
-                new PropertyValueFactory<LeaderBoardEntry, String>("id")
-        );
-        Player1Column.setCellValueFactory(
-                new PropertyValueFactory<LeaderBoardEntry, String>("player1Name")
-        );
-        Player1ResultColumn.setCellValueFactory(
-                new PropertyValueFactory<LeaderBoardEntry, String>("player1Result")
-        );
-        Player2Column.setCellValueFactory(
-                new PropertyValueFactory<LeaderBoardEntry, String>("player2Name")
-        );
-        Player2ResultColumn.setCellValueFactory(
-                new PropertyValueFactory<LeaderBoardEntry, String>("player2Result")
-        );
+    public void initialize() {
+        show(idColumn, LeaderBoardEntry::getId);
+        show(Player1Column, LeaderBoardEntry::getPlayer1Name);
+        show(Player1ResultColumn, LeaderBoardEntry::getPlayer1Result);
+        show(Player2Column, LeaderBoardEntry::getPlayer2Name);
+        show(Player2ResultColumn, LeaderBoardEntry::getPlayer2Result);
         table.setItems(Database.getAllEntries());
         // Color the table to match the chosen board theme (see menuStyle.css)
         menu.setStyle(Settings.currentStyle().cssVariables());
     }
 
+    // Type-checked replacement for PropertyValueFactory("name"), which silently shows blanks on a typo
+    private static void show(TableColumn<LeaderBoardEntry, String> column, Function<LeaderBoardEntry, String> field) {
+        column.setCellValueFactory(cell -> new ReadOnlyStringWrapper(field.apply(cell.getValue())));
+    }
+
     /**
      * Button action for switching to the main screen
-     * @param event {@link ActionEvent} for the click
-     * @throws IOException Can throw if screen cant be loaded
      */
-    public void backToMainMenu(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/mainmenu.fxml")));
-        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css")).toExternalForm());
-        stage.setScene(scene);
-        stage.show();
+    public void backToMainMenu(ActionEvent event) {
+        Screens.show(event, Screens.MAIN_MENU);
     }
 }
