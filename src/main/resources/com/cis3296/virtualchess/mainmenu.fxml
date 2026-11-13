@@ -17,6 +17,6 @@
         <Button mnemonicParsing="false" onAction="#switchToLeaderboard" prefHeight="54.0" prefWidth="355.0" text="Leaderboard" />
         <Button mnemonicParsing="false" onAction="#switchToSettingsMenu" prefHeight="54.0" prefWidth="355.0" text="Settings" />
         <Button mnemonicParsing="false" onAction="#switchToTutorial" prefHeight="54.0" prefWidth="355.0" text="Learn Chess" />
-        <Button mnemonicParsing="false" onAction="#quit" prefHeight="54.0" prefWidth="355.0" text="Quit" />
+        <Button styleClass="secondary" mnemonicParsing="false" onAction="#quit" prefHeight="54.0" prefWidth="355.0" text="Quit" />
     </VBox>
 </VBox>

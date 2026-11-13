@@ -11,19 +11,22 @@
     <padding>
         <Insets bottom="20.0" top="20.0" />
     </padding>
-    <!-- Pictures and description, centered as a group. Fixed height so the buttons don't move when a topic is picked. -->
-    <HBox alignment="CENTER" spacing="10.0" minHeight="250.0" prefHeight="250.0" maxHeight="250.0">
-        <ImageView fx:id="imageView" fitHeight="250.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true" />
-        <ImageView fx:id="additionalImageView" fitHeight="250.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true" />
-        <Label fx:id="descriptionLabel" minWidth="240.0" prefWidth="240.0" maxWidth="240.0" style="-fx-font-family: 'Calibri'; -fx-font-size: 14px;" textFill="WHITE" wrapText="true" />
+    <!-- Pictures and a text card, centered as a group. Fixed height so the buttons don't move between topics. -->
+    <HBox alignment="CENTER" spacing="12.0" minHeight="290.0" prefHeight="290.0" maxHeight="290.0">
+        <ImageView fx:id="imageView" fitHeight="210.0" fitWidth="210.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fx:id="additionalImageView" fitHeight="210.0" fitWidth="210.0" pickOnBounds="true" preserveRatio="true" />
+        <VBox styleClass="tutorial-card" minWidth="310.0" prefWidth="310.0" maxWidth="310.0">
+            <Label fx:id="topicTitle" styleClass="tutorial-title" text="The Pieces" />
+            <Label fx:id="descriptionLabel" styleClass="tutorial-text" maxWidth="Infinity" minHeight="-Infinity" text="Pick a piece below to see how it moves." />
+        </VBox>
     </HBox>
     <VBox alignment="CENTER" spacing="8.0">
-        <Button mnemonicParsing="false" onAction="#switchToPawn" prefHeight="58.0" prefWidth="355.0" text="Pawn" />
-        <Button mnemonicParsing="false" onAction="#switchToRook" prefHeight="58.0" prefWidth="355.0" text="Rook" />
-        <Button mnemonicParsing="false" onAction="#switchToBishop" prefHeight="58.0" prefWidth="355.0" text="Bishop" />
-        <Button mnemonicParsing="false" onAction="#switchToKnight" prefHeight="58.0" prefWidth="355.0" text="Knight" />
-        <Button mnemonicParsing="false" onAction="#switchToKing" prefHeight="58.0" prefWidth="355.0" text="King" />
-        <Button mnemonicParsing="false" onAction="#switchToQueen" prefHeight="58.0" prefWidth="355.0" text="Queen" />
+        <Button mnemonicParsing="false" onAction="#switchToPawn" prefHeight="54.0" prefWidth="355.0" text="Pawn" />
+        <Button mnemonicParsing="false" onAction="#switchToRook" prefHeight="54.0" prefWidth="355.0" text="Rook" />
+        <Button mnemonicParsing="false" onAction="#switchToBishop" prefHeight="54.0" prefWidth="355.0" text="Bishop" />
+        <Button mnemonicParsing="false" onAction="#switchToKnight" prefHeight="54.0" prefWidth="355.0" text="Knight" />
+        <Button mnemonicParsing="false" onAction="#switchToKing" prefHeight="54.0" prefWidth="355.0" text="King" />
+        <Button mnemonicParsing="false" onAction="#switchToQueen" prefHeight="54.0" prefWidth="355.0" text="Queen" />
     </VBox>
-    <Button mnemonicParsing="false" onAction="#switchToTutorial" prefHeight="58.0" prefWidth="355.0" text="Back" />
+    <Button styleClass="secondary" mnemonicParsing="false" onAction="#switchToTutorial" prefHeight="54.0" prefWidth="355.0" text="Back" />
 </VBox>
