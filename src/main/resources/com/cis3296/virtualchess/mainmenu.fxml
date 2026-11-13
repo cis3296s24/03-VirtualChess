@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="menu" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-            prefHeight="800.0" prefWidth="810.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.cis3296.virtualchess.Controller.MainMenuController">
-    <Button layoutX="227.0" layoutY="480.0" mnemonicParsing="false" onAction="#switchToGameMode" prefHeight="58.0"
-            prefWidth="355.0" text="Play!"/>
-    <Button layoutX="227.0" layoutY="560.0" mnemonicParsing="false" onAction="#switchToLeaderboard" prefHeight="58.0"
-            prefWidth="355.0" text="Leaderboard"/>
-    <Button layoutX="227.0" layoutY="640.0" mnemonicParsing="false" onAction="#switchToSettingsMenu" prefHeight="58.0"
-            prefWidth="355.0" text="Settings"/>
-    <Button layoutX="227.0" layoutY="720.0" mnemonicParsing="false" onAction="#switchToTutorial" prefHeight="58.0"
-            prefWidth="355.0" text="Learn Chess"/>
-    <ImageView fx:id="imageView" fitHeight="413.0" fitWidth="699.0" layoutX="55.0" layoutY="43.0" pickOnBounds="true">
-    </ImageView>
-</AnchorPane>
+<VBox fx:id="menu" alignment="CENTER" spacing="20.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="800.0" prefWidth="810.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.cis3296.virtualchess.Controller.MainMenuController">
+    <padding>
+        <Insets bottom="20.0" top="20.0" />
+    </padding>
+    <ImageView fx:id="imageView" fitHeight="413.0" fitWidth="699.0" pickOnBounds="true" />
+    <VBox alignment="CENTER" spacing="10.0">
+        <Button mnemonicParsing="false" onAction="#switchToGameMode" prefHeight="54.0" prefWidth="355.0" text="Play!" />
+        <Button mnemonicParsing="false" onAction="#switchToLeaderboard" prefHeight="54.0" prefWidth="355.0" text="Leaderboard" />
+        <Button mnemonicParsing="false" onAction="#switchToSettingsMenu" prefHeight="54.0" prefWidth="355.0" text="Settings" />
+        <Button mnemonicParsing="false" onAction="#switchToTutorial" prefHeight="54.0" prefWidth="355.0" text="Learn Chess" />
+        <Button mnemonicParsing="false" onAction="#quit" prefHeight="54.0" prefWidth="355.0" text="Quit" />
+    </VBox>
+</VBox>
