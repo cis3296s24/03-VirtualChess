@@ -93,6 +93,16 @@
                     <artifactId>maven-install-plugin</artifactId>
                     <version>3.2.0</version>
                 </plugin>
+                <plugin>
+                    <!-- API docs on demand: ./mvnw javadoc:javadoc, output in target/reports/apidocs -->
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.12.0</version>
+                    <configuration>
+                        <!-- Document package-private members too, since this is an app rather than a library -->
+                        <show>package</show>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
 
