@@ -1,28 +1,96 @@
-#menu {
-    -fx-background-color: linear-gradient(to bottom, #090124 0%, #2d0040 50%, #350e55 55%, #2d0040 75%, #090124 100%);
-}
+/*
+ * Styles for the menu screens (purple background) and shared button effects.
+ * Menu screens use fx:id="menu" on their root; the Learn Chess topic pages use fx:id="piece".
+ */
+
+#menu,
 #piece {
     -fx-background-color: linear-gradient(to bottom, #090124 0%, #2d0040 50%, #350e55 55%, #2d0040 75%, #090124 100%);
 }
 
+/* Buttons elsewhere (e.g. the game screen side panel) keep the default look with a soft shadow */
 .button {
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 10, 0, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 10, 0, 0, 0);
 }
 
-.text-area {
-    -fx-background-color: transparent;
+/* ---- Menu buttons ---- */
+
+#menu .button,
+#piece .button {
+    -fx-background-color: linear-gradient(to bottom, #8b5cf6, #6d3fd6);
+    -fx-background-radius: 14;
+    -fx-background-insets: 0;
+    -fx-border-color: rgba(255, 255, 255, 0.22);
+    -fx-border-radius: 14;
+    -fx-border-width: 1;
     -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 14, 0.15, 0, 4);
 }
 
-.text-area .scroll-pane {
-    -fx-background-color: transparent;
+#menu .button:hover,
+#piece .button:hover {
+    -fx-background-color: linear-gradient(to bottom, #a07bff, #7d50e8);
+    -fx-border-color: rgba(255, 255, 255, 0.45);
 }
 
-.text-area .scroll-pane .viewport{
-    -fx-background-color: transparent;
+#menu .button:pressed,
+#piece .button:pressed {
+    -fx-background-color: linear-gradient(to bottom, #5b30b8, #4a2596);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 6, 0.1, 0, 1);
+    -fx-translate-y: 1;
 }
 
+/* Keyboard focus ring (only shown when navigating with the keyboard, not after a mouse click) */
+#menu .button:focus-visible,
+#piece .button:focus-visible {
+    -fx-border-color: #f1e8ff;
+    -fx-border-width: 2;
+}
 
-.text-area .scroll-pane .content{
-    -fx-background-color: transparent;
+/* Back and Quit: a quieter outline style so the main choices stand out */
+#menu .button.secondary,
+#piece .button.secondary {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-border-color: rgba(255, 255, 255, 0.35);
+    -fx-text-fill: #e8defa;
+    -fx-font-weight: normal;
+    -fx-effect: null;
+}
+
+#menu .button.secondary:hover,
+#piece .button.secondary:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.14);
+    -fx-border-color: rgba(255, 255, 255, 0.6);
+}
+
+#menu .button.secondary:pressed,
+#piece .button.secondary:pressed {
+    -fx-background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* ---- Learn Chess topic text ---- */
+
+.tutorial-card {
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+    -fx-background-radius: 14;
+    -fx-border-color: rgba(255, 255, 255, 0.14);
+    -fx-border-radius: 14;
+    -fx-padding: 16 20 16 20;
+    -fx-spacing: 8;
+}
+
+.tutorial-title {
+    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.tutorial-text {
+    -fx-text-fill: #e8defa;
+    -fx-font-size: 15px;
+    -fx-line-spacing: 3px;
+    -fx-wrap-text: true;
 }
