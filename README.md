@@ -169,7 +169,15 @@ How to contribute to the project
 
 ### Documentation
 
-Click here to view the full documentation for Virtual Chess: https://github.com/cis3296s24/03-VirtualChess/tree/main/documentation
+Project documentation (UML diagrams and user personas): https://github.com/cis3296s24/03-VirtualChess/tree/main/documentation
+
+API documentation (Javadoc) is generated from the source rather than kept in the repo, so it's always up to date:
+
+```sh
+./mvnw javadoc:javadoc
+```
+
+Then open `target/reports/apidocs/index.html` in a browser.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
