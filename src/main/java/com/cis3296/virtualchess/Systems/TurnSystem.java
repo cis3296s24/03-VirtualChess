@@ -1,6 +1,7 @@
 package com.cis3296.virtualchess.Systems;
 
 import com.cis3296.virtualchess.Entities.Player;
+import com.cis3296.virtualchess.engine.Color;
 import javafx.scene.text.Text;
 
 /**
@@ -23,19 +24,9 @@ public class TurnSystem {
 
     // Tracks the current player
     private Player currentPlayer;
-    // Tracks the current players color
-    public String currentColor;
-
-    // Displays each players name if its their turn
-    private Text currentPlayerText;
 
     // The single instance of turn system
     private static TurnSystem instance = null;
-
-    // For determining check. Not in use
-    public boolean isCheck = false;
-    // For determining checkmate. Not in use
-    public boolean isCheckMate = false;
 
     /**
      * Constructor for Turn System
@@ -65,7 +56,6 @@ public class TurnSystem {
      */
     public void start(){
         currentPlayer = whitePlayer;
-        currentColor = "white";
         if(whiteTimer == null || blackTimer == null){
             whiteTimer = new Timer(DEFAULT_TIMER_AMOUNT);
             blackTimer = new Timer(DEFAULT_TIMER_AMOUNT);
@@ -88,31 +78,28 @@ public class TurnSystem {
     }
 
     /**
-     * Sets the text for whom the current player is
-     * @param text {@link Text} to be displayed
+     * Makes it this side's turn: their clock runs and the other side's clock is paused.
+     * Setting the turn directly (instead of toggling) keeps the clocks right after an undo.
+     * @param color the side to move
      */
-    public void setCurrentPlayerText(Text text){
-        currentPlayerText = text;
+    public void setTurn(Color color){
+        if(color == Color.WHITE){
+            currentPlayer = whitePlayer;
+            blackTimer.pause();
+            whiteTimer.unpause();
+        } else {
+            currentPlayer = blackPlayer;
+            whiteTimer.pause();
+            blackTimer.unpause();
+        }
     }
 
     /**
-     * Handles logic for changing turns.
-     * Flips the current player color and their timers
+     * Pauses both clocks, e.g. when the game ends
      */
-    public void changeTurn(){
-        if(currentPlayer == whitePlayer){
-            currentPlayer = blackPlayer;
-            currentColor = "black";
-
-            whiteTimer.pause();
-            blackTimer.unpause();
-        } else {
-            currentPlayer = whitePlayer;
-            currentColor = "white";
-            blackTimer.pause();
-            whiteTimer.unpause();
-        }
-        currentPlayerText.setText("Current Turn:\n" + this.currentPlayer.name);
+    public void pauseClocks(){
+        whiteTimer.pause();
+        blackTimer.pause();
     }
 
     /**

@@ -1,12 +1,15 @@
 package com.cis3296.virtualchess.Controller;
 
-import com.cis3296.virtualchess.Components.Board;
+import com.cis3296.virtualchess.Components.BoardView;
+import com.cis3296.virtualchess.Components.PromotionDialog;
 import com.cis3296.virtualchess.Components.Settings;
-import com.cis3296.virtualchess.Components.BoardSquare;
-import com.cis3296.virtualchess.Entities.Coordinates;
-import com.cis3296.virtualchess.Entities.Move;
 import com.cis3296.virtualchess.Game;
 import com.cis3296.virtualchess.Systems.TurnSystem;
+import com.cis3296.virtualchess.engine.ChessGame;
+import com.cis3296.virtualchess.engine.Color;
+import com.cis3296.virtualchess.engine.GameResult;
+import com.cis3296.virtualchess.engine.Move;
+import com.cis3296.virtualchess.engine.Square;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -16,166 +19,225 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.input.TransferMode;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 /**
- * Controller for Game UI
+ * Controller for the game screen (board.fxml): connects the {@link BoardView}, side panel, and buttons to
+ * a {@link Game}.
  */
 public class GameController {
 
-    public VBox board;
-
     @FXML
-    public Button undo;
+    private StackPane boardContainer;
     @FXML
-    GridPane chessBoard = new GridPane();
-
+    private Text currentTurnText;
     @FXML
     private Text timerTextWhite;
     @FXML
     private Text timerTextBlack;
     @FXML
-    private Text currentTurnText;
+    private ListView<String> moveList;
+    @FXML
+    private Button undo;
+    @FXML
+    private Button resign;
 
-    private TurnSystem turnSystem;
-
-    // Game that is to be created when this UI starts
-    Game game;
+    private final TurnSystem turnSystem = TurnSystem.getInstance();
+    private final BoardView boardView = new BoardView();
+    private Game game;
+    private Timeline clockRefresh;
+    private boolean resultAnnounced;
 
     /**
-     * Creates the chess board and adds functionality for the drag handling
+     * Called by the FXML loader once the screen's controls exist.
      */
-    public void initialize(){
-        this.game = new Game(chessBoard);
-        this.turnSystem = TurnSystem.getInstance();
-        // "Refresh Rate" of the timers
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.1), event -> updateTime()));
-        timeline.setCycleCount(Timeline.INDEFINITE); // Repeat indefinitely
-        timeline.play();
-        currentTurnText.setText("Current Turn:\n" + turnSystem.getCurrentPlayer().name);
-        turnSystem.setCurrentPlayerText(currentTurnText);
+    public void initialize() {
+        boardContainer.getChildren().add(boardView);
+        boolean vsComputer = Boolean.parseBoolean(Settings.getConfig(Settings.AI_CONFIG_ACCESS_STRING));
+        game = new Game(vsComputer, this::refresh);
 
-        undo.setVisible(Boolean.parseBoolean(Settings.getConfig(Settings.UNDO_CONFIG_ACCESS_STRING)));
+        applySettings();
+        boardView.setLegalMovesProvider(game::movesFor);
+        boardView.setOnMoveRequested(this::onMoveRequested);
 
-        // Add drag-and-drop event handlers to the chessboard GridPane
-        chessBoard.setOnDragOver(event -> {
-            event.acceptTransferModes(TransferMode.MOVE);
-            event.consume();
-        });
+        clockRefresh = new Timeline(new KeyFrame(Duration.seconds(0.1), event -> updateClocks()));
+        clockRefresh.setCycleCount(Timeline.INDEFINITE);
+        clockRefresh.play();
+        updateClocks();
 
-        chessBoard.setOnDragDropped(event -> {
-            game.chessBoard.removeShownMoves();
-            event.setDropCompleted(true);
-            event.consume();
-        });
+        refresh();
+
+        if (game.isComputerUnavailable()) {
+            // Wait until the window is showing so the alert has something to sit on top of
+            Platform.runLater(() -> new Alert(Alert.AlertType.WARNING,
+                    "Stockfish couldn't be started, so this game is for two players at one board.\n\n"
+                            + "See \"Playing Against Stockfish\" in the README for where the app looks for it.")
+                    .show());
+        }
+    }
+
+    private void onMoveRequested(Square from, Square to) {
+        ChessGame chessGame = game.chessGame();
+        if (chessGame.isPromotion(from, to)) {
+            PromotionDialog.ask(boardView.getScene().getWindow(), chessGame.sideToMove())
+                    .ifPresent(piece -> game.play(new Move(from, to, piece)));
+        } else {
+            game.play(new Move(from, to));
+        }
     }
 
     /**
-     * Update the timers on the screen each 0.1 seconds(Defined in the timeline)
+     * Redraws everything from the current game state.
      */
-    public void updateTime(){
-        turnSystem.getWhiteTime(timerTextWhite);
+    private void refresh() {
+        ChessGame chessGame = game.chessGame();
+        List<Move> moves = chessGame.moves();
+        boardView.setPosition(chessGame.position(), moves.isEmpty() ? null : moves.getLast());
 
+        moveList.getItems().setAll(formatMoveList(chessGame.movesInSan()));
+        if (!moveList.getItems().isEmpty()) {
+            moveList.scrollTo(moveList.getItems().size() - 1);
+        }
+
+        GameResult result = chessGame.result();
+        if (result == null) {
+            currentTurnText.setText("Current Turn:\n" + playerName(chessGame.sideToMove()));
+        } else {
+            currentTurnText.setText("Game over\n" + describe(result));
+            announceResult(result);
+        }
+
+        undo.setDisable(!game.canUndo());
+        resign.setDisable(!game.isHumanTurn());
+    }
+
+    /**
+     * Pairs up moves for display: "1. e4  e5", "2. Nf3  Nc6", ...
+     */
+    private static List<String> formatMoveList(List<String> san) {
+        List<String> rows = new ArrayList<>();
+        for (int i = 0; i < san.size(); i += 2) {
+            String black = i + 1 < san.size() ? san.get(i + 1) : "";
+            rows.add(String.format("%d.  %-8s %s", i / 2 + 1, san.get(i), black).stripTrailing());
+        }
+        return rows;
+    }
+
+    private String describe(GameResult result) {
+        if (result.isDraw()) {
+            return result.describe();
+        }
+        return playerName(result.winner()) + " wins by " + result.reason().description();
+    }
+
+    private String playerName(Color color) {
+        return color == Color.WHITE ? turnSystem.getWhitePlayer().name : turnSystem.getBlackPlayer().name;
+    }
+
+    private void announceResult(GameResult result) {
+        if (resultAnnounced) {
+            return;
+        }
+        resultAnnounced = true;
+        // show() rather than showAndWait(): this can run in the middle of handling a mouse event
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, describe(result) + " (" + result.score() + ")");
+            alert.setTitle("Game over");
+            alert.setHeaderText("Game over");
+            alert.show();
+        });
+    }
+
+    private void updateClocks() {
+        turnSystem.getWhiteTime(timerTextWhite);
         turnSystem.getBlackTime(timerTextBlack);
     }
 
     /**
-     * Button action for leaving the game and going to the main screen
-     * @param event {@link ActionEvent} for the click
-     * @throws IOException Throws if it cannot load the fxml file
+     * Reads the theme, hints, and undo settings and applies them to the screen.
      */
-    public void leaveGame(ActionEvent event) throws IOException {
+    private void applySettings() {
+        boardView.setBoardStyle(Settings.getStyleFromString(Settings.getConfig(Settings.THEME_CONFIG_ACCESS_STRING)));
+        boardView.setShowHints(Boolean.parseBoolean(Settings.getConfig(Settings.HINTS_CONFIG_ACCESS_STRING)));
+        undo.setVisible(Boolean.parseBoolean(Settings.getConfig(Settings.UNDO_CONFIG_ACCESS_STRING)));
+    }
+
+    /**
+     * Button action: take back the last move (and the computer's reply, against the computer).
+     */
+    @FXML
+    private void undoMoveButton() {
+        game.undo();
+    }
+
+    /**
+     * Button action: the player whose turn it is resigns, after confirming.
+     */
+    @FXML
+    private void resignButton() {
+        String name = playerName(game.chessGame().sideToMove());
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, name + ", do you want to resign?",
+                ButtonType.YES, ButtonType.NO);
+        confirm.setHeaderText("Resign?");
+        confirm.showAndWait()
+                .filter(ButtonType.YES::equals)
+                .ifPresent(answer -> game.resign());
+    }
+
+    /**
+     * Button action: leave the game and go back to the main menu. Unfinished games aren't recorded.
+     */
+    @FXML
+    private void leaveGame(ActionEvent event) throws IOException {
+        clockRefresh.stop();
+        game.leave();
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/mainmenu.fxml")));
-        Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css")).toExternalForm());
         stage.setScene(scene);
         stage.show();
-        game.endGame();
-
     }
 
     /**
-     * Button action for displaying the settings
+     * Button action: open the settings window, then apply any changes.
      */
-    public void settings(){
+    @FXML
+    private void settings() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cis3296/virtualchess/settingsMenu.fxml"));
             Parent settingsContent = loader.load();
 
             Stage settingsPopup = new Stage();
             Scene settingsScene = new Scene(settingsContent);
-
-            settingsScene.getStylesheets().add(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css").toExternalForm());
-
+            settingsScene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css")).toExternalForm());
             settingsPopup.setScene(settingsScene);
-
             settingsPopup.setTitle("Settings");
-
             settingsPopup.initModality(Modality.APPLICATION_MODAL);
-
 
             SettingsMenuController controller = loader.getController();
             controller.backButton.setOnAction(event -> {
                 Settings.setConfig(Settings.THEME_CONFIG_ACCESS_STRING, controller.ThemeDropDown.getValue().toString());
-
-                game.getTheme();
-                game.chessBoard.rerenderBoard();
-
                 settingsPopup.close();
-                undo.setVisible(Boolean.parseBoolean(Settings.getConfig(Settings.UNDO_CONFIG_ACCESS_STRING)));
-            });
-
-            settingsPopup.setOnCloseRequest(event -> {
-                Platform.runLater(settingsPopup::close);
-                undo.setVisible(Boolean.parseBoolean(Settings.getConfig(Settings.UNDO_CONFIG_ACCESS_STRING)));
             });
 
             settingsPopup.showAndWait();
-        } catch (Exception e) {
+            applySettings();
+        } catch (IOException e) {
             e.printStackTrace();
-        }
-
-    }
-
-    /**
-     * Connected to a button on the board FXML file, this method calls a Board method to undo piece movement
-     */
-    public void undoMoveButton(){
-        if(Boolean.parseBoolean(Settings.getConfig(Settings.UNDO_CONFIG_ACCESS_STRING))){
-            undoMove();
-            if(Boolean.parseBoolean(Settings.getConfig(Settings.AI_CONFIG_ACCESS_STRING))){
-                undoMove();
-            }
-        }
-    }
-
-    private void undoMove(){
-        // get the board
-        Board chessBoard = game.chessBoard;
-        // get the previous move
-        if(!chessBoard.getMoveStack().empty()){
-            Move previousMove = chessBoard.getMoveStack().pop();
-            // get the last coordinates
-            Coordinates previousCoordinates = previousMove.getPreviousCoordinates();
-            // get the square at the coordinates
-            BoardSquare previousSquare = chessBoard.getSquareAt(previousCoordinates);
-            // signal that the piece is not an eaten piece
-            boolean isEatenPiece = false;
-            // set the piece back to the previous square
-            chessBoard.undoPieceMove(previousSquare, previousMove.getPiece(), isEatenPiece);
         }
     }
 }
-
