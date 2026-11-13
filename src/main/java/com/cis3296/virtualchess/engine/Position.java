@@ -322,6 +322,46 @@ public final class Position {
     }
 
     /**
+     * Checks whether neither side can possibly checkmate, no matter how badly the other plays. That covers
+     * king vs king, king and one bishop or knight vs king, and positions where every remaining piece besides
+     * the kings is a bishop on the same color of square.
+     * <p>
+     * Positions like king and knight vs king and knight return false: mate is impossible to force, but it
+     * can still happen if one side blunders, so under FIDE rules the game goes on.
+     */
+    public boolean hasInsufficientMaterial() {
+        int minorPieces = 0;
+        boolean onlyBishops = true;
+        boolean bishopOnLightSquare = false;
+        boolean bishopOnDarkSquare = false;
+        for (Square square : Square.ALL_SQUARES) {
+            Piece piece = board[square.index()];
+            if (piece == null || piece.type() == PieceType.KING) {
+                continue;
+            }
+            switch (piece.type()) {
+                case PAWN, ROOK, QUEEN -> {
+                    return false;
+                }
+                case KNIGHT -> {
+                    minorPieces++;
+                    onlyBishops = false;
+                }
+                case BISHOP -> {
+                    minorPieces++;
+                    if ((square.file() + square.rank()) % 2 == 0) {
+                        bishopOnDarkSquare = true; // a1 is a dark square
+                    } else {
+                        bishopOnLightSquare = true;
+                    }
+                }
+                default -> throw new IllegalStateException("Unexpected piece " + piece);
+            }
+        }
+        return minorPieces <= 1 || (onlyBishops && !(bishopOnLightSquare && bishopOnDarkSquare));
+    }
+
+    /**
      * Two positions are equal if every field matches, including the move counters.
      */
     @Override
