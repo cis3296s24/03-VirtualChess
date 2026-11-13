@@ -1,173 +1,276 @@
 package com.cis3296.virtualchess;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 /**
- * A simple and efficient client to run Stockfish from Java
- * Originally from Rahul A R on GitHub
- * Nick Rucinski worked on cleaning it up and extending it
+ * Runs the Stockfish chess engine as a separate process and talks to it over UCI (the standard text
+ * protocol for chess engines).
+ * <p>
+ * Originally from Rahul A R on GitHub; Nick Rucinski cleaned it up and extended it.
+ * <p>
+ * Every failure (engine missing, not executable, crashed, stopped responding) is logged and reported through
+ * return values ({@link #startEngine()} returns false, {@link #getBestMove} returns null) rather than thrown,
+ * so the game can fall back to two players.
  */
 public class Stockfish {
 
-	private Process engineProcess;
-	private BufferedReader processReader;
-	private OutputStreamWriter processWriter;
+    private static final Logger log = LoggerFactory.getLogger(Stockfish.class);
+    private static final long QUIT_TIMEOUT_MILLIS = 1000;
 
-	/**
-	 * Starts Stockfish engine as a process and initializes it
-	 * Checks for the users OS and launches the correct version if available
-	 * @return True on success. False otherwise
-	 */
-	public boolean startEngine() {
-		try {
-			// FOR MAC:
-			// Install homebrew,
-			// Install stockfish,
-			// Replace 'insert' with "/usr/local/bin/stockfish"
-			// Runtime.getRuntime().exec( 'insert' );
-			String PATH;
-			// Find the right OS
-			String osName = System.getProperty("os.name");
-			if (osName.toLowerCase().contains("mac")) {
-				PATH = "stockfish/stockfish-macos-x86-64-avx2";
-			} else if (osName.toLowerCase().contains("win")) {
-				PATH = "stockfish/stockfish-windows-x86-64-avx2.exe";
-			} else {
-				PATH = "stockfish/stockfish-ubuntu-x86-64-avx2";
-			}
-			// Startup Stockfish
-			engineProcess = Runtime.getRuntime().exec(PATH);
-			processReader  = new BufferedReader(new InputStreamReader(
-					engineProcess.getInputStream()));
-			processWriter = new OutputStreamWriter(
-					engineProcess.getOutputStream());
-		} catch (Exception e) {
-			// Failed to open
-			return false;
-		}
-		// Everything okay
-		return true;
-	}
+    private final Path executable;
+    private Process engineProcess;
+    private BufferedReader processReader;
+    private Writer processWriter;
+    private boolean running;
 
-	/**
-	 * Stops Stockfish and cleans up before closing it
-	 */
-	public void stopEngine() {
-		try {
-			sendCommand("quit");
-			processReader.close();
-			processWriter.close();
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		}
-	}
+    /**
+     * Uses the Stockfish build for this operating system from the "stockfish" folder in the directory the app
+     * was started from (see "Playing Against Stockfish" in the README).
+     */
+    public Stockfish() {
+        this(defaultExecutable());
+    }
 
-	/**
-	 * Takes in any valid UCI command and executes it. Adds a newline character automatically
-	 *
-	 * @param command A UCI command to be sent to stockfish
-	 */
-	public void sendCommand(String command) {
-		try {
-			processWriter.write(command + "\n");
-			processWriter.flush();
-			System.out.println("Sending command: " + command);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+    /**
+     * @param executable the Stockfish program to run
+     */
+    public Stockfish(Path executable) {
+        this.executable = executable;
+    }
 
-	/**
-	 * Sends the command to start a new game with UCI
-	 */
-	public void setUCINewGame() {
-		sendCommand("ucinewgame");
-	}
+    /**
+     * @return where the app looks for Stockfish on this operating system
+     */
+    public static Path defaultExecutable() {
+        String os = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
+        String name;
+        if (os.contains("mac")) {
+            name = "stockfish-macos-x86-64-avx2";
+        } else if (os.contains("win")) {
+            name = "stockfish-windows-x86-64-avx2.exe";
+        } else {
+            name = "stockfish-ubuntu-x86-64-avx2";
+        }
+        return Path.of("stockfish", name);
+    }
 
-	/**
-	 * Sets the positions on the board
-	 * @param fen A FEN string that represents the board
-	 */
-	public void setPosition(String fen){
-		String buffer = "position fen " + fen;
-		sendCommand(buffer);
-	}
+    /**
+     * Starts the engine and checks that it answers like a UCI chess engine.
+     *
+     * @return true if the engine is running and ready; false if it couldn't be started (the reason is logged)
+     */
+    public boolean startEngine() {
+        Path path = executable.toAbsolutePath();
+        if (!Files.exists(path)) {
+            log.warn("Stockfish not found at {}. See \"Playing Against Stockfish\" in the README.", path);
+            return false;
+        }
+        if (!Files.isExecutable(path)) {
+            log.warn("Stockfish at {} isn't executable. On Linux or macOS, fix it with: chmod +x \"{}\"", path, path);
+            return false;
+        }
+        try {
+            engineProcess = new ProcessBuilder(path.toString()).redirectErrorStream(true).start();
+        } catch (IOException e) {
+            log.warn("Couldn't start Stockfish at {}: {}", path, e.getMessage());
+            return false;
+        }
+        processReader = new BufferedReader(new InputStreamReader(engineProcess.getInputStream(), StandardCharsets.UTF_8));
+        processWriter = new OutputStreamWriter(engineProcess.getOutputStream(), StandardCharsets.UTF_8);
+        running = true;
 
-	/**
-	 * Gets a move from Stockfish and parses it into coordinates if found
-	 * @param fen A FEN string that represents the board
-	 * @param waitTime The amount of time that Stockfish should wait before responding
-	 * @return The coordinates from and two to move
-	 * ex. a2a4 is move white pawn up two squares.
-	 * or null if the move in not received
-	 */
-	public String getBestMove(String fen, int waitTime) {
-		sendCommand("position fen " + fen);
-		sendCommand("go depth 1 movetime " + waitTime);
+        // UCI handshake: the engine introduces itself and ends with "uciok"
+        sendCommand("uci");
+        String engineName = null;
+        String line;
+        while ((line = readLine()) != null && !line.equals("uciok")) {
+            if (line.startsWith("id name ")) {
+                engineName = line.substring("id name ".length());
+            }
+        }
+        if (line == null) {
+            log.warn("Stockfish at {} exited during startup (it may not support this CPU; the bundled builds need AVX2)", path);
+            stopEngine();
+            return false;
+        }
+        log.info("Started {} from {}", engineName == null ? "chess engine" : engineName, path);
+        return true;
+    }
 
-		// Wait for the output to be ready
-		String output = getOutput(waitTime + 20);
+    /**
+     * @return true if the engine was started and hasn't stopped or crashed since
+     */
+    public boolean isRunning() {
+        return running && engineProcess != null && engineProcess.isAlive();
+    }
 
-		// Split the output to find the best move
-		String[] lines = output.split("\n");
-		for (String line : lines) {
-			if (line.startsWith("bestmove")) {
-				String[] parts = line.split(" ");
-				if (parts.length >= 2) {
-					return parts[1]; // Return the best move
-				}
-			}
-		}
+    /**
+     * Asks the engine to quit and cleans up, killing the process if it doesn't exit in time. Safe to call
+     * even if the engine never started.
+     */
+    public void stopEngine() {
+        if (engineProcess == null) {
+            return;
+        }
+        if (running && engineProcess.isAlive()) {
+            sendCommand("quit");
+        }
+        running = false;
+        try {
+            if (!engineProcess.waitFor(QUIT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS)) {
+                log.warn("Stockfish didn't quit within {} ms; stopping it", QUIT_TIMEOUT_MILLIS);
+                engineProcess.destroyForcibly();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            engineProcess.destroyForcibly();
+        }
+        closeQuietly();
+        log.debug("Stockfish stopped");
+    }
 
-		// Return null if no best move found
-		return null;
-	}
+    /**
+     * Sends any UCI command (a newline is added). If the engine has stopped, logs it and does nothing.
+     *
+     * @param command A UCI command to be sent to stockfish
+     */
+    public void sendCommand(String command) {
+        if (!running) {
+            log.warn("Not sending \"{}\": Stockfish isn't running", command);
+            return;
+        }
+        try {
+            processWriter.write(command + "\n");
+            processWriter.flush();
+            log.debug("Stockfish << {}", command);
+        } catch (IOException e) {
+            engineStopped("sending \"" + command + "\"", e);
+        }
+    }
 
-	/**
-	 * This is generally called right after 'sendCommand' for getting the raw
-	 * output from Stockfish
-	 *
-	 * @param waitTime
-	 *            Time in milliseconds for which the function waits before
-	 *            reading the output. Useful when a long running command is
-	 *            executed
-	 * @return Raw output from Stockfish
-	 */
-	public String getOutput(int waitTime) {
-		StringBuffer buffer = new StringBuffer();
-		try {
-			Thread.sleep(waitTime);
-			sendCommand("isready");
-			while (true) {
-				String text = processReader.readLine();
-				if (text.equals("readyok"))
-					break;
-				else
-					buffer.append(text + "\n");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return buffer.toString();
-	}
+    /**
+     * Tells the engine a new game is starting
+     */
+    public void setUCINewGame() {
+        sendCommand("ucinewgame");
+    }
 
-	/**
-	 * Draws the current state of the chess board
-	 * 
-	 * @param fen
-	 *            Position string with using FEN
-	 */
-	public void drawBoard(String fen) {
-		sendCommand("position fen " + fen);
-		sendCommand("d");
+    /**
+     * Asks the engine for its move in a position.
+     *
+     * @param fen      the position, as a full FEN string
+     * @param waitTime how long the engine may think, in milliseconds
+     * @return the move in UCI notation (e.g. "e2e4", or "e7e8q" for a promotion), or null if the engine
+     * isn't running or didn't answer (the reason is logged)
+     */
+    public String getBestMove(String fen, int waitTime) {
+        if (!isRunning()) {
+            log.warn("Can't get a move: Stockfish isn't running");
+            return null;
+        }
+        sendCommand("position fen " + fen);
+        sendCommand("go depth 1 movetime " + waitTime);
 
-		String[] rows = getOutput(0).split("\n");
+        String output = getOutput(waitTime + 20);
+        for (String line : output.split("\n")) {
+            if (line.startsWith("bestmove")) {
+                String[] parts = line.split(" ");
+                if (parts.length >= 2 && !parts[1].equals("(none)")) {
+                    log.debug("Stockfish >> {}", line);
+                    return parts[1];
+                }
+            }
+        }
+        if (isRunning()) { // if it crashed, that's already been logged
+            log.warn("Stockfish gave no move for {}. Its output was:\n{}", fen,
+                    output.isBlank() ? "(nothing)" : output.strip());
+        }
+        return null;
+    }
 
-		for (int i = 1; i < 18; i++) {
-			System.out.println(rows[i]);
-		}
-	}
+    /**
+     * Waits, then reads everything the engine has printed. Uses the "isready"/"readyok" exchange to know
+     * when the engine has finished.
+     *
+     * @param waitTime milliseconds to wait before reading, to give a long-running command time to finish
+     * @return the engine's output, possibly incomplete if it stopped responding
+     */
+    public String getOutput(int waitTime) {
+        StringBuilder buffer = new StringBuilder();
+        try {
+            Thread.sleep(waitTime);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return buffer.toString();
+        }
+        sendCommand("isready");
+        String line;
+        while ((line = readLine()) != null && !line.equals("readyok")) {
+            buffer.append(line).append('\n');
+        }
+        return buffer.toString();
+    }
+
+    // One line from the engine, or null if it has exited (in which case it's marked as no longer running)
+    private String readLine() {
+        if (!running) {
+            return null;
+        }
+        try {
+            String line = processReader.readLine();
+            if (line == null) {
+                engineStopped("reading its output", null);
+            }
+            return line;
+        } catch (IOException e) {
+            engineStopped("reading its output", e);
+            return null;
+        }
+    }
+
+    /**
+     * Records that the engine has gone away. Logged once, as a single line: a closed pipe is the expected
+     * symptom of a crashed process, not something that needs a stack trace.
+     */
+    private void engineStopped(String whileDoing, IOException cause) {
+        if (!running) {
+            return;
+        }
+        running = false;
+        String exit = "";
+        try {
+            if (engineProcess.waitFor(200, TimeUnit.MILLISECONDS)) {
+                exit = " with exit code " + engineProcess.exitValue();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        log.error("Stockfish stopped unexpectedly{} while {}{}", exit, whileDoing,
+                cause == null ? "" : " (" + cause.getMessage() + ")");
+    }
+
+    private void closeQuietly() {
+        try {
+            processReader.close();
+        } catch (IOException e) {
+            log.debug("Problem closing Stockfish's output: {}", e.getMessage());
+        }
+        try {
+            processWriter.close();
+        } catch (IOException e) {
+            log.debug("Problem closing Stockfish's input: {}", e.getMessage());
+        }
+    }
 }

@@ -1,6 +1,8 @@
 package com.cis3296.virtualchess.Components;
 
 import com.cis3296.virtualchess.Systems.AppData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +20,8 @@ import static com.cis3296.virtualchess.Components.Style.*;
  * missing from the file (or a missing file, on first launch) fall back to the defaults below.
  */
 public class Settings {
+
+    private static final Logger log = LoggerFactory.getLogger(Settings.class);
 
     // Access String for getting the theme
     public static final String THEME_CONFIG_ACCESS_STRING = "theme";
@@ -76,12 +80,14 @@ public class Settings {
      * @param value The value to be changed to
      */
     public static synchronized void setConfig(String accessString, String value){
-        properties().setProperty(accessString, value);
-        Path file = AppData.file(FILE_NAME);
-        try (OutputStream out = Files.newOutputStream(file)) {
+        Object previous = properties().setProperty(accessString, value);
+        if (!value.equals(previous)) {
+            log.info("Setting \"{}\" changed to {}", accessString, value);
+        }
+        try (OutputStream out = Files.newOutputStream(AppData.file(FILE_NAME))) {
             properties().storeToXML(out, "VirtualChess settings");
-        } catch (IOException e) {
-            System.err.println("Couldn't save settings to " + file + ": " + e.getMessage());
+        } catch (IOException | RuntimeException e) {
+            log.warn("Couldn't save settings; the change only lasts until the app closes", e);
         }
     }
 
@@ -97,13 +103,22 @@ public class Settings {
     private static Properties properties() {
         if (prop == null) {
             prop = new Properties(DEFAULTS);
-            Path file = AppData.file(FILE_NAME);
+            Path file;
+            try {
+                file = AppData.file(FILE_NAME);
+            } catch (RuntimeException e) {
+                log.warn("Couldn't find the data folder; using default settings", e);
+                return prop;
+            }
             if (Files.exists(file)) {
                 try (InputStream in = Files.newInputStream(file)) {
                     prop.loadFromXML(in);
+                    log.info("Loaded settings from {}", file);
                 } catch (IOException e) {
-                    System.err.println("Couldn't read settings from " + file + ", using defaults: " + e.getMessage());
+                    log.warn("Couldn't read settings from {}; using defaults", file, e);
                 }
+            } else {
+                log.info("No settings file yet; using defaults (will be saved to {})", file);
             }
         }
         return prop;

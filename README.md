@@ -116,6 +116,19 @@ Your settings (`config.xml`) and game history (`leaderboard.db`) are saved in a 
 home directory (`~/.virtualchess` on macOS/Linux, `C:\Users\<you>\.virtualchess` on Windows), not in the repo.
 Delete that folder to reset both.
 
+#### Logs
+
+The app logs what it's doing to the console: startup, where your data is stored, games starting and ending,
+settings changes, Stockfish starting (or why it couldn't), and any errors with full details. For more detail,
+including every move and every command sent to Stockfish, turn on debug logging:
+
+```sh
+./mvnw javafx:run -Dlog.level=debug
+```
+
+Log levels and format are set in `src/main/resources/simplelogger.properties`. In code, get a logger with
+`LoggerFactory.getLogger(YourClass.class)` (SLF4J).
+
 ### Running Tests
 
 ```sh

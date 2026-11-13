@@ -1,28 +1,24 @@
 package com.cis3296.virtualchess.Controller;
 
-import com.cis3296.virtualchess.Systems.Database;
+import com.cis3296.virtualchess.Components.Screens;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.Objects;
+import java.net.URL;
 
 /**
  * UI Controller for the main menu screen
  */
 public class MainMenuController {
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
+
+    private static final Logger log = LoggerFactory.getLogger(MainMenuController.class);
+    private static final String LOGO = "/assets/menuImages/VirtualChess!.gif";
 
     @FXML
     ImageView imageView;
@@ -32,15 +28,15 @@ public class MainMenuController {
     Pane menu;
 
     /**
-     * Creates the chess board, loads the GIF, and makes sure the database is initialized
+     * Loads the animated logo. A missing logo is logged rather than stopping the menu from opening.
      */
-    public void initialize() throws IOException {
-        Image image = new Image(String.valueOf(getClass().getResource("/assets/menuImages/VirtualChess!.gif")));
-        imageView.setImage(image);
-        Database.getInstance();
-        //load settings on startup
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cis3296/virtualchess/settingsMenu.fxml"));
-        Parent settingsContent = loader.load();
+    public void initialize() {
+        URL logo = getClass().getResource(LOGO);
+        if (logo == null) {
+            log.warn("Main menu logo {} is missing from the build", LOGO);
+            return;
+        }
+        imageView.setImage(new Image(logo.toExternalForm()));
     }
 
     /**
@@ -49,62 +45,27 @@ public class MainMenuController {
      */
     @FXML
     private void quit() {
+        log.info("Quit pressed");
         Platform.exit();
     }
 
-    /**
-     * Button action for switching to the game mode screen
-     * @param event {@link ActionEvent} for the click
-     * @throws IOException Can throw if screen cant be loaded
-     */
-    public void switchToGameMode(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/gamemode.fxml")));
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();
+    @FXML
+    public void switchToGameMode(ActionEvent event) {
+        Screens.show(event, Screens.GAME_MODE);
     }
 
-    /**
-     * Button action for switching to the leaderboard screen
-     * @param event {@link ActionEvent} for the click
-     * @throws IOException Can throw if screen cant be loaded
-     */
-    public void switchToLeaderboard(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/leaderboard.fxml")));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();
+    @FXML
+    public void switchToLeaderboard(ActionEvent event) {
+        Screens.show(event, Screens.LEADERBOARD);
     }
 
-    /**
-     * Button action for switching to the settings screen
-     * @param event {@link ActionEvent} for the click
-     * @throws IOException Can throw if screen cant be loaded
-     */
-    public void switchToSettingsMenu(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/settingsMenu.fxml")));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();
+    @FXML
+    public void switchToSettingsMenu(ActionEvent event) {
+        Screens.show(event, Screens.SETTINGS);
     }
 
-    /**
-     * Button action for switching to the tutorial screen
-     * @param event {@link ActionEvent} for the click
-     * @throws IOException Can throw if screen cant be loaded
-     */
-    public void switchToTutorial(ActionEvent event) throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/Tutorial Screen.fxml")));
-        stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css").toExternalForm());
-        stage.setScene(scene);
-        stage.show();
+    @FXML
+    public void switchToTutorial(ActionEvent event) {
+        Screens.show(event, Screens.LEARN_CHESS);
     }
 }

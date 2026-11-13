@@ -3,6 +3,7 @@ module com.cis3296.virtualchess {
     requires javafx.fxml;
     requires java.sql;
     requires org.xerial.sqlitejdbc;
+    requires org.slf4j;
 
     opens com.cis3296.virtualchess to javafx.fxml;
     exports com.cis3296.virtualchess;

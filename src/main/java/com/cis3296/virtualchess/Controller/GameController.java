@@ -3,6 +3,7 @@ package com.cis3296.virtualchess.Controller;
 import com.cis3296.virtualchess.Components.BoardView;
 import com.cis3296.virtualchess.Components.Dialogs;
 import com.cis3296.virtualchess.Components.PromotionDialog;
+import com.cis3296.virtualchess.Components.Screens;
 import com.cis3296.virtualchess.Components.Settings;
 import com.cis3296.virtualchess.Components.Style;
 import com.cis3296.virtualchess.Game;
@@ -17,10 +18,6 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -32,17 +29,20 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Controller for the game screen (board.fxml): connects the {@link BoardView}, side panel, and buttons to
  * a {@link Game}.
  */
 public class GameController {
+
+    private static final Logger log = LoggerFactory.getLogger(GameController.class);
 
     // The whole screen; gets the board theme's colors as CSS variables so the side panel matches the board
     @FXML
@@ -75,6 +75,14 @@ public class GameController {
         boardContainer.getChildren().add(boardView);
         boolean vsComputer = Boolean.parseBoolean(Settings.getConfig(Settings.AI_CONFIG_ACCESS_STRING));
         game = new Game(vsComputer, this::refresh);
+        game.setOnComputerFailure(() -> {
+            Alert alert = Dialogs.themed(new Alert(Alert.AlertType.WARNING,
+                    "The game continues as two players at one board: you can now move the black pieces too.\n\n"
+                            + "The details are in the log."), window());
+            alert.setTitle("Computer opponent stopped");
+            alert.setHeaderText("Stockfish stopped responding");
+            alert.show();
+        });
 
         applySettings();
         boardView.setLegalMovesProvider(game::movesFor);
@@ -227,15 +235,10 @@ public class GameController {
      * Button action: leave the game and go back to the main menu. Unfinished games aren't recorded.
      */
     @FXML
-    private void leaveGame(ActionEvent event) throws IOException {
+    private void leaveGame(ActionEvent event) {
         clockRefresh.stop();
         game.leave();
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/mainmenu.fxml")));
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css")).toExternalForm());
-        stage.setScene(scene);
-        stage.show();
+        Screens.show(event, Screens.MAIN_MENU);
     }
 
     /**
@@ -243,27 +246,27 @@ public class GameController {
      */
     @FXML
     private void settings() {
+        Screens.Loaded<SettingsMenuController> loaded;
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cis3296/virtualchess/settingsMenu.fxml"));
-            Parent settingsContent = loader.load();
-
-            Stage settingsPopup = new Stage();
-            Scene settingsScene = new Scene(settingsContent);
-            settingsScene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/com/cis3296/virtualchess/menuStyle.css")).toExternalForm());
-            settingsPopup.setScene(settingsScene);
-            settingsPopup.setTitle("Settings");
-            settingsPopup.initModality(Modality.APPLICATION_MODAL);
-
-            SettingsMenuController controller = loader.getController();
-            controller.backButton.setOnAction(event -> {
-                Settings.setConfig(Settings.THEME_CONFIG_ACCESS_STRING, controller.ThemeDropDown.getValue().toString());
-                settingsPopup.close();
-            });
-
-            settingsPopup.showAndWait();
-            applySettings();
-        } catch (IOException e) {
-            e.printStackTrace();
+            loaded = Screens.load(Screens.SETTINGS);
+        } catch (IOException | RuntimeException e) {
+            log.error("Couldn't open the settings window", e);
+            Dialogs.error(window(), "Couldn't open Settings", "Something went wrong while loading it. The details are in the log.");
+            return;
         }
+
+        Stage settingsPopup = new Stage();
+        settingsPopup.setScene(Screens.scene(loaded.root()));
+        settingsPopup.setTitle("Settings");
+        // An owner keeps the pop-up on top of the game; without one, a modal window can end up hidden behind
+        // the game window, leaving the game blocked with no visible way out
+        settingsPopup.initOwner(window());
+        settingsPopup.initModality(Modality.WINDOW_MODAL);
+
+        SettingsMenuController controller = loaded.controller();
+        controller.backButton.setOnAction(event -> settingsPopup.close());
+
+        settingsPopup.showAndWait();
+        applySettings();
     }
 }
