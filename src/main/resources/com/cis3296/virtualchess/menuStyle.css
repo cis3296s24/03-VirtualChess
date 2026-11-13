@@ -406,7 +406,7 @@
     -fx-opacity: 0.4;
 }
 
-/* ---- Game dialogs (game over, resign, warnings) and the promotion picker ----
+/* ---- Game dialogs (game over, resign, warnings) ----
  * These pop-ups get the board theme's colors the same way the game screen does (Dialogs.themed()).
  */
 
@@ -437,8 +437,7 @@
     -fx-padding: 14 22 20 22;
 }
 
-.game-dialog .button,
-.promotion-dialog .button {
+.game-dialog .button {
     -fx-background-color: -theme-light;
     -fx-background-radius: 10;
     -fx-text-fill: -theme-ink;
@@ -449,13 +448,11 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 8, 0.1, 0, 2);
 }
 
-.game-dialog .button:hover,
-.promotion-dialog .button:hover {
+.game-dialog .button:hover {
     -fx-background-color: derive(-theme-light, 18%);
 }
 
-.game-dialog .button:pressed,
-.promotion-dialog .button:pressed {
+.game-dialog .button:pressed {
     -fx-background-color: derive(-theme-light, -12%);
 }
 
@@ -471,18 +468,4 @@
 
 .game-dialog .button:cancel:hover {
     -fx-background-color: rgba(255, 255, 255, 0.08);
-}
-
-.promotion-dialog {
-    -fx-background-color: derive(-theme-dark, -62%);
-}
-
-.promotion-dialog > .label {
-    -fx-text-fill: -theme-light;
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
-}
-
-.promotion-dialog .button {
-    -fx-padding: 6;
 }

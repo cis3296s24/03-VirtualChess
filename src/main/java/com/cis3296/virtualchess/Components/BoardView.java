@@ -2,6 +2,7 @@ package com.cis3296.virtualchess.Components;
 
 import com.cis3296.virtualchess.engine.Move;
 import com.cis3296.virtualchess.engine.Piece;
+import com.cis3296.virtualchess.engine.PieceType;
 import com.cis3296.virtualchess.engine.Position;
 import com.cis3296.virtualchess.engine.Square;
 import javafx.geometry.Insets;
@@ -10,7 +11,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -27,8 +30,12 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -44,6 +51,8 @@ import java.util.function.Function;
  */
 public class BoardView extends StackPane {
 
+    private static final Logger log = LoggerFactory.getLogger(BoardView.class);
+
     public static final double SQUARE_SIZE = 100;
     private static final double PIECE_SIZE = 84;
     private static final double DRAG_THRESHOLD = 5;
@@ -53,7 +62,12 @@ public class BoardView extends StackPane {
     private static final double SELECTED_OPACITY = 0.8;
     private static final Color HINT_COLOR = Color.rgb(0, 0, 0, 0.22);
 
+    // Promotion choices in the order the tiles appear, starting on the promotion square
+    private static final PieceType[] PROMOTION_CHOICES = {PieceType.QUEEN, PieceType.KNIGHT, PieceType.ROOK, PieceType.BISHOP};
+    private static final Color PROMOTION_DIM = Color.rgb(0, 0, 0, 0.5);
+
     private final GridPane grid = new GridPane();
+    private final Pane promotionLayer = new Pane();
     private final Pane dragLayer = new Pane();
     private final StackPane[] squares = new StackPane[64];
 
@@ -75,6 +89,9 @@ public class BoardView extends StackPane {
     private ImageView draggedPieceView;
     private Square hoverSquare;
 
+    // Called with the chosen piece; non-null exactly while the promotion picker is showing
+    private Consumer<PieceType> onPromotionChosen;
+
     public BoardView() {
         for (int rank = 7; rank >= 0; rank--) {
             for (int file = 0; file < 8; file++) {
@@ -86,9 +103,11 @@ public class BoardView extends StackPane {
                 squares[Square.of(file, rank).index()] = cell;
             }
         }
-        // The drag layer floats the dragged piece above the board without blocking mouse events
+        // The promotion layer holds the on-board promotion picker; hidden (and so ignored by the mouse) until
+        // needed. The drag layer floats the dragged piece above everything without blocking mouse events.
+        promotionLayer.setVisible(false);
         dragLayer.setMouseTransparent(true);
-        getChildren().addAll(grid, dragLayer);
+        getChildren().addAll(grid, promotionLayer, dragLayer);
         setAlignment(Pos.TOP_LEFT);
         setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 
@@ -100,6 +119,7 @@ public class BoardView extends StackPane {
             hoverSquare = null;
             setCursor(Cursor.DEFAULT);
         });
+        setOnKeyPressed(this::handleKey);
         redraw();
     }
 
@@ -110,6 +130,8 @@ public class BoardView extends StackPane {
      * @param lastMove the move that led to it, to highlight, or null for none
      */
     public void setPosition(Position position, Move lastMove) {
+        // A pending promotion choice belongs to the old position, so drop it
+        hidePromotionPicker();
         this.position = position;
         this.lastMove = lastMove;
         this.selected = null;
@@ -150,10 +172,135 @@ public class BoardView extends StackPane {
         this.onMoveRequested = handler;
     }
 
+    // ---- Promotion picker ----
+
+    /**
+     * Shows the promotion choices on the board itself: a column of four tiles (queen, knight, rook, bishop)
+     * starting on the promotion square, over a dimmed board. Clicking a tile, or pressing Q, N, R, or B,
+     * chooses; clicking anywhere else on the board or pressing Esc cancels, leaving the pawn where it was.
+     * <p>
+     * The picker closes by itself if the position changes first (e.g. undo), and the choice is then dropped.
+     *
+     * @param to       the square the pawn is promoting on (the first rank or the last rank)
+     * @param color    the promoting side, so the tiles show that side's pieces
+     * @param onChosen called with the chosen piece; not called if the player cancels
+     */
+    public void showPromotionPicker(Square to, com.cis3296.virtualchess.engine.Color color, Consumer<PieceType> onChosen) {
+        hidePromotionPicker();
+        clearSelection();
+        hoverSquare = null;
+        setCursor(Cursor.DEFAULT);
+
+        Region dim = new Region();
+        dim.setPrefSize(8 * SQUARE_SIZE, 8 * SQUARE_SIZE);
+        dim.resize(8 * SQUARE_SIZE, 8 * SQUARE_SIZE);
+        dim.setBackground(fill(PROMOTION_DIM));
+        dim.setOnMousePressed(event -> {
+            event.consume();
+            log.debug("Promotion cancelled");
+            hidePromotionPicker();
+        });
+        promotionLayer.getChildren().add(dim);
+
+        // The column runs from the promotion square toward the middle of the board
+        int towardCenter = to.rank() == 7 ? -1 : 1;
+        for (int i = 0; i < PROMOTION_CHOICES.length; i++) {
+            PieceType type = PROMOTION_CHOICES[i];
+            Square square = Square.of(to.file(), to.rank() + towardCenter * i);
+            StackPane tile = promotionTile(Piece.of(color, type));
+            tile.relocate(square.file() * SQUARE_SIZE, (7 - square.rank()) * SQUARE_SIZE);
+            tile.setOnMousePressed(event -> {
+                event.consume();
+                choosePromotion(type);
+            });
+            promotionLayer.getChildren().add(tile);
+        }
+
+        onPromotionChosen = onChosen;
+        promotionLayer.setVisible(true);
+        requestFocus(); // for the keyboard shortcuts
+        log.debug("Promotion picker shown on {}", to);
+    }
+
+    /**
+     * @return true while the promotion picker is waiting for a choice
+     */
+    public boolean isPromotionPickerShowing() {
+        return onPromotionChosen != null;
+    }
+
+    private void choosePromotion(PieceType type) {
+        Consumer<PieceType> handler = onPromotionChosen;
+        hidePromotionPicker();
+        if (handler != null) {
+            log.debug("Promotion to {} chosen", type.name().toLowerCase());
+            handler.accept(type);
+        }
+    }
+
+    private void hidePromotionPicker() {
+        onPromotionChosen = null;
+        promotionLayer.getChildren().clear();
+        promotionLayer.setVisible(false);
+    }
+
+    // A round tile in the light-square color with the piece on it; brightens on hover
+    private StackPane promotionTile(Piece piece) {
+        Circle background = new Circle(SQUARE_SIZE * 0.46, boardStyle.squareColor1);
+        background.setStroke(boardStyle.highlight);
+        background.setStrokeWidth(3);
+        background.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.5)));
+
+        ImageView image = pieceImageView(piece);
+        image.setFitWidth(PIECE_SIZE * 0.9);
+        image.setFitHeight(PIECE_SIZE * 0.9);
+
+        StackPane tile = new StackPane(background, image);
+        tile.setPrefSize(SQUARE_SIZE, SQUARE_SIZE);
+        tile.resize(SQUARE_SIZE, SQUARE_SIZE);
+        tile.setPickOnBounds(true); // the whole square is clickable, not just the circle
+        tile.setCursor(Cursor.HAND);
+        tile.setAccessibleText("Promote to " + piece.type().name().toLowerCase());
+        tile.setOnMouseEntered(event -> {
+            background.setFill(boardStyle.squareColor1.brighter());
+            tile.setScaleX(1.06);
+            tile.setScaleY(1.06);
+        });
+        tile.setOnMouseExited(event -> {
+            background.setFill(boardStyle.squareColor1);
+            tile.setScaleX(1);
+            tile.setScaleY(1);
+        });
+        return tile;
+    }
+
+    private void handleKey(KeyEvent event) {
+        if (!isPromotionPickerShowing()) {
+            return;
+        }
+        switch (event.getCode()) {
+            case ESCAPE -> {
+                log.debug("Promotion cancelled");
+                hidePromotionPicker();
+            }
+            case Q -> choosePromotion(PieceType.QUEEN);
+            case N -> choosePromotion(PieceType.KNIGHT);
+            case R -> choosePromotion(PieceType.ROOK);
+            case B -> choosePromotion(PieceType.BISHOP);
+            default -> {
+                return; // leave other keys alone
+            }
+        }
+        event.consume();
+    }
+
     // ---- Mouse handling ----
 
     // Show a hand over pieces the player can pick up. Only re-checks when the mouse enters a new square.
     private void handleHover(MouseEvent event) {
+        if (isPromotionPickerShowing()) {
+            return; // the picker's tiles set their own cursor
+        }
         Square square = squareAt(event);
         if (square == null ? hoverSquare == null : square.equals(hoverSquare)) {
             return;
@@ -166,7 +313,7 @@ public class BoardView extends StackPane {
     private void handlePress(MouseEvent event) {
         pressedSquare = null;
         deselectOnRelease = false;
-        if (event.getButton() != MouseButton.PRIMARY) {
+        if (event.getButton() != MouseButton.PRIMARY || isPromotionPickerShowing()) {
             return;
         }
         Square square = squareAt(event);
