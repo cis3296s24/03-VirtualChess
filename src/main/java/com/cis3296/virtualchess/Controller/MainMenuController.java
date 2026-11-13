@@ -1,6 +1,7 @@
 package com.cis3296.virtualchess.Controller;
 
 import com.cis3296.virtualchess.Systems.Database;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,7 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -26,8 +27,9 @@ public class MainMenuController {
     @FXML
     ImageView imageView;
 
+    // The screen's root layout; the CSS gives it the background gradient
     @FXML
-    AnchorPane menu;
+    Pane menu;
 
     /**
      * Creates the chess board, loads the GIF, and makes sure the database is initialized
@@ -39,6 +41,15 @@ public class MainMenuController {
         //load settings on startup
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cis3296/virtualchess/settingsMenu.fxml"));
         Parent settingsContent = loader.load();
+    }
+
+    /**
+     * Button action for quitting the app. Goes through JavaFX's normal shutdown, so ChessApp.stop() still
+     * closes the database.
+     */
+    @FXML
+    private void quit() {
+        Platform.exit();
     }
 
     /**
