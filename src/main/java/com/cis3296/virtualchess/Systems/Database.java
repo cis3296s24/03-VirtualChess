@@ -5,6 +5,7 @@ import com.cis3296.virtualchess.Entities.Player;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.nio.file.Path;
 import java.sql.*;
 
 /**
@@ -52,11 +53,12 @@ public class Database {
         try {
             // Uses the sqlite Java DataBase Connection Lib
             Class.forName("org.sqlite.JDBC");
-            // Gets a connection to the "leaderboard.db" database
-            c = DriverManager.getConnection("jdbc:sqlite:leaderboard.db");
+            // leaderboard.db lives in the per-user data folder, not the repo or launch folder
+            Path file = AppData.file("leaderboard.db");
+            c = DriverManager.getConnection("jdbc:sqlite:" + file);
             c.setAutoCommit(false);
 
-            System.out.println("Opened database successfully");
+            System.out.println("Opened leaderboard database at " + file);
         } catch ( Exception e ) {
             System.err.println( e.getClass().getName() + ": " + e.getMessage() );
         }

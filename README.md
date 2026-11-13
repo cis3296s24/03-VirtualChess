@@ -112,6 +112,10 @@ To get a local copy up and running follow these simple example steps.
 ./mvnw javafx:run
 ```
 
+Your settings (`config.xml`) and game history (`leaderboard.db`) are saved in a `.virtualchess` folder in your
+home directory (`~/.virtualchess` on macOS/Linux, `C:\Users\<you>\.virtualchess` on Windows), not in the repo.
+Delete that folder to reset both.
+
 ### Running Tests
 
 ```sh
