@@ -64,6 +64,13 @@ public class Settings {
     }
 
     /**
+     * @return the board theme the player has chosen
+     */
+    public static Style currentStyle() {
+        return getStyleFromString(getConfig(THEME_CONFIG_ACCESS_STRING));
+    }
+
+    /**
      * Static method for setting a config value and saving it. Use one of the static access strings.
      * @param accessString One of the static access Strings representing a config value
      * @param value The value to be changed to

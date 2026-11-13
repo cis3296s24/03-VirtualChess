@@ -7,7 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ import java.util.Objects;
 public class GameModeController {
 
     @FXML
-    public AnchorPane menu;
+    public Pane menu;
 
     private Stage stage;
     private Scene scene;
