@@ -41,6 +41,9 @@
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#installation">Installation</a></li>
+        <li><a href="#running-the-app">Running the App</a></li>
+        <li><a href="#running-tests">Running Tests</a></li>
+        <li><a href="#playing-against-stockfish">Playing Against Stockfish</a></li>
         <li><a href="#contributing">Contributing</a></li>
         <li><a href="#documentation">Documentation</a></li>
       </ul>
@@ -71,16 +74,15 @@ Toker Ahmed
 
 ## Downloads
 
-1. Make sure Java 21 is installed on your machine
-   https://www.oracle.com/java/technologies/downloads/#java21
-2. Go to the releases and download the latest release
+1. Make sure Java 21 or newer is installed on your machine
+   (any distribution works, e.g. [Eclipse Temurin](https://adoptium.net/) or your OS package manager)
+2. Go to the releases and download `VirtualChess.zip` from the latest release
    https://github.com/cis3296s24/03-VirtualChess/releases
-3. Run the chess.jar and play!
-4. If you plan to use Stockfish you may need to download the Stockfish executable from
-   https://stockfishchess.org/download/
-   As of now, there are executables for some Macs, Windows, and Ubuntu currently
-   If you need to add one place it in the Stockfish folder in the same directory as
-   VirtualChess.jar and rename it the same as one of the other ones
+3. Unzip it and run `VirtualChess.jar` (double-click, or `java -jar VirtualChess.jar` from the unzipped folder)
+4. The zip includes Stockfish for macOS (Intel), Windows, and Ubuntu in a `stockfish/` folder next to the jar.
+   For another platform, download Stockfish from https://stockfishchess.org/download/,
+   put it in that `stockfish/` folder, and give it the same name as one of the existing files
+   (see [Playing Against Stockfish](#playing-against-stockfish))
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -90,13 +92,48 @@ To get a local copy up and running follow these simple example steps.
 
 ### Installation
 
-1. Make sure Java 21 is installed on your machine
-   https://www.oracle.com/java/technologies/downloads/#java21
+1. Install a JDK, version 21 or newer (e.g. `sudo apt install openjdk-25-jdk` on Ubuntu,
+   or [Eclipse Temurin](https://adoptium.net/) on Windows/macOS). Maven does **not** need to be installed:
+   the repo includes the Maven Wrapper (`mvnw` / `mvnw.cmd`), which downloads the right version on first use.
 2. Clone the repo
    ```sh
    git clone https://github.com/cis3296s24/03-VirtualChess.git
+   cd 03-VirtualChess
    ```
-3. Run the maven build script to download all dependencies
+3. Build it and run the tests (this also downloads all dependencies)
+   ```sh
+   ./mvnw verify          # macOS / Linux
+   mvnw.cmd verify        # Windows
+   ```
+
+### Running the App
+
+```sh
+./mvnw javafx:run
+```
+
+### Running Tests
+
+```sh
+./mvnw test
+```
+
+Tests live in `src/test/java` and use JUnit. In VS Code or IntelliJ you can also run them from the editor's test panel.
+
+### Playing Against Stockfish
+
+Player-vs-computer mode uses the [Stockfish](https://stockfishchess.org/) engine, which is **not** included in the
+repository. The app looks for it in a `stockfish/` folder in the directory you launch from (the repo root when using
+`./mvnw javafx:run`), under one of these exact names:
+
+| OS      | Expected path                                 |
+|---------|-----------------------------------------------|
+| Linux   | `stockfish/stockfish-ubuntu-x86-64-avx2`      |
+| Windows | `stockfish/stockfish-windows-x86-64-avx2.exe` |
+| macOS   | `stockfish/stockfish-macos-x86-64-avx2`       |
+
+The easiest way to get them is to copy the `stockfish/` folder out of the latest release's `VirtualChess.zip`.
+On Linux and macOS, make sure the file is executable (`chmod +x stockfish/*`).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -105,10 +142,11 @@ To get a local copy up and running follow these simple example steps.
 How to contribute to the project
 
 0. See Installation
-1. Create your Feature Branch (`git checkout -b YourName/Feature`)
-2. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-3. Push to the Branch (`git push origin feature/AmazingFeature`)
-4. Open a Pull Request
+1. Create your feature branch from `main` (`git switch -c YourName/feature-name`)
+2. Commit your changes (`git commit -m "Add some feature"`)
+3. Make sure the build and tests pass (`./mvnw verify`)
+4. Push the branch (`git push -u origin YourName/feature-name`)
+5. Open a pull request. `main` is protected, so all changes go through a pull request
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
