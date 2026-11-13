@@ -2,7 +2,6 @@ package com.cis3296.virtualchess.Controller;
 
 import com.cis3296.virtualchess.Components.BoardView;
 import com.cis3296.virtualchess.Components.Dialogs;
-import com.cis3296.virtualchess.Components.PromotionDialog;
 import com.cis3296.virtualchess.Components.Screens;
 import com.cis3296.virtualchess.Components.Settings;
 import com.cis3296.virtualchess.Components.Style;
@@ -112,8 +111,8 @@ public class GameController {
     private void onMoveRequested(Square from, Square to) {
         ChessGame chessGame = game.chessGame();
         if (chessGame.isPromotion(from, to)) {
-            PromotionDialog.ask(boardView.getScene().getWindow(), chessGame.sideToMove())
-                    .ifPresent(piece -> game.play(new Move(from, to, piece)));
+            // Ask on the board itself; nothing happens until a piece is chosen (or the player cancels)
+            boardView.showPromotionPicker(to, chessGame.sideToMove(), piece -> game.play(new Move(from, to, piece)));
         } else {
             game.play(new Move(from, to));
         }
