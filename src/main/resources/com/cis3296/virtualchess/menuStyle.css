@@ -405,3 +405,84 @@
 #gameScreen .button:disabled {
     -fx-opacity: 0.4;
 }
+
+/* ---- Game dialogs (game over, resign, warnings) and the promotion picker ----
+ * These pop-ups get the board theme's colors the same way the game screen does (Dialogs.themed()).
+ */
+
+.game-dialog {
+    -fx-background-color: derive(-theme-dark, -62%);
+    -fx-padding: 0;
+}
+
+.game-dialog > .header-panel {
+    -fx-background-color: derive(-theme-dark, -48%);
+    -fx-padding: 18 22 14 22;
+}
+
+.game-dialog > .header-panel .label {
+    -fx-text-fill: -theme-light;
+    -fx-font-size: 21px;
+    -fx-font-weight: bold;
+}
+
+.game-dialog > .content.label {
+    -fx-text-fill: derive(-theme-light, 25%);
+    -fx-font-size: 15px;
+    -fx-line-spacing: 2px;
+    -fx-padding: 18 22 6 22;
+}
+
+.game-dialog > .button-bar > .container {
+    -fx-padding: 14 22 20 22;
+}
+
+.game-dialog .button,
+.promotion-dialog .button {
+    -fx-background-color: -theme-light;
+    -fx-background-radius: 10;
+    -fx-text-fill: -theme-ink;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 22 8 22;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 8, 0.1, 0, 2);
+}
+
+.game-dialog .button:hover,
+.promotion-dialog .button:hover {
+    -fx-background-color: derive(-theme-light, 18%);
+}
+
+.game-dialog .button:pressed,
+.promotion-dialog .button:pressed {
+    -fx-background-color: derive(-theme-light, -12%);
+}
+
+/* "No" / "Cancel" buttons */
+.game-dialog .button:cancel {
+    -fx-background-color: transparent;
+    -fx-border-color: derive(-theme-light, -15%);
+    -fx-border-radius: 10;
+    -fx-text-fill: -theme-light;
+    -fx-font-weight: normal;
+    -fx-effect: null;
+}
+
+.game-dialog .button:cancel:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+}
+
+.promotion-dialog {
+    -fx-background-color: derive(-theme-dark, -62%);
+}
+
+.promotion-dialog > .label {
+    -fx-text-fill: -theme-light;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.promotion-dialog .button {
+    -fx-padding: 6;
+}

@@ -1,6 +1,7 @@
 package com.cis3296.virtualchess.Controller;
 
 import com.cis3296.virtualchess.Components.BoardView;
+import com.cis3296.virtualchess.Components.Dialogs;
 import com.cis3296.virtualchess.Components.PromotionDialog;
 import com.cis3296.virtualchess.Components.Settings;
 import com.cis3296.virtualchess.Components.Style;
@@ -29,6 +30,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -87,10 +89,15 @@ public class GameController {
 
         if (game.isComputerUnavailable()) {
             // Wait until the window is showing so the alert has something to sit on top of
-            Platform.runLater(() -> new Alert(Alert.AlertType.WARNING,
-                    "Stockfish couldn't be started, so this game is for two players at one board.\n\n"
-                            + "See \"Playing Against Stockfish\" in the README for where the app looks for it.")
-                    .show());
+            Platform.runLater(() -> {
+                Alert alert = Dialogs.themed(new Alert(Alert.AlertType.WARNING,
+                        "This game is for two players at one board instead.\n\n"
+                                + "See \"Playing Against Stockfish\" in the README for where the app looks for it."),
+                        window());
+                alert.setTitle("Stockfish not found");
+                alert.setHeaderText("Stockfish couldn't be started");
+                alert.show();
+            });
         }
     }
 
@@ -159,11 +166,21 @@ public class GameController {
         resultAnnounced = true;
         // show() rather than showAndWait(): this can run in the middle of handling a mouse event
         Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, describe(result) + " (" + result.score() + ")");
+            Alert alert = Dialogs.themed(new Alert(Alert.AlertType.INFORMATION,
+                    "Final score: " + result.score() + "\n\n"
+                            + "You can look over the final position, then press End Game to return to the menu."),
+                    window());
             alert.setTitle("Game over");
-            alert.setHeaderText("Game over");
+            alert.setHeaderText(describe(result));
             alert.show();
         });
+    }
+
+    /**
+     * @return the game window, or null before the screen is showing
+     */
+    private Window window() {
+        return boardView.getScene() == null ? null : boardView.getScene().getWindow();
     }
 
     private void updateClocks() {
@@ -196,9 +213,11 @@ public class GameController {
     @FXML
     private void resignButton() {
         String name = playerName(game.chessGame().sideToMove());
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, name + ", do you want to resign?",
-                ButtonType.YES, ButtonType.NO);
-        confirm.setHeaderText("Resign?");
+        Alert confirm = Dialogs.themed(new Alert(Alert.AlertType.CONFIRMATION,
+                name + ", do you want to resign? Your opponent will win the game.",
+                ButtonType.YES, ButtonType.NO), window());
+        confirm.setTitle("Resign");
+        confirm.setHeaderText("Resign this game?");
         confirm.showAndWait()
                 .filter(ButtonType.YES::equals)
                 .ifPresent(answer -> game.resign());

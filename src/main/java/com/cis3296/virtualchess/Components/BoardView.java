@@ -48,8 +48,9 @@ public class BoardView extends StackPane {
     private static final double PIECE_SIZE = 84;
     private static final double DRAG_THRESHOLD = 5;
 
-    private static final Color LAST_MOVE_TINT = Color.rgb(255, 235, 59, 0.45);
-    private static final Color SELECTED_TINT = Color.rgb(46, 125, 50, 0.45);
+    // Opacity of the theme's highlight color: lighter for the last move, stronger for the selected piece
+    private static final double LAST_MOVE_OPACITY = 0.45;
+    private static final double SELECTED_OPACITY = 0.8;
     private static final Color HINT_COLOR = Color.rgb(0, 0, 0, 0.22);
 
     private final GridPane grid = new GridPane();
@@ -306,10 +307,10 @@ public class BoardView extends StackPane {
             cell.setBackground(fill(base));
 
             if (lastMove != null && (square.equals(lastMove.from()) || square.equals(lastMove.to()))) {
-                cell.getChildren().add(tint(LAST_MOVE_TINT));
+                cell.getChildren().add(tint(boardStyle.highlight.deriveColor(0, 1, 1, LAST_MOVE_OPACITY)));
             }
             if (square.equals(selected)) {
-                cell.getChildren().add(tint(SELECTED_TINT));
+                cell.getChildren().add(tint(boardStyle.highlight.deriveColor(0, 1, 1, SELECTED_OPACITY)));
             }
             if (square.equals(checkedKing)) {
                 cell.getChildren().add(checkGlow());

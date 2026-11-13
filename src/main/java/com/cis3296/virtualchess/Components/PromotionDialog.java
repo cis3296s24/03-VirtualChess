@@ -63,7 +63,12 @@ public final class PromotionDialog {
         VBox root = new VBox(12, new Label("Promote your pawn to:"), buttons);
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(16));
-        stage.setScene(new Scene(root));
+        // Match the game screen: board theme colors, styled by ".promotion-dialog" in menuStyle.css
+        root.getStyleClass().add("promotion-dialog");
+        root.setStyle(Settings.currentStyle().cssVariables());
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(Dialogs.stylesheet());
+        stage.setScene(scene);
 
         // Center over the game window once the dialog knows its own size
         stage.setOnShown(event -> {
