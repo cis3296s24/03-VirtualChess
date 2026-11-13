@@ -7,6 +7,8 @@ import com.cis3296.virtualchess.engine.Square;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -70,6 +72,7 @@ public class BoardView extends StackPane {
     private double pressSceneY;
     private ImageView dragImage;
     private ImageView draggedPieceView;
+    private Square hoverSquare;
 
     public BoardView() {
         for (int rank = 7; rank >= 0; rank--) {
@@ -91,6 +94,11 @@ public class BoardView extends StackPane {
         setOnMousePressed(this::handlePress);
         setOnMouseDragged(this::handleDrag);
         setOnMouseReleased(this::handleRelease);
+        setOnMouseMoved(this::handleHover);
+        setOnMouseExited(event -> {
+            hoverSquare = null;
+            setCursor(Cursor.DEFAULT);
+        });
         redraw();
     }
 
@@ -105,6 +113,7 @@ public class BoardView extends StackPane {
         this.lastMove = lastMove;
         this.selected = null;
         this.selectedMoves = List.of();
+        this.hoverSquare = null; // re-check the cursor on the next mouse move: whose turn it is changed
         redraw();
     }
 
@@ -141,6 +150,17 @@ public class BoardView extends StackPane {
     }
 
     // ---- Mouse handling ----
+
+    // Show a hand over pieces the player can pick up. Only re-checks when the mouse enters a new square.
+    private void handleHover(MouseEvent event) {
+        Square square = squareAt(event);
+        if (square == null ? hoverSquare == null : square.equals(hoverSquare)) {
+            return;
+        }
+        hoverSquare = square;
+        boolean movable = square != null && !legalMovesProvider.apply(square).isEmpty();
+        setCursor(movable ? Cursor.HAND : Cursor.DEFAULT);
+    }
 
     private void handlePress(MouseEvent event) {
         pressedSquare = null;
@@ -229,11 +249,14 @@ public class BoardView extends StackPane {
         }
         dragImage = pieceImageView(piece);
         dragLayer.getChildren().add(dragImage);
+        setCursor(Cursor.CLOSED_HAND);
     }
 
     private void endDrag() {
         dragLayer.getChildren().clear();
         dragImage = null;
+        hoverSquare = null;
+        setCursor(Cursor.DEFAULT);
         if (draggedPieceView != null) {
             draggedPieceView.setVisible(true);
             draggedPieceView = null;
@@ -299,6 +322,13 @@ public class BoardView extends StackPane {
             }
             if (showHints && selected != null && isTarget(square)) {
                 cell.getChildren().add(piece == null ? hintDot() : captureRing());
+            }
+
+            // Everything drawn inside a square ignores the mouse, so presses land on the square itself.
+            // A redraw replaces these nodes, and JavaFX sends the rest of a drag to whichever node was
+            // pressed; if that were a piece image, the drag would go to a node that no longer exists.
+            for (Node child : cell.getChildren()) {
+                child.setMouseTransparent(true);
             }
         }
     }
