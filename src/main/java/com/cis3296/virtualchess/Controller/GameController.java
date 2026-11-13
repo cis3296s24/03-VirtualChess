@@ -3,6 +3,7 @@ package com.cis3296.virtualchess.Controller;
 import com.cis3296.virtualchess.Components.BoardView;
 import com.cis3296.virtualchess.Components.PromotionDialog;
 import com.cis3296.virtualchess.Components.Settings;
+import com.cis3296.virtualchess.Components.Style;
 import com.cis3296.virtualchess.Game;
 import com.cis3296.virtualchess.Systems.TurnSystem;
 import com.cis3296.virtualchess.engine.ChessGame;
@@ -23,6 +24,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
@@ -40,6 +42,9 @@ import java.util.Objects;
  */
 public class GameController {
 
+    // The whole screen; gets the board theme's colors as CSS variables so the side panel matches the board
+    @FXML
+    private Pane gameScreen;
     @FXML
     private StackPane boardContainer;
     @FXML
@@ -170,7 +175,9 @@ public class GameController {
      * Reads the theme, hints, and undo settings and applies them to the screen.
      */
     private void applySettings() {
-        boardView.setBoardStyle(Settings.getStyleFromString(Settings.getConfig(Settings.THEME_CONFIG_ACCESS_STRING)));
+        Style theme = Settings.currentStyle();
+        boardView.setBoardStyle(theme);
+        gameScreen.setStyle(theme.cssVariables());
         boardView.setShowHints(Boolean.parseBoolean(Settings.getConfig(Settings.HINTS_CONFIG_ACCESS_STRING)));
         undo.setVisible(Boolean.parseBoolean(Settings.getConfig(Settings.UNDO_CONFIG_ACCESS_STRING)));
     }

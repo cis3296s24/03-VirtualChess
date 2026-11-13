@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.*?>
-
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:id="menu"
-            fx:controller="com.cis3296.virtualchess.Controller.PlayerSelectionScreenController"
-            prefHeight="800.0" prefWidth="800.0">
-    <VBox layoutX="255.0" layoutY="190.0" prefHeight="58.0" prefWidth="300.0">
-        <children>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Player 1 Name" />
-            <TextField fx:id="player1name" />
-        </children>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="menu" alignment="CENTER" spacing="12.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="810.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cis3296.virtualchess.Controller.PlayerSelectionScreenController">
+    <Label styleClass="screen-title" text="Play the Computer" />
+    <Label styleClass="screen-subtitle" text="You play White against Stockfish." />
+    <VBox styleClass="card" spacing="16.0" minWidth="440.0" prefWidth="440.0" maxWidth="440.0">
+        <VBox.margin>
+            <Insets top="24.0" />
+        </VBox.margin>
+        <VBox spacing="6.0">
+            <Label styleClass="field-label" text="Your name" />
+            <TextField fx:id="player1name" promptText="Name" />
+        </VBox>
+        <VBox spacing="6.0">
+            <Label styleClass="field-label" text="Minutes per player" />
+            <TextField fx:id="timer" promptText="5" />
+            <Label styleClass="hint-text" text="Leave blank for 5 minutes each." />
+        </VBox>
+        <Label fx:id="errorLabel" styleClass="error-label" managed="false" visible="false" wrapText="true" maxWidth="Infinity" />
     </VBox>
-    <VBox layoutX="255.0" layoutY="390.0" prefHeight="58.0" prefWidth="300.0">
-        <children>
-            <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Start Time" />
-            <TextField fx:id="timer" />
-        </children>
-    </VBox>
-
-    <Button layoutX="227.0" layoutY="600.0" mnemonicParsing="false" onAction="#switchToGame" prefHeight="58.0" prefWidth="355.0" text="Start" />
-
-    <Button styleClass="secondary" layoutX="227.0" layoutY="700.0" mnemonicParsing="false" onAction="#switchToGamemode" prefHeight="58.0" prefWidth="355.0" text="Back" />
-
-
-</AnchorPane>
+    <Button defaultButton="true" mnemonicParsing="false" onAction="#switchToGame" prefHeight="54.0" prefWidth="355.0" text="Start Game">
+        <VBox.margin>
+            <Insets top="20.0" />
+        </VBox.margin>
+    </Button>
+    <Button styleClass="secondary" mnemonicParsing="false" onAction="#switchToGamemode" prefHeight="54.0" prefWidth="355.0" text="Back" />
+</VBox>

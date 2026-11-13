@@ -71,8 +71,9 @@
     -fx-background-color: rgba(255, 255, 255, 0.03);
 }
 
-/* ---- Learn Chess topic text ---- */
+/* ---- Cards (Learn Chess topic text, forms) ---- */
 
+.card,
 .tutorial-card {
     -fx-background-color: rgba(255, 255, 255, 0.07);
     -fx-background-radius: 14;
@@ -93,4 +94,314 @@
     -fx-font-size: 15px;
     -fx-line-spacing: 3px;
     -fx-wrap-text: true;
+}
+
+/* ---- Screen titles ---- */
+
+.screen-title {
+    -fx-text-fill: white;
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+}
+
+.screen-subtitle {
+    -fx-text-fill: #cbb8ec;
+    -fx-font-size: 16px;
+}
+
+/* ---- Form controls on the menu screens ---- */
+
+.field-label {
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+.hint-text {
+    -fx-text-fill: #b9a6dc;
+    -fx-font-size: 13px;
+}
+
+.error-label {
+    -fx-text-fill: #ffb3c1;
+    -fx-font-size: 14px;
+}
+
+#menu .text-field,
+#menu .combo-box {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.25);
+    -fx-border-radius: 10;
+    -fx-font-size: 16px;
+}
+
+#menu .text-field {
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(255, 255, 255, 0.38);
+    -fx-highlight-fill: #8b5cf6;
+    -fx-highlight-text-fill: white;
+    -fx-padding: 10 12 10 12;
+}
+
+#menu .text-field:focused,
+#menu .combo-box:focused,
+#menu .combo-box:showing {
+    -fx-border-color: #a07bff;
+    -fx-effect: dropshadow(gaussian, rgba(160, 123, 255, 0.55), 10, 0.2, 0, 0);
+}
+
+#menu .combo-box {
+    -fx-padding: 4 4 4 4;
+    -fx-cursor: hand;
+}
+
+#menu .combo-box .list-cell {
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
+}
+
+#menu .combo-box .arrow {
+    -fx-background-color: white;
+}
+
+#menu .combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+/* The dropdown list opens in its own pop-up window, outside #menu */
+.combo-box-popup .list-view {
+    -fx-background-color: #2a1145;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.25);
+    -fx-border-radius: 10;
+    -fx-padding: 4;
+}
+
+.combo-box-popup .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-padding: 8 12 8 12;
+}
+
+.combo-box-popup .list-cell:hover,
+.combo-box-popup .list-cell:selected {
+    -fx-background-color: #6d3fd6;
+    -fx-background-radius: 6;
+}
+
+#menu .check-box {
+    -fx-text-fill: #e8defa;
+    -fx-font-size: 16px;
+    -fx-cursor: hand;
+    -fx-label-padding: 0 0 0 8;
+}
+
+#menu .check-box .box {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+    -fx-background-radius: 5;
+    -fx-border-color: rgba(255, 255, 255, 0.45);
+    -fx-border-radius: 5;
+    -fx-padding: 3;
+}
+
+#menu .check-box:selected .box {
+    -fx-background-color: #8b5cf6;
+    -fx-border-color: #a07bff;
+}
+
+#menu .check-box:selected .mark {
+    -fx-background-color: white;
+}
+
+/* ---- Board theme colors ----
+ * Screens that should match the chosen board theme get -theme-light and -theme-dark set on their root by
+ * their controller (Style.cssVariables()). These defaults (Sandcastle) apply anywhere they aren't set.
+ */
+
+.root {
+    -theme-light: #e4c16f;
+    -theme-dark: #b88b4a;
+    -theme-ink: derive(-theme-dark, -72%);
+}
+
+/* ---- Leaderboard ---- */
+
+#menu .table-view {
+    -fx-background-color: -theme-dark;
+    -fx-background-radius: 12;
+    -fx-border-color: derive(-theme-dark, -25%);
+    -fx-border-radius: 12;
+    -fx-border-width: 2;
+    -fx-padding: 0;
+    -fx-table-cell-border-color: transparent;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 16, 0.15, 0, 4);
+}
+
+#menu .table-view .column-header-background {
+    -fx-background-color: -theme-dark;
+    -fx-background-radius: 10 10 0 0;
+}
+
+#menu .table-view .column-header,
+#menu .table-view .filler {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-size: 44;
+}
+
+#menu .table-view .column-header .label {
+    -fx-text-fill: -theme-ink;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+}
+
+#menu .table-view .table-row-cell {
+    -fx-background-color: -theme-light;
+    -fx-cell-size: 40;
+}
+
+#menu .table-view .table-row-cell:odd {
+    -fx-background-color: derive(-theme-light, -7%);
+}
+
+#menu .table-view .table-row-cell:empty {
+    -fx-background-color: derive(-theme-light, 25%);
+}
+
+#menu .table-view .table-row-cell:selected {
+    -fx-background-color: derive(-theme-dark, 20%);
+}
+
+#menu .table-view .table-cell {
+    -fx-text-fill: -theme-ink;
+    -fx-font-size: 15px;
+    -fx-alignment: CENTER;
+}
+
+#menu .table-view .placeholder {
+    -fx-background-color: derive(-theme-light, 25%);
+}
+
+#menu .table-view .placeholder .label {
+    -fx-text-fill: -theme-ink;
+    -fx-font-size: 16px;
+}
+
+/* Slim themed scroll bars for the leaderboard and the move list */
+#menu .table-view .scroll-bar,
+#gameScreen .list-view .scroll-bar {
+    -fx-background-color: transparent;
+}
+
+#menu .table-view .scroll-bar .thumb,
+#gameScreen .list-view .scroll-bar .thumb {
+    -fx-background-color: derive(-theme-dark, -20%);
+    -fx-background-radius: 6;
+}
+
+#menu .table-view .scroll-bar .increment-button,
+#menu .table-view .scroll-bar .decrement-button,
+#gameScreen .list-view .scroll-bar .increment-button,
+#gameScreen .list-view .scroll-bar .decrement-button {
+    -fx-padding: 0;
+}
+
+#menu .table-view .scroll-bar .increment-arrow,
+#menu .table-view .scroll-bar .decrement-arrow,
+#gameScreen .list-view .scroll-bar .increment-arrow,
+#gameScreen .list-view .scroll-bar .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0;
+}
+
+/* ---- Game screen (side panel next to the board) ---- */
+
+#gameScreen {
+    -fx-background-color: derive(-theme-dark, -65%);
+}
+
+#gameScreen .side-panel {
+    -fx-background-color: linear-gradient(to bottom, derive(-theme-dark, -52%), derive(-theme-dark, -68%));
+    -fx-padding: 16;
+    -fx-spacing: 12;
+}
+
+#gameScreen .turn-text {
+    -fx-fill: -theme-light;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+#gameScreen .clock-box {
+    -fx-background-color: derive(-theme-dark, -40%);
+    -fx-background-radius: 10;
+    -fx-padding: 10 14 10 14;
+    -fx-spacing: 4;
+    -fx-alignment: CENTER;
+}
+
+#gameScreen .clock-text {
+    -fx-fill: derive(-theme-light, 15%);
+    -fx-font-size: 20px;
+    -fx-font-family: "Monospaced";
+}
+
+#gameScreen .list-view {
+    -fx-background-color: derive(-theme-dark, -45%);
+    -fx-background-radius: 10;
+    -fx-border-color: derive(-theme-dark, -25%);
+    -fx-border-radius: 10;
+    -fx-padding: 4;
+}
+
+#gameScreen .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: -theme-light;
+    -fx-font-family: "Monospaced";
+    -fx-font-size: 16px;
+}
+
+#gameScreen .list-cell:filled:odd {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+}
+
+#gameScreen .list-cell:filled:selected {
+    -fx-background-color: derive(-theme-dark, -15%);
+}
+
+#gameScreen .button {
+    -fx-background-color: -theme-light;
+    -fx-background-radius: 10;
+    -fx-text-fill: -theme-ink;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 10, 0.1, 0, 3);
+}
+
+#gameScreen .button:hover {
+    -fx-background-color: derive(-theme-light, 15%);
+}
+
+#gameScreen .button:pressed {
+    -fx-background-color: derive(-theme-light, -12%);
+}
+
+#gameScreen .button.secondary {
+    -fx-background-color: transparent;
+    -fx-border-color: derive(-theme-light, -15%);
+    -fx-border-radius: 10;
+    -fx-text-fill: -theme-light;
+    -fx-font-weight: normal;
+    -fx-effect: null;
+}
+
+#gameScreen .button.secondary:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.08);
+}
+
+#gameScreen .button:disabled {
+    -fx-opacity: 0.4;
 }

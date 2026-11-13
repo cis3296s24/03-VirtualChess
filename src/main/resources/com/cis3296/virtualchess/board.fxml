@@ -1,57 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cis3296.virtualchess.Controller.GameController">
+<!-- Colors come from the chosen board theme: GameController sets -theme-light and -theme-dark on this root
+     (see menuStyle.css, "Game screen"). -->
+<HBox fx:id="gameScreen" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cis3296.virtualchess.Controller.GameController">
     <!-- GameController puts the BoardView in here. (FXML can't import it directly: the loader treats the
          capitalized "Components" package as a class name.) -->
     <StackPane fx:id="boardContainer" />
-    <VBox spacing="10.0" minWidth="300.0" prefWidth="300.0" maxWidth="300.0">
-        <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-        </padding>
-        <Text fx:id="currentTurnText" text="Current Turn:" textAlignment="CENTER" wrappingWidth="280.0">
-            <font>
-                <Font size="28.0" />
-            </font>
-        </Text>
-        <Text fx:id="timerTextWhite" text="White Time:" textAlignment="CENTER" wrappingWidth="280.0">
-            <font>
-                <Font size="24.0" />
-            </font>
-        </Text>
-        <Text fx:id="timerTextBlack" text="Black Time:" textAlignment="CENTER" wrappingWidth="280.0">
-            <font>
-                <Font size="24.0" />
-            </font>
-        </Text>
-        <ListView fx:id="moveList" focusTraversable="false" style="-fx-font-family: 'Monospaced'; -fx-font-size: 16px;" VBox.vgrow="ALWAYS" />
-        <Button fx:id="undo" maxWidth="Infinity" mnemonicParsing="false" onAction="#undoMoveButton" prefHeight="45.0" text="Undo Move">
-            <font>
-                <Font name="System Bold" size="18.0" />
-            </font>
-        </Button>
-        <Button fx:id="resign" maxWidth="Infinity" mnemonicParsing="false" onAction="#resignButton" prefHeight="45.0" text="Resign">
-            <font>
-                <Font size="18.0" />
-            </font>
-        </Button>
-        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#settings" prefHeight="45.0" text="Settings">
-            <font>
-                <Font size="18.0" />
-            </font>
-        </Button>
-        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#leaveGame" prefHeight="60.0" text="End Game">
-            <font>
-                <Font size="18.0" />
-            </font>
-        </Button>
+    <VBox styleClass="side-panel" minWidth="300.0" prefWidth="300.0" maxWidth="300.0">
+        <Text fx:id="currentTurnText" styleClass="turn-text" text="Current Turn:" textAlignment="CENTER" wrappingWidth="268.0" />
+        <VBox styleClass="clock-box">
+            <Text fx:id="timerTextWhite" styleClass="clock-text" text="White Time:" />
+            <Text fx:id="timerTextBlack" styleClass="clock-text" text="Black Time:" />
+        </VBox>
+        <!-- Small preferred height so the list just fills the space left over (the default is 400px, which made
+             the panel taller than the 800px board) -->
+        <ListView fx:id="moveList" focusTraversable="false" prefHeight="100.0" VBox.vgrow="ALWAYS" />
+        <Button fx:id="undo" maxWidth="Infinity" mnemonicParsing="false" onAction="#undoMoveButton" prefHeight="46.0" text="Undo Move" />
+        <Button fx:id="resign" styleClass="secondary" maxWidth="Infinity" mnemonicParsing="false" onAction="#resignButton" prefHeight="46.0" text="Resign" />
+        <Button styleClass="secondary" maxWidth="Infinity" mnemonicParsing="false" onAction="#settings" prefHeight="46.0" text="Settings" />
+        <Button styleClass="secondary" maxWidth="Infinity" mnemonicParsing="false" onAction="#leaveGame" prefHeight="46.0" text="End Game" />
     </VBox>
 </HBox>

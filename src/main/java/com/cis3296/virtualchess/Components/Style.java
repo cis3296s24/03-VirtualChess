@@ -68,4 +68,18 @@ public class Style {
         this.squareColor1 = color1;
         this.squareColor2 = color2;
     }
+
+    /**
+     * The theme's colors as CSS variables, so other screens can match the board. Apply with
+     * {@code node.setStyle(style.cssVariables())}; rules in menuStyle.css then use {@code -theme-light}
+     * (the light squares) and {@code -theme-dark} (the dark squares), e.g. {@code derive(-theme-dark, -60%)}.
+     */
+    public String cssVariables() {
+        return "-theme-light: " + toHex(squareColor1) + "; -theme-dark: " + toHex(squareColor2) + ";";
+    }
+
+    private static String toHex(Color color) {
+        return String.format("#%02x%02x%02x",
+                Math.round(color.getRed() * 255), Math.round(color.getGreen() * 255), Math.round(color.getBlue() * 255));
+    }
 }

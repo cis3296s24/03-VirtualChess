@@ -1,5 +1,6 @@
 package com.cis3296.virtualchess.Controller;
 
+import com.cis3296.virtualchess.Components.Settings;
 import com.cis3296.virtualchess.Entities.LeaderBoardEntry;
 import com.cis3296.virtualchess.Systems.Database;
 import javafx.event.ActionEvent;
@@ -12,7 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -38,7 +39,7 @@ public class LeaderBoardController {
     @FXML
     public TableColumn Player2ResultColumn;
     @FXML
-    public AnchorPane menu;
+    public Pane menu;
 
     /**
      * Called when the screen is loaded.
@@ -62,6 +63,8 @@ public class LeaderBoardController {
                 new PropertyValueFactory<LeaderBoardEntry, String>("player2Result")
         );
         table.setItems(Database.getAllEntries());
+        // Color the table to match the chosen board theme (see menuStyle.css)
+        menu.setStyle(Settings.currentStyle().cssVariables());
     }
 
     /**
