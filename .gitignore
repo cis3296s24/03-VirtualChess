@@ -110,3 +110,9 @@ fabric.properties
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
+### VirtualChess ###
+# Per-user data now lives in ~/.virtualchess; these are leftovers from older versions that wrote to the launch folder
+/config.xml
+/leaderboard.db
+# Stockfish binaries (download them; see "Playing Against Stockfish" in the README)
+/stockfish/
