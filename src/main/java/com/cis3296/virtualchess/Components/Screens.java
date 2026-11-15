@@ -63,7 +63,14 @@ public final class Screens {
      * @return true if the screen is now showing; false if it failed to load or set up
      */
     public static <C> boolean show(Event event, String fxml, Consumer<C> setup) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        return show((Stage) ((Node) event.getSource()).getScene().getWindow(), fxml, setup);
+    }
+
+    /**
+     * Like {@link #show(Event, String, Consumer)}, for when there's no button event to find the window from
+     * (e.g. a choice made in a dialog).
+     */
+    public static <C> boolean show(Stage stage, String fxml, Consumer<C> setup) {
         try {
             Loaded<C> loaded = load(fxml);
             setup.accept(loaded.controller());

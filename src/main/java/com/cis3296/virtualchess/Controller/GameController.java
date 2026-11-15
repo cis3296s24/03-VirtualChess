@@ -15,10 +15,10 @@ import com.cis3296.virtualchess.engine.Square;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.Pane;
@@ -62,11 +62,16 @@ public class GameController {
     private Button resign;
     @FXML
     private Button offerDraw;
+    @FXML
+    private Button rematch;
+    @FXML
+    private Button leave;
 
     private final BoardView boardView = new BoardView();
     private Game game;
     private Timeline clockRefresh;
     private boolean resultAnnounced;
+    private boolean undoEnabledInSettings = true;
 
     /**
      * Called by the FXML loader once the screen's controls exist.
@@ -148,10 +153,31 @@ public class GameController {
             announceResult(result);
         }
 
+        updateButtons();
+        updateClocks();
+    }
+
+    /**
+     * While the game is on, the side panel offers Undo, Offer Draw, and Resign; once it's over, those make no
+     * sense (a finished game is already on the leaderboard), so it offers a rematch instead.
+     */
+    private void updateButtons() {
+        boolean over = game.chessGame().isOver();
+        setShown(undo, undoEnabledInSettings && !over);
+        setShown(offerDraw, !over);
+        setShown(resign, !over);
+        setShown(rematch, over);
+        leave.setText(over ? "Main Menu" : "Leave Game");
+
         undo.setDisable(!game.canUndo());
         resign.setDisable(!game.isHumanTurn());
         offerDraw.setDisable(!game.canOfferDraw());
-        updateClocks();
+    }
+
+    // Hidden buttons also give up their space, so the move list grows into it
+    private static void setShown(Button button, boolean shown) {
+        button.setVisible(shown);
+        button.setManaged(shown);
     }
 
     /**
@@ -184,14 +210,34 @@ public class GameController {
         resultAnnounced = true;
         // show() rather than showAndWait(): this can run in the middle of handling a mouse event
         Platform.runLater(() -> {
+            ButtonType rematchChoice = new ButtonType("Rematch", ButtonBar.ButtonData.OK_DONE);
+            ButtonType menuChoice = new ButtonType("Main Menu", ButtonBar.ButtonData.BACK_PREVIOUS);
+            ButtonType viewBoardChoice = new ButtonType("View Board", ButtonBar.ButtonData.CANCEL_CLOSE);
             Alert alert = Dialogs.themed(new Alert(Alert.AlertType.INFORMATION,
-                    "Final score: " + result.score() + "\n\n"
-                            + "You can look over the final position, then press End Game to return to the menu."),
-                    window());
+                    "Final score: " + result.score() + "\n\n" + rematchDescription(),
+                    viewBoardChoice, menuChoice, rematchChoice), window());
             alert.setTitle("Game over");
             alert.setHeaderText(describe(result));
+            alert.getDialogPane().lookupButton(menuChoice).getStyleClass().add("secondary");
+            // Closing the window counts as View Board (the cancel button)
+            alert.setOnHidden(event -> {
+                if (alert.getResult() == rematchChoice) {
+                    startRematch();
+                } else if (alert.getResult() == menuChoice) {
+                    goToMainMenu();
+                }
+            });
             alert.show();
         });
+    }
+
+    private String rematchDescription() {
+        GameSession next = game.session().rematch();
+        if (next.vsComputer()) {
+            return "Play again with the same settings, or close this to look over the final position.";
+        }
+        return "In a rematch, " + next.white().name + " takes White. "
+                + "Or close this to look over the final position.";
     }
 
     /**
@@ -214,7 +260,8 @@ public class GameController {
         boardView.setBoardStyle(theme);
         gameScreen.setStyle(theme.cssVariables());
         boardView.setShowHints(Boolean.parseBoolean(Settings.getConfig(Settings.HINTS_CONFIG_ACCESS_STRING)));
-        undo.setVisible(Boolean.parseBoolean(Settings.getConfig(Settings.UNDO_CONFIG_ACCESS_STRING)));
+        undoEnabledInSettings = Boolean.parseBoolean(Settings.getConfig(Settings.UNDO_CONFIG_ACCESS_STRING));
+        updateButtons();
     }
 
     /**
@@ -258,13 +305,62 @@ public class GameController {
     }
 
     /**
-     * Button action: leave the game and go back to the main menu. Unfinished games aren't recorded.
+     * Button action: go back to the main menu. Leaving a game in progress asks first, since unfinished games
+     * aren't recorded.
      */
     @FXML
-    private void leaveGame(ActionEvent event) {
+    private void leaveGame() {
+        ChessGame chessGame = game.chessGame();
+        if (!chessGame.isOver() && !chessGame.moves().isEmpty() && !confirmLeave()) {
+            return;
+        }
+        goToMainMenu();
+    }
+
+    private boolean confirmLeave() {
+        ButtonType leaveChoice = new ButtonType("Leave Game", ButtonBar.ButtonData.OK_DONE);
+        ButtonType stayChoice = new ButtonType("Keep Playing", ButtonBar.ButtonData.CANCEL_CLOSE);
+        Alert confirm = Dialogs.themed(new Alert(Alert.AlertType.CONFIRMATION,
+                "This game isn't finished, so it won't be recorded on the leaderboard.",
+                stayChoice, leaveChoice), window());
+        confirm.setTitle("Leave game");
+        confirm.setHeaderText("Leave this game?");
+        return confirm.showAndWait().filter(leaveChoice::equals).isPresent();
+    }
+
+    /**
+     * Button action (shown once the game is over): play again with the same settings.
+     */
+    @FXML
+    private void rematchButton() {
+        startRematch();
+    }
+
+    private void startRematch() {
+        GameSession next = game.session().rematch();
+        Stage stage = stage();
+        closeGame();
+        log.info("Rematch");
+        // A fresh screen and controller, so nothing carries over from the last game
+        if (!Screens.<GameController>show(stage, Screens.GAME, controller -> controller.start(next))) {
+            Screens.show(stage, Screens.MAIN_MENU); // the game screen failed to load (already reported)
+        }
+    }
+
+    private void goToMainMenu() {
+        Stage stage = stage();
+        closeGame();
+        Screens.show(stage, Screens.MAIN_MENU);
+    }
+
+    // Stops the clocks and the computer; the game screen is about to be replaced
+    private void closeGame() {
         clockRefresh.stop();
         game.leave();
-        Screens.show(event, Screens.MAIN_MENU);
+    }
+
+    private Stage stage() {
+        return (Stage) window();
     }
 
     /**
