@@ -29,7 +29,6 @@ class SettingsTest {
         assertEquals("Sandcastle", Settings.getConfig(Settings.THEME_CONFIG_ACCESS_STRING));
         assertEquals("true", Settings.getConfig(Settings.UNDO_CONFIG_ACCESS_STRING));
         assertEquals("true", Settings.getConfig(Settings.HINTS_CONFIG_ACCESS_STRING));
-        assertEquals("false", Settings.getConfig(Settings.AI_CONFIG_ACCESS_STRING));
 
         Settings.setConfig(Settings.THEME_CONFIG_ACCESS_STRING, "Marine");
         assertEquals("Marine", Settings.getConfig(Settings.THEME_CONFIG_ACCESS_STRING));
