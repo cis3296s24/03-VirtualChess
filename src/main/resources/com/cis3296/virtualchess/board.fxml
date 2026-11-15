@@ -23,6 +23,7 @@
              the panel taller than the 800px board) -->
         <ListView fx:id="moveList" focusTraversable="false" prefHeight="100.0" VBox.vgrow="ALWAYS" />
         <Button fx:id="undo" maxWidth="Infinity" mnemonicParsing="false" onAction="#undoMoveButton" prefHeight="46.0" text="Undo Move" />
+        <Button fx:id="offerDraw" styleClass="secondary" maxWidth="Infinity" mnemonicParsing="false" onAction="#offerDrawButton" prefHeight="46.0" text="Offer Draw" />
         <Button fx:id="resign" styleClass="secondary" maxWidth="Infinity" mnemonicParsing="false" onAction="#resignButton" prefHeight="46.0" text="Resign" />
         <Button styleClass="secondary" maxWidth="Infinity" mnemonicParsing="false" onAction="#settings" prefHeight="46.0" text="Settings" />
         <Button styleClass="secondary" maxWidth="Infinity" mnemonicParsing="false" onAction="#leaveGame" prefHeight="46.0" text="End Game" />

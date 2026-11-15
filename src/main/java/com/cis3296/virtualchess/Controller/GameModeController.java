@@ -1,7 +1,6 @@
 package com.cis3296.virtualchess.Controller;
 
 import com.cis3296.virtualchess.Components.Screens;
-import com.cis3296.virtualchess.Components.Settings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.layout.Pane;
@@ -19,9 +18,7 @@ public class GameModeController {
      */
     @FXML
     public void switchToSelectionPVP(ActionEvent event) {
-        if (Screens.show(event, Screens.PLAYER_SELECTION_PVP)) {
-            Settings.setConfig(Settings.AI_CONFIG_ACCESS_STRING, "false");
-        }
+        Screens.<PlayerSelectionScreenController>show(event, Screens.PLAYER_SELECTION_PVP, c -> c.setVsComputer(false));
     }
 
     /**
@@ -29,9 +26,7 @@ public class GameModeController {
      */
     @FXML
     public void switchToSelectionPVC(ActionEvent event) {
-        if (Screens.show(event, Screens.PLAYER_SELECTION_PVC)) {
-            Settings.setConfig(Settings.AI_CONFIG_ACCESS_STRING, "true");
-        }
+        Screens.<PlayerSelectionScreenController>show(event, Screens.PLAYER_SELECTION_PVC, c -> c.setVsComputer(true));
     }
 
     @FXML

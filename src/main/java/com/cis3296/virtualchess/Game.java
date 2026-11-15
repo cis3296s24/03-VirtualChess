@@ -7,12 +7,14 @@ import com.cis3296.virtualchess.engine.Move;
 import com.cis3296.virtualchess.engine.Notation;
 import com.cis3296.virtualchess.engine.Square;
 import com.cis3296.virtualchess.Systems.Database;
-import com.cis3296.virtualchess.Systems.TurnSystem;
+import com.cis3296.virtualchess.Systems.GameClock;
 import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Runs one game on the game screen: the rules (through {@link ChessGame}), the clocks, the computer
@@ -30,30 +32,38 @@ public class Game {
 
     // The computer always plays Black; the player selection screen only names the human (White) player
     private static final Color COMPUTER_COLOR = Color.BLACK;
-    private static final int COMPUTER_THINK_MILLIS = 1000;
 
     private final ChessGame chessGame = new ChessGame();
-    private final TurnSystem turnSystem = TurnSystem.getInstance();
+    private final GameSession session;
+    private final GameClock clock;
     private final Runnable onChange;
     private final boolean computerRequested;
     private Stockfish stockfish; // null unless playing the computer and the engine is working
     private Runnable onComputerFailure = () -> { };
+    // Stockfish thinks on this thread so the window stays responsive
+    private final ExecutorService engineThread = Executors.newSingleThreadExecutor(task -> {
+        Thread thread = new Thread(task, "stockfish");
+        thread.setDaemon(true);
+        return thread;
+    });
     private boolean resultRecorded;
     private boolean closed;
 
     /**
-     * @param vsComputer true for player vs computer, false for two players at one board
-     * @param onChange   called after every change to the game, so the screen can redraw
+     * @param session  who's playing, against the computer or not, and the clock time
+     * @param onChange called after every change to the game, so the screen can redraw
      */
-    public Game(boolean vsComputer, Runnable onChange) {
+    public Game(GameSession session, Runnable onChange) {
+        this.session = session;
         this.onChange = onChange;
-        this.computerRequested = vsComputer;
-        turnSystem.start();
-        turnSystem.setTurn(chessGame.sideToMove());
-        if (vsComputer) {
+        this.computerRequested = session.vsComputer();
+        this.clock = new GameClock(session.minutesPerSide());
+        clock.switchTo(chessGame.sideToMove());
+        if (computerRequested) {
             Stockfish engine = new Stockfish();
             if (engine.startEngine()) {
                 engine.setUCINewGame();
+                engine.setSkillLevel(session.difficulty().skillLevel());
                 stockfish = engine;
             } else {
                 log.warn("Playing the computer was chosen, but Stockfish couldn't be started; "
@@ -65,6 +75,49 @@ public class Game {
 
     public ChessGame chessGame() {
         return chessGame;
+    }
+
+    public GameSession session() {
+        return session;
+    }
+
+    public GameClock clock() {
+        return clock;
+    }
+
+    /**
+     * Called regularly by the screen: ends the game if a side has run out of time.
+     */
+    public void tick() {
+        if (chessGame.isOver()) {
+            return;
+        }
+        Color flagged = clock.flagged();
+        if (flagged != null) {
+            log.info("{} ran out of time", flagged);
+            chessGame.timeout(flagged);
+            afterChange();
+        }
+    }
+
+    /**
+     * @return true if a draw can be offered: a game between two people that's still going. (The computer
+     * never accepts one.)
+     */
+    public boolean canOfferDraw() {
+        return !chessGame.isOver() && !isVsComputer();
+    }
+
+    /**
+     * The side to move offered a draw and the opponent accepted.
+     */
+    public void agreeDraw() {
+        if (!canOfferDraw()) {
+            return;
+        }
+        log.info("Draw agreed");
+        chessGame.agreeDraw();
+        afterChange();
     }
 
     /**
@@ -169,7 +222,8 @@ public class Game {
         if (!chessGame.isOver()) {
             log.info("Left an unfinished game after {} moves; it won't be recorded", chessGame.moves().size());
         }
-        turnSystem.stop();
+        clock.stop();
+        engineThread.shutdown();
         if (stockfish != null) {
             stockfish.stopEngine();
         }
@@ -177,33 +231,41 @@ public class Game {
 
     private void afterChange() {
         if (chessGame.isOver()) {
-            turnSystem.pauseClocks();
+            clock.stop();
             recordResult();
         } else {
-            turnSystem.setTurn(chessGame.sideToMove());
+            clock.switchTo(chessGame.sideToMove());
         }
         onChange.run();
     }
 
     private void requestComputerMove() {
-        // runLater lets the player's move finish processing first. Stockfish still runs on the UI thread,
-        // so the window pauses while it thinks; moving it to a background thread is planned separately.
-        Platform.runLater(() -> {
-            if (closed || !isComputerTurn() || chessGame.isOver()) {
-                return;
-            }
-            String bestMove = stockfish.getBestMove(chessGame.position().toFen(), COMPUTER_THINK_MILLIS);
-            if (bestMove == null) {
-                computerFailed("Stockfish didn't return a move");
-                return;
-            }
-            try {
-                play(Move.parse(bestMove));
-            } catch (IllegalArgumentException e) {
-                log.error("Stockfish's move \"{}\" isn't legal in {}", bestMove, chessGame.position().toFen(), e);
-                computerFailed("Stockfish sent an illegal move");
-            }
+        String fen = chessGame.position().toFen();
+        Stockfish engine = stockfish;
+        int thinkMillis = session.difficulty().thinkMillis();
+        // Think on the engine thread; apply the answer back on the UI thread
+        engineThread.execute(() -> {
+            String bestMove = engine.getBestMove(fen, thinkMillis);
+            Platform.runLater(() -> applyComputerMove(fen, bestMove));
         });
+    }
+
+    private void applyComputerMove(String fenAskedAbout, String bestMove) {
+        // The game may have moved on while the computer was thinking (time ran out, or the screen was left)
+        if (closed || stockfish == null || chessGame.isOver() || !isComputerTurn()
+                || !chessGame.position().toFen().equals(fenAskedAbout)) {
+            return;
+        }
+        if (bestMove == null) {
+            computerFailed("Stockfish didn't return a move");
+            return;
+        }
+        try {
+            play(Move.parse(bestMove));
+        } catch (IllegalArgumentException e) {
+            log.error("Stockfish's move \"{}\" isn't legal in {}", bestMove, fenAskedAbout, e);
+            computerFailed("Stockfish sent an illegal move");
+        }
     }
 
     /**
@@ -225,7 +287,7 @@ public class Game {
         resultRecorded = true;
         GameResult result = chessGame.result();
         log.info("Game over after {} moves: {} ({})", chessGame.moves().size(), result.describe(), result.score());
-        Database.insert(turnSystem.getWhitePlayer(), turnSystem.getBlackPlayer(),
+        Database.insert(session.white(), session.black(),
                 leaderboardResult(result, Color.WHITE), leaderboardResult(result, Color.BLACK));
     }
 

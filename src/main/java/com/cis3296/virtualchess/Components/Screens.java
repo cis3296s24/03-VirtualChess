@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.function.Consumer;
 
 /**
  * Switches the window between the app's screens (each one an FXML file). Every controller goes through here,
@@ -53,6 +54,30 @@ public final class Screens {
      */
     public static boolean show(Event event, String fxml) {
         return show((Stage) ((Node) event.getSource()).getScene().getWindow(), fxml);
+    }
+
+    /**
+     * Shows a screen after giving its controller what it needs (e.g. the game screen's {@link
+     * com.cis3296.virtualchess.GameSession}). The setup runs before the screen is shown.
+     *
+     * @return true if the screen is now showing; false if it failed to load or set up
+     */
+    public static <C> boolean show(Event event, String fxml, Consumer<C> setup) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        try {
+            Loaded<C> loaded = load(fxml);
+            setup.accept(loaded.controller());
+            stage.setScene(scene(loaded.root()));
+            stage.show();
+            log.debug("Showing screen {}", fxml);
+            return true;
+        } catch (IOException | RuntimeException e) {
+            log.error("Couldn't open screen {}", fxml, e);
+            Dialogs.error(stage, "Couldn't open that screen",
+                    "Something went wrong while loading it, so you're still on the previous screen. "
+                            + "The details are in the log.");
+            return false;
+        }
     }
 
     /**

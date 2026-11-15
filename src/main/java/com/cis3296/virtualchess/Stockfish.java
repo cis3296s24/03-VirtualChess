@@ -168,34 +168,49 @@ public class Stockfish {
     }
 
     /**
-     * Asks the engine for its move in a position.
+     * Sets how strongly the engine plays, using Stockfish's "Skill Level" option. Engines without the option
+     * ignore it.
      *
-     * @param fen      the position, as a full FEN string
-     * @param waitTime how long the engine may think, in milliseconds
+     * @param level 0 (weakest) to 20 (full strength)
+     */
+    public void setSkillLevel(int level) {
+        sendCommand("setoption name Skill Level value " + Math.max(0, Math.min(20, level)));
+    }
+
+    /**
+     * Asks the engine for its move in a position and waits for the answer. This blocks for about
+     * {@code thinkMillis}, so call it from a background thread, not the UI thread.
+     *
+     * @param fen        the position, as a full FEN string
+     * @param thinkMillis how long the engine may think, in milliseconds
      * @return the move in UCI notation (e.g. "e2e4", or "e7e8q" for a promotion), or null if the engine
      * isn't running or didn't answer (the reason is logged)
      */
-    public String getBestMove(String fen, int waitTime) {
+    public String getBestMove(String fen, int thinkMillis) {
         if (!isRunning()) {
             log.warn("Can't get a move: Stockfish isn't running");
             return null;
         }
         sendCommand("position fen " + fen);
-        sendCommand("go depth 1 movetime " + waitTime);
+        sendCommand("go movetime " + thinkMillis);
 
-        String output = getOutput(waitTime + 20);
-        for (String line : output.split("\n")) {
+        StringBuilder output = new StringBuilder();
+        String line;
+        while ((line = readLine()) != null) {
             if (line.startsWith("bestmove")) {
                 String[] parts = line.split(" ");
                 if (parts.length >= 2 && !parts[1].equals("(none)")) {
                     log.debug("Stockfish >> {}", line);
                     return parts[1];
                 }
+                output.append(line).append('\n');
+                break;
             }
+            output.append(line).append('\n');
         }
-        if (isRunning()) { // if it crashed, that's already been logged
+        if (isRunning()) { // if it crashed or was stopped, that's already been logged
             log.warn("Stockfish gave no move for {}. Its output was:\n{}", fen,
-                    output.isBlank() ? "(nothing)" : output.strip());
+                    output.isEmpty() ? "(nothing)" : output.toString().strip());
         }
         return null;
     }

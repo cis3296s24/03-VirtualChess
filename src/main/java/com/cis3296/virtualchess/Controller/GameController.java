@@ -6,7 +6,7 @@ import com.cis3296.virtualchess.Components.Screens;
 import com.cis3296.virtualchess.Components.Settings;
 import com.cis3296.virtualchess.Components.Style;
 import com.cis3296.virtualchess.Game;
-import com.cis3296.virtualchess.Systems.TurnSystem;
+import com.cis3296.virtualchess.GameSession;
 import com.cis3296.virtualchess.engine.ChessGame;
 import com.cis3296.virtualchess.engine.Color;
 import com.cis3296.virtualchess.engine.GameResult;
@@ -60,8 +60,9 @@ public class GameController {
     private Button undo;
     @FXML
     private Button resign;
+    @FXML
+    private Button offerDraw;
 
-    private final TurnSystem turnSystem = TurnSystem.getInstance();
     private final BoardView boardView = new BoardView();
     private Game game;
     private Timeline clockRefresh;
@@ -72,8 +73,13 @@ public class GameController {
      */
     public void initialize() {
         boardContainer.getChildren().add(boardView);
-        boolean vsComputer = Boolean.parseBoolean(Settings.getConfig(Settings.AI_CONFIG_ACCESS_STRING));
-        game = new Game(vsComputer, this::refresh);
+    }
+
+    /**
+     * Starts the game; called by whoever opens this screen, with the choices from the setup screen.
+     */
+    public void start(GameSession session) {
+        game = new Game(session, this::refresh);
         game.setOnComputerFailure(() -> {
             Alert alert = Dialogs.themed(new Alert(Alert.AlertType.WARNING,
                     "The game continues as two players at one board: you can now move the black pieces too.\n\n"
@@ -87,7 +93,10 @@ public class GameController {
         boardView.setLegalMovesProvider(game::movesFor);
         boardView.setOnMoveRequested(this::onMoveRequested);
 
-        clockRefresh = new Timeline(new KeyFrame(Duration.seconds(0.1), event -> updateClocks()));
+        clockRefresh = new Timeline(new KeyFrame(Duration.seconds(0.1), event -> {
+            game.tick(); // a side may have run out of time
+            updateClocks();
+        }));
         clockRefresh.setCycleCount(Timeline.INDEFINITE);
         clockRefresh.play();
         updateClocks();
@@ -141,6 +150,8 @@ public class GameController {
 
         undo.setDisable(!game.canUndo());
         resign.setDisable(!game.isHumanTurn());
+        offerDraw.setDisable(!game.canOfferDraw());
+        updateClocks();
     }
 
     /**
@@ -163,7 +174,7 @@ public class GameController {
     }
 
     private String playerName(Color color) {
-        return color == Color.WHITE ? turnSystem.getWhitePlayer().name : turnSystem.getBlackPlayer().name;
+        return game.session().player(color).name;
     }
 
     private void announceResult(GameResult result) {
@@ -191,8 +202,8 @@ public class GameController {
     }
 
     private void updateClocks() {
-        turnSystem.getWhiteTime(timerTextWhite);
-        turnSystem.getBlackTime(timerTextBlack);
+        timerTextWhite.setText("White Time: " + game.clock().format(Color.WHITE));
+        timerTextBlack.setText("Black Time: " + game.clock().format(Color.BLACK));
     }
 
     /**
@@ -228,6 +239,22 @@ public class GameController {
         confirm.showAndWait()
                 .filter(ButtonType.YES::equals)
                 .ifPresent(answer -> game.resign());
+    }
+
+    /**
+     * Button action: the side to move offers a draw; the opponent answers at the same screen.
+     */
+    @FXML
+    private void offerDrawButton() {
+        Color offerer = game.chessGame().sideToMove();
+        Alert confirm = Dialogs.themed(new Alert(Alert.AlertType.CONFIRMATION,
+                playerName(offerer) + " has offered a draw.\n\n" + playerName(offerer.opposite())
+                        + ", do you accept?", ButtonType.YES, ButtonType.NO), window());
+        confirm.setTitle("Draw offer");
+        confirm.setHeaderText("Accept a draw?");
+        confirm.showAndWait()
+                .filter(ButtonType.YES::equals)
+                .ifPresent(answer -> game.agreeDraw());
     }
 
     /**
