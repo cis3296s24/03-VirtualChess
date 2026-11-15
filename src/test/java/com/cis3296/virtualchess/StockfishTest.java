@@ -123,6 +123,9 @@ class StockfishTest {
                 assertTrue(engine.startEngine());
                 engine.setUCINewGame();
                 engine.setSkillLevel(difficulty.skillLevel());
+                if (difficulty.isFullStrength()) {
+                    engine.setResources(2, 32);
+                }
                 com.cis3296.virtualchess.engine.ChessGame game = new com.cis3296.virtualchess.engine.ChessGame();
                 for (int ply = 0; ply < 6 && !game.isOver(); ply++) {
                     String move = engine.getBestMove(game.position().toFen(), 50);

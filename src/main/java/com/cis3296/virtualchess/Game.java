@@ -5,6 +5,7 @@ import com.cis3296.virtualchess.engine.Color;
 import com.cis3296.virtualchess.engine.GameResult;
 import com.cis3296.virtualchess.engine.Move;
 import com.cis3296.virtualchess.engine.Notation;
+import com.cis3296.virtualchess.engine.Position;
 import com.cis3296.virtualchess.engine.Square;
 import com.cis3296.virtualchess.Systems.Database;
 import com.cis3296.virtualchess.Systems.GameClock;
@@ -13,8 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Runs one game on the game screen: the rules (through {@link ChessGame}), the clocks, the computer
@@ -32,6 +35,9 @@ public class Game {
 
     // The computer always plays Black; the player selection screen only names the human (White) player
     private static final Color COMPUTER_COLOR = Color.BLACK;
+    // Full-strength Stockfish gets up to this many threads (half the machine's cores) and this much hash
+    private static final int MAX_ENGINE_THREADS = 4;
+    private static final int FULL_STRENGTH_HASH_MB = 128;
 
     private final ChessGame chessGame = new ChessGame();
     private final GameSession session;
@@ -46,6 +52,7 @@ public class Game {
         thread.setDaemon(true);
         return thread;
     });
+    private final Random random = new Random();
     private boolean resultRecorded;
     private boolean closed;
 
@@ -64,6 +71,10 @@ public class Game {
             if (engine.startEngine()) {
                 engine.setUCINewGame();
                 engine.setSkillLevel(session.difficulty().skillLevel());
+                if (session.difficulty().isFullStrength()) {
+                    int threads = Math.clamp(Runtime.getRuntime().availableProcessors() / 2, 1, MAX_ENGINE_THREADS);
+                    engine.setResources(threads, FULL_STRENGTH_HASH_MB);
+                }
                 stockfish = engine;
             } else {
                 log.warn("Playing the computer was chosen, but Stockfish couldn't be started; "
@@ -147,6 +158,13 @@ public class Game {
         return !chessGame.isOver() && !isComputerTurn();
     }
 
+    /**
+     * @return true while the computer is working out its move
+     */
+    public boolean isComputerThinking() {
+        return !chessGame.isOver() && isComputerTurn();
+    }
+
     private boolean isComputerTurn() {
         return isVsComputer() && chessGame.sideToMove() == COMPUTER_COLOR;
     }
@@ -223,7 +241,7 @@ public class Game {
             log.info("Left an unfinished game after {} moves; it won't be recorded", chessGame.moves().size());
         }
         clock.stop();
-        engineThread.shutdown();
+        engineThread.shutdownNow(); // also cuts short the computer's pause, if it's in one
         if (stockfish != null) {
             stockfish.stopEngine();
         }
@@ -240,12 +258,25 @@ public class Game {
     }
 
     private void requestComputerMove() {
-        String fen = chessGame.position().toFen();
+        Position position = chessGame.position();
+        String fen = position.toFen();
         Stockfish engine = stockfish;
-        int thinkMillis = session.difficulty().thinkMillis();
+        Difficulty difficulty = session.difficulty();
+        // Stockfish answers almost instantly at the easier levels; pause like a person would before moving
+        long delayMillis = difficulty.moveDelayMillis(chessGame.legalMoves().size(), position.fullmoveNumber(),
+                clock.remainingMillis(COMPUTER_COLOR), random);
         // Think on the engine thread; apply the answer back on the UI thread
         engineThread.execute(() -> {
-            String bestMove = engine.getBestMove(fen, thinkMillis);
+            long started = System.nanoTime();
+            String bestMove = engine.getBestMove(fen, difficulty.thinkMillis());
+            long pauseLeft = delayMillis - TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - started);
+            if (pauseLeft > 0) {
+                try {
+                    Thread.sleep(pauseLeft);
+                } catch (InterruptedException e) {
+                    return; // the game screen was left
+                }
+            }
             Platform.runLater(() -> applyComputerMove(fen, bestMove));
         });
     }

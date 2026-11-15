@@ -152,6 +152,20 @@ The app looks for the engine in this order:
 
 If none is found, the game still works as two players at one board, and the log says where it looked.
 
+The setup screen offers five difficulties (set in `Difficulty.java`). Below Ultra, the computer also pauses for a
+second or two before moving, like a person would, instead of replying instantly:
+
+| Difficulty | Stockfish Skill Level | Search time per move | Pause before moving |
+|------------|-----------------------|----------------------|---------------------|
+| Easy       | 0                     | 50 ms                | 0.9 to 2.4 s        |
+| Medium     | 5                     | 150 ms               | 1.0 to 2.8 s        |
+| Hard       | 11                    | 0.5 s                | 1.0 to 3.0 s        |
+| Expert     | 17                    | 1 s                  | 0.8 to 2.5 s        |
+| Ultra      | 20 (full strength)    | 3 s, extra threads   | none                |
+
+Pauses are halved for the first few moves, kept short when there's only one legal move, and never use more than
+1/40 of the computer's remaining clock.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Making a release

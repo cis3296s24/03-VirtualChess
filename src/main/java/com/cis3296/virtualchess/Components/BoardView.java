@@ -48,13 +48,21 @@ import java.util.function.Function;
  * <p>
  * Players can drag a piece to its destination, or click the piece and then click the destination.
  * White is always at the bottom.
+ * <p>
+ * The board is drawn at whatever size {@link #setSquareSize} says, so the screen can grow and shrink it with
+ * the window.
  */
 public class BoardView extends StackPane {
 
     private static final Logger log = LoggerFactory.getLogger(BoardView.class);
 
-    public static final double SQUARE_SIZE = 100;
-    private static final double PIECE_SIZE = 84;
+    public static final double DEFAULT_SQUARE_SIZE = 100;
+    /** Smallest square size the board will draw at, so pieces stay recognizable. */
+    public static final double MIN_SQUARE_SIZE = 32;
+    // Pieces and coordinate labels are sized relative to the square
+    private static final double PIECE_SHARE = 0.84;
+    private static final double LABEL_SHARE = 0.15;
+    private static final double MIN_LABEL_SIZE = 12;
     private static final double DRAG_THRESHOLD = 5;
 
     // Opacity of the theme's highlight color: lighter for the last move, stronger for the selected piece
@@ -71,6 +79,7 @@ public class BoardView extends StackPane {
     private final Pane dragLayer = new Pane();
     private final StackPane[] squares = new StackPane[64];
 
+    private double squareSize = DEFAULT_SQUARE_SIZE;
     private Style boardStyle = Style.SANDCASTLE;
     private boolean showHints = true;
     private Position position = Position.startingPosition();
@@ -91,14 +100,15 @@ public class BoardView extends StackPane {
 
     // Called with the chosen piece; non-null exactly while the promotion picker is showing
     private Consumer<PieceType> onPromotionChosen;
+    // Where the picker is showing, so it can be redrawn at a new size
+    private Square promotionSquare;
+    private com.cis3296.virtualchess.engine.Color promotionColor;
 
     public BoardView() {
         for (int rank = 7; rank >= 0; rank--) {
             for (int file = 0; file < 8; file++) {
                 StackPane cell = new StackPane();
-                cell.setMinSize(SQUARE_SIZE, SQUARE_SIZE);
-                cell.setPrefSize(SQUARE_SIZE, SQUARE_SIZE);
-                cell.setMaxSize(SQUARE_SIZE, SQUARE_SIZE);
+                sizeCell(cell);
                 grid.add(cell, file, 7 - rank);
                 squares[Square.of(file, rank).index()] = cell;
             }
@@ -138,6 +148,40 @@ public class BoardView extends StackPane {
         this.selectedMoves = List.of();
         this.hoverSquare = null; // re-check the cursor on the next mouse move: whose turn it is changed
         redraw();
+    }
+
+    /**
+     * Resizes the board. Sizes below {@link #MIN_SQUARE_SIZE} are raised to it.
+     *
+     * @param size the width and height of each square, in pixels (the board is 8 times this)
+     */
+    public void setSquareSize(double size) {
+        double newSize = Math.max(MIN_SQUARE_SIZE, Math.floor(size));
+        if (newSize == squareSize) {
+            return;
+        }
+        squareSize = newSize;
+        for (StackPane cell : squares) {
+            sizeCell(cell);
+        }
+        redraw();
+        if (isPromotionPickerShowing()) {
+            // Redraw the picker at the new size, still waiting for the same choice
+            showPromotionPicker(promotionSquare, promotionColor, onPromotionChosen);
+        }
+    }
+
+    /**
+     * @return the width and height of each square, in pixels
+     */
+    public double squareSize() {
+        return squareSize;
+    }
+
+    private void sizeCell(StackPane cell) {
+        cell.setMinSize(squareSize, squareSize);
+        cell.setPrefSize(squareSize, squareSize);
+        cell.setMaxSize(squareSize, squareSize);
     }
 
     /**
@@ -192,8 +236,8 @@ public class BoardView extends StackPane {
         setCursor(Cursor.DEFAULT);
 
         Region dim = new Region();
-        dim.setPrefSize(8 * SQUARE_SIZE, 8 * SQUARE_SIZE);
-        dim.resize(8 * SQUARE_SIZE, 8 * SQUARE_SIZE);
+        dim.setPrefSize(8 * squareSize, 8 * squareSize);
+        dim.resize(8 * squareSize, 8 * squareSize);
         dim.setBackground(fill(PROMOTION_DIM));
         dim.setOnMousePressed(event -> {
             event.consume();
@@ -208,7 +252,7 @@ public class BoardView extends StackPane {
             PieceType type = PROMOTION_CHOICES[i];
             Square square = Square.of(to.file(), to.rank() + towardCenter * i);
             StackPane tile = promotionTile(Piece.of(color, type));
-            tile.relocate(square.file() * SQUARE_SIZE, (7 - square.rank()) * SQUARE_SIZE);
+            tile.relocate(square.file() * squareSize, (7 - square.rank()) * squareSize);
             tile.setOnMousePressed(event -> {
                 event.consume();
                 choosePromotion(type);
@@ -217,6 +261,8 @@ public class BoardView extends StackPane {
         }
 
         onPromotionChosen = onChosen;
+        promotionSquare = to;
+        promotionColor = color;
         promotionLayer.setVisible(true);
         requestFocus(); // for the keyboard shortcuts
         log.debug("Promotion picker shown on {}", to);
@@ -240,24 +286,26 @@ public class BoardView extends StackPane {
 
     private void hidePromotionPicker() {
         onPromotionChosen = null;
+        promotionSquare = null;
+        promotionColor = null;
         promotionLayer.getChildren().clear();
         promotionLayer.setVisible(false);
     }
 
     // A round tile in the light-square color with the piece on it; brightens on hover
     private StackPane promotionTile(Piece piece) {
-        Circle background = new Circle(SQUARE_SIZE * 0.46, boardStyle.squareColor1);
+        Circle background = new Circle(squareSize * 0.46, boardStyle.squareColor1);
         background.setStroke(boardStyle.highlight);
         background.setStrokeWidth(3);
         background.setEffect(new DropShadow(10, Color.rgb(0, 0, 0, 0.5)));
 
         ImageView image = pieceImageView(piece);
-        image.setFitWidth(PIECE_SIZE * 0.9);
-        image.setFitHeight(PIECE_SIZE * 0.9);
+        image.setFitWidth(pieceSize() * 0.9);
+        image.setFitHeight(pieceSize() * 0.9);
 
         StackPane tile = new StackPane(background, image);
-        tile.setPrefSize(SQUARE_SIZE, SQUARE_SIZE);
-        tile.resize(SQUARE_SIZE, SQUARE_SIZE);
+        tile.setPrefSize(squareSize, squareSize);
+        tile.resize(squareSize, squareSize);
         tile.setPickOnBounds(true); // the whole square is clickable, not just the circle
         tile.setCursor(Cursor.HAND);
         tile.setAccessibleText("Promote to " + piece.type().name().toLowerCase());
@@ -413,8 +461,8 @@ public class BoardView extends StackPane {
 
     private Square squareAt(MouseEvent event) {
         Point2D point = grid.sceneToLocal(event.getSceneX(), event.getSceneY());
-        int file = (int) Math.floor(point.getX() / SQUARE_SIZE);
-        int row = (int) Math.floor(point.getY() / SQUARE_SIZE);
+        int file = (int) Math.floor(point.getX() / squareSize);
+        int row = (int) Math.floor(point.getY() / squareSize);
         return Square.isOnBoard(file, 7 - row) ? Square.of(file, 7 - row) : null;
     }
 
@@ -481,7 +529,7 @@ public class BoardView extends StackPane {
         }
     }
 
-    private static void addCoordinateLabels(StackPane cell, Square square, Color color) {
+    private void addCoordinateLabels(StackPane cell, Square square, Color color) {
         if (square.rank() == 0) {
             Label fileLabel = coordinateLabel(String.valueOf((char) ('a' + square.file())), color);
             StackPane.setAlignment(fileLabel, Pos.BOTTOM_RIGHT);
@@ -494,18 +542,23 @@ public class BoardView extends StackPane {
         }
     }
 
-    private static Label coordinateLabel(String text, Color color) {
+    private Label coordinateLabel(String text, Color color) {
         Label label = new Label(text);
-        label.setFont(Font.font("System", FontWeight.BOLD, 14));
+        double fontSize = Math.max(MIN_LABEL_SIZE, Math.round(squareSize * LABEL_SHARE));
+        label.setFont(Font.font("System", FontWeight.BOLD, fontSize));
         label.setTextFill(color);
-        label.setPadding(new Insets(2, 5, 2, 5));
+        label.setPadding(new Insets(fontSize / 7, fontSize / 3, fontSize / 7, fontSize / 3));
         return label;
     }
 
-    private static ImageView pieceImageView(Piece piece) {
+    private double pieceSize() {
+        return Math.round(squareSize * PIECE_SHARE);
+    }
+
+    private ImageView pieceImageView(Piece piece) {
         ImageView view = new ImageView(PieceImages.of(piece));
-        view.setFitWidth(PIECE_SIZE);
-        view.setFitHeight(PIECE_SIZE);
+        view.setFitWidth(pieceSize());
+        view.setFitHeight(pieceSize());
         view.setPreserveRatio(true);
         view.setSmooth(true);
         return view;
@@ -525,14 +578,14 @@ public class BoardView extends StackPane {
         return region;
     }
 
-    private static Circle hintDot() {
-        return new Circle(SQUARE_SIZE * 0.15, HINT_COLOR);
+    private Circle hintDot() {
+        return new Circle(squareSize * 0.15, HINT_COLOR);
     }
 
-    private static Circle captureRing() {
-        Circle ring = new Circle(SQUARE_SIZE * 0.44, Color.TRANSPARENT);
+    private Circle captureRing() {
+        Circle ring = new Circle(squareSize * 0.44, Color.TRANSPARENT);
         ring.setStroke(HINT_COLOR);
-        ring.setStrokeWidth(SQUARE_SIZE * 0.08);
+        ring.setStrokeWidth(squareSize * 0.08);
         return ring;
     }
 

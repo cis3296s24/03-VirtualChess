@@ -36,8 +36,7 @@ public class ChessApp extends Application {
 
         stage.setTitle("Virtual Chess");
         try {
-            stage.setScene(Screens.scene(Screens.load(Screens.MAIN_MENU).root()));
-            stage.show();
+            Screens.openMainWindow(stage);
         } catch (Exception e) {
             log.error("Couldn't load the main menu, so the app can't start", e);
             Dialogs.errorAndWait(null, "Virtual Chess couldn't start",

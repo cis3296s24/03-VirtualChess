@@ -21,6 +21,7 @@
         <VBox spacing="6.0">
             <Label styleClass="field-label" text="Difficulty" />
             <ComboBox fx:id="difficulty" maxWidth="Infinity" />
+            <Label fx:id="difficultyHint" styleClass="hint-text" wrapText="true" maxWidth="Infinity" />
         </VBox>
         <VBox spacing="6.0">
             <Label styleClass="field-label" text="Minutes per player" />

@@ -14,8 +14,9 @@ import java.util.Map;
  */
 public final class PieceImages {
 
-    // Images are loaded once at this size and scaled down by the ImageView where needed
-    private static final double LOAD_SIZE = 90;
+    // Images are loaded once at this size and scaled down by the ImageView where needed. Big enough for a
+    // full-screen board on a large display without the pieces looking blurry.
+    private static final double LOAD_SIZE = 200;
     private static final Map<Piece, Image> CACHE = new HashMap<>();
 
     private PieceImages() {

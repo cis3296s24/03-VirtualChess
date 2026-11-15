@@ -29,6 +29,8 @@ public class Settings {
     public static final String UNDO_CONFIG_ACCESS_STRING = "undo";
     // Access String for getting if the game should show hints
     public static final String HINTS_CONFIG_ACCESS_STRING = "hints";
+    // Access String for whether the window was left in full screen
+    public static final String FULLSCREEN_CONFIG_ACCESS_STRING = "fullscreen";
 
     private static final String FILE_NAME = "config.xml";
 
@@ -38,6 +40,7 @@ public class Settings {
         DEFAULTS.setProperty(THEME_CONFIG_ACCESS_STRING, SANDCASTLE.styleName);
         DEFAULTS.setProperty(UNDO_CONFIG_ACCESS_STRING, "true");
         DEFAULTS.setProperty(HINTS_CONFIG_ACCESS_STRING, "true");
+        DEFAULTS.setProperty(FULLSCREEN_CONFIG_ACCESS_STRING, "false");
     }
 
     // Loaded on first use; falls back to DEFAULTS for anything not in the file
