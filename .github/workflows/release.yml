@@ -1,0 +1,77 @@
+# Builds a self-contained VirtualChess download (its own Java runtime and Stockfish included) for Windows,
+# macOS, and Linux, and attaches them to a GitHub Release.
+#
+# To publish a release: push a tag, e.g.  git tag v1.0.0 && git push origin v1.0.0
+# To try the builds without releasing: Actions tab > Release > Run workflow (downloads appear as artifacts).
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest,  name: Linux }
+          - { os: windows-latest, name: Windows }
+          - { os: macos-latest,   name: macOS }
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      # Some tests build fake engines out of shell scripts, so they only run on Linux
+      - name: Run the tests
+        if: runner.os == 'Linux'
+        run: |
+          scripts/fetch-stockfish.sh
+          ./mvnw -B verify
+
+      - name: Package the app
+        run: scripts/package-app.sh
+
+      - name: Zip it
+        run: |
+          cd target/dist
+          if [[ "$RUNNER_OS" == "Windows" ]]; then
+            7z a -tzip "../VirtualChess-${{ matrix.name }}.zip" VirtualChess
+          else
+            # zip keeps the executable bits and symlinks that the app needs
+            zip -qry "../VirtualChess-${{ matrix.name }}.zip" ./*
+          fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: VirtualChess-${{ matrix.name }}
+          path: target/VirtualChess-${{ matrix.name }}.zip
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Create the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${{ github.ref_name }}" dist/*.zip --repo "${{ github.repository }}" --generate-notes

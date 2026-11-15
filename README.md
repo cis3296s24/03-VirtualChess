@@ -74,15 +74,12 @@ Toker Ahmed
 
 ## Downloads
 
-1. Make sure Java 21 or newer is installed on your machine
-   (any distribution works, e.g. [Eclipse Temurin](https://adoptium.net/) or your OS package manager)
-2. Go to the releases and download `VirtualChess.zip` from the latest release
-   https://github.com/cis3296s24/03-VirtualChess/releases
-3. Unzip it and run `VirtualChess.jar` (double-click, or `java -jar VirtualChess.jar` from the unzipped folder)
-4. The zip includes Stockfish for macOS (Intel), Windows, and Ubuntu in a `stockfish/` folder next to the jar.
-   For another platform, download Stockfish from https://stockfishchess.org/download/,
-   put it in that `stockfish/` folder, and give it the same name as one of the existing files
-   (see [Playing Against Stockfish](#playing-against-stockfish))
+1. Go to the [latest release](https://github.com/cis3296s24/03-VirtualChess/releases/latest) and download the zip for
+   your system: `VirtualChess-Windows.zip`, `VirtualChess-macOS.zip` (Apple Silicon), or `VirtualChess-Linux.zip`
+2. Unzip it and run `VirtualChess` inside the `VirtualChess` folder (`VirtualChess.exe` on Windows, the
+   `VirtualChess` app on macOS, `bin/VirtualChess` on Linux)
+3. Nothing else to install: Java and the [Stockfish](https://stockfishchess.org/) chess engine are included.
+   (On macOS, the first launch may need right-click > Open, because the app isn't signed.)
 
 <!-- GETTING STARTED -->
 ## Getting Started
@@ -139,20 +136,37 @@ Tests live in `src/test/java` and use JUnit. In VS Code or IntelliJ you can also
 
 ### Playing Against Stockfish
 
-Player-vs-computer mode uses the [Stockfish](https://stockfishchess.org/) engine, which is **not** included in the
-repository. The app looks for it in a `stockfish/` folder in the directory you launch from (the repo root when using
-`./mvnw javafx:run`), under one of these exact names:
+Player-vs-computer mode uses the [Stockfish](https://stockfishchess.org/) engine. Release downloads include it, but
+the repository doesn't (the binaries are large), so a fresh checkout needs it fetched once:
 
-| OS      | Expected path                                 |
-|---------|-----------------------------------------------|
-| Linux   | `stockfish/stockfish-ubuntu-x86-64-avx2`      |
-| Windows | `stockfish/stockfish-windows-x86-64-avx2.exe` |
-| macOS   | `stockfish/stockfish-macos-x86-64-avx2`       |
+```sh
+./scripts/fetch-stockfish.sh      # Linux, macOS, or WSL; downloads the pinned, checksum-verified build into ./stockfish/
+```
 
-The easiest way to get them is to copy the `stockfish/` folder out of the latest release's `VirtualChess.zip`.
-On Linux and macOS, make sure the file is executable (`chmod +x stockfish/*`).
+The app looks for the engine in this order:
+
+1. the file named by `-Dvirtualchess.stockfish=/path/to/stockfish` (the packaged app sets this to its bundled copy)
+2. `stockfish/stockfish` (`stockfish\stockfish.exe` on Windows) in the directory you launch from, i.e. the repo root
+   with `./mvnw javafx:run`
+3. a `stockfish` program on your PATH (for example from `sudo apt install stockfish`)
+
+If none is found, the game still works as two players at one board, and the log says where it looked.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+### Making a release
+
+Releases are built by GitHub Actions (`.github/workflows/release.yml`): push a tag and the workflow tests the code,
+builds the self-contained Windows, macOS, and Linux downloads, and attaches them to a new release.
+
+```sh
+git tag v1.0.0 && git push origin v1.0.0
+```
+
+To try the builds without releasing, run the workflow by hand from the Actions tab. To build one for your own
+system, run `scripts/package-app.sh` (needs a JDK with `jpackage`); the result is in `target/dist/`.
+Stockfish is downloaded at build time from its official releases, pinned and checksum-verified in
+`scripts/fetch-stockfish.sh`, and is licensed GPLv3 (its `Copying.txt` is included in the download).
 
 ### Contributing
 
