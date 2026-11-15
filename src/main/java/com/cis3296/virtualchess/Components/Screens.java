@@ -75,6 +75,7 @@ public final class Screens {
         FullScreen.install(stage, scene);
         mainStage = stage;
         stage.show();
+        MaximizeWorkaround.install(stage);
     }
 
     /**
