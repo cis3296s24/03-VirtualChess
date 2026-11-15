@@ -1,34 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
 
 <!-- Colors come from the chosen board theme: GameController sets -theme-light and -theme-dark on this root
      (see menuStyle.css, "Game screen"). -->
-<HBox fx:id="gameScreen" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cis3296.virtualchess.Controller.GameController">
-    <!-- GameController puts the BoardView in here. (FXML can't import it directly: the loader treats the
+<HBox fx:id="gameScreen" alignment="CENTER" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cis3296.virtualchess.Controller.GameController">
+    <!-- GameController puts the BoardView in here and sizes it to fill whatever space the side panel leaves;
+         the board and panel are centered together. (FXML can't import BoardView directly: the loader treats the
          capitalized "Components" package as a class name.) -->
-    <StackPane fx:id="boardContainer" />
-    <VBox styleClass="side-panel" minWidth="300.0" prefWidth="300.0" maxWidth="300.0">
-        <Text fx:id="currentTurnText" styleClass="turn-text" text="Current Turn:" textAlignment="CENTER" wrappingWidth="268.0" />
-        <VBox styleClass="clock-box">
-            <Text fx:id="timerTextWhite" styleClass="clock-text" text="White Time:" />
-            <Text fx:id="timerTextBlack" styleClass="clock-text" text="Black Time:" />
+    <StackPane fx:id="boardContainer" minWidth="0.0" minHeight="0.0">
+        <padding>
+            <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+        </padding>
+    </StackPane>
+    <VBox fx:id="sidePanel" styleClass="side-panel" minWidth="300.0" prefWidth="300.0" maxWidth="300.0">
+        <!-- Black's card on top and White's at the bottom, matching the board (White is at the bottom) -->
+        <VBox fx:id="blackCard" styleClass="player-card">
+            <HBox styleClass="player-row">
+                <ImageView fx:id="blackIcon" fitWidth="26.0" fitHeight="26.0" preserveRatio="true" smooth="true" />
+                <Label fx:id="blackName" styleClass="player-name" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
+            </HBox>
+            <HBox styleClass="player-row">
+                <!-- The White pieces Black has captured, and Black's material lead -->
+                <HBox fx:id="blackMaterial" styleClass="material-row" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
+                <Label fx:id="blackClock" styleClass="clock" minWidth="-Infinity" />
+            </HBox>
         </VBox>
-        <!-- Small preferred height so the list just fills the space left over (the default is 400px, which made
-             the panel taller than the 800px board) -->
-        <ListView fx:id="moveList" focusTraversable="false" prefHeight="100.0" VBox.vgrow="ALWAYS" />
+        <Label fx:id="statusText" styleClass="status-text" wrapText="true" maxWidth="Infinity" minHeight="-Infinity" />
+        <!-- Small preferred height so the list just fills the space left over -->
+        <ListView fx:id="moveList" focusTraversable="false" prefHeight="60.0" VBox.vgrow="ALWAYS" />
+        <VBox fx:id="whiteCard" styleClass="player-card">
+            <HBox styleClass="player-row">
+                <ImageView fx:id="whiteIcon" fitWidth="26.0" fitHeight="26.0" preserveRatio="true" smooth="true" />
+                <Label fx:id="whiteName" styleClass="player-name" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
+            </HBox>
+            <HBox styleClass="player-row">
+                <HBox fx:id="whiteMaterial" styleClass="material-row" maxWidth="Infinity" HBox.hgrow="ALWAYS" />
+                <Label fx:id="whiteClock" styleClass="clock" minWidth="-Infinity" />
+            </HBox>
+        </VBox>
         <!-- While the game is on: Undo, Offer Draw, Resign. Once it's over GameController hides those and shows
              Rematch instead, and the leave button becomes "Main Menu". -->
-        <Button fx:id="undo" maxWidth="Infinity" mnemonicParsing="false" onAction="#undoMoveButton" prefHeight="46.0" text="Undo Move" />
-        <Button fx:id="offerDraw" styleClass="secondary" maxWidth="Infinity" mnemonicParsing="false" onAction="#offerDrawButton" prefHeight="46.0" text="Offer Draw" />
-        <Button fx:id="resign" styleClass="secondary" maxWidth="Infinity" mnemonicParsing="false" onAction="#resignButton" prefHeight="46.0" text="Resign" />
-        <Button fx:id="rematch" visible="false" managed="false" maxWidth="Infinity" mnemonicParsing="false" onAction="#rematchButton" prefHeight="46.0" text="Rematch" />
-        <Button styleClass="secondary" maxWidth="Infinity" mnemonicParsing="false" onAction="#settings" prefHeight="46.0" text="Settings" />
-        <Button fx:id="leave" styleClass="secondary" maxWidth="Infinity" mnemonicParsing="false" onAction="#leaveGame" prefHeight="46.0" text="Leave Game" />
+        <Button fx:id="undo" maxWidth="Infinity" mnemonicParsing="false" onAction="#undoMoveButton" prefHeight="40.0" text="Undo Move" />
+        <Button fx:id="offerDraw" styleClass="secondary" maxWidth="Infinity" mnemonicParsing="false" onAction="#offerDrawButton" prefHeight="40.0" text="Offer Draw" />
+        <Button fx:id="resign" styleClass="secondary" maxWidth="Infinity" mnemonicParsing="false" onAction="#resignButton" prefHeight="40.0" text="Resign" />
+        <Button fx:id="rematch" visible="false" managed="false" maxWidth="Infinity" mnemonicParsing="false" onAction="#rematchButton" prefHeight="40.0" text="Rematch" />
+        <Button styleClass="secondary" maxWidth="Infinity" mnemonicParsing="false" onAction="#settings" prefHeight="40.0" text="Settings" />
+        <Button fx:id="leave" styleClass="secondary" maxWidth="Infinity" mnemonicParsing="false" onAction="#leaveGame" prefHeight="40.0" text="Leave Game" />
     </VBox>
 </HBox>

@@ -9,7 +9,7 @@
 
 <!-- Shown both from the main menu and as a pop-up during a game (where GameController replaces the button's
      action), so the button says "Done" rather than "Back". -->
-<VBox fx:id="menu" alignment="CENTER" spacing="20.0" prefHeight="540.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cis3296.virtualchess.Controller.SettingsMenuController">
+<VBox fx:id="menu" alignment="CENTER" spacing="20.0" prefHeight="620.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cis3296.virtualchess.Controller.SettingsMenuController">
     <padding>
         <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
     </padding>
@@ -24,6 +24,12 @@
         </Label>
         <CheckBox fx:id="hints" mnemonicParsing="false" onAction="#setHints" text="Show where a piece can move" />
         <CheckBox fx:id="undo" mnemonicParsing="false" onAction="#setUndoButton" text="Show the Undo Move button" />
+        <Label styleClass="field-label" text="Window">
+            <VBox.margin>
+                <Insets top="14.0" />
+            </VBox.margin>
+        </Label>
+        <CheckBox fx:id="fullScreen" mnemonicParsing="false" onAction="#setFullScreen" text="Full screen (F11)" />
     </VBox>
     <Button fx:id="backButton" mnemonicParsing="false" onAction="#backToMainMenu" prefHeight="54.0" prefWidth="355.0" text="Done" />
 </VBox>

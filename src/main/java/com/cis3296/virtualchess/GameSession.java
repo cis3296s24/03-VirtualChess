@@ -8,7 +8,7 @@ import com.cis3296.virtualchess.engine.Color;
  * long each side's clock is. It's handed to the game screen, so nothing about a game lives in global state.
  *
  * @param white           the White player
- * @param black           the Black player (named "Computer" when {@code vsComputer})
+ * @param black           the Black player (named e.g. "Stockfish (Easy)" when {@code vsComputer})
  * @param vsComputer      true if Black is played by Stockfish
  * @param minutesPerSide  starting clock time for each side
  * @param difficulty      how strongly the computer plays (ignored for two players)

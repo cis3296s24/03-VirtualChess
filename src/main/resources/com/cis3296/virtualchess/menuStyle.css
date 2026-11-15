@@ -3,8 +3,9 @@
  * Menu screens use fx:id="menu" on their root; the Learn Chess topic pages use fx:id="piece".
  */
 
-#menu,
-#piece {
+/* Every screen sits in a ScreenFrame that fills the window, so the background goes there: menus are scaled
+   to fit and may not cover the whole window themselves. (The game screen paints over it.) */
+.screen-frame {
     -fx-background-color: linear-gradient(to bottom, #090124 0%, #2d0040 50%, #350e55 55%, #2d0040 75%, #090124 100%);
 }
 
@@ -325,27 +326,78 @@
 #gameScreen .side-panel {
     -fx-background-color: linear-gradient(to bottom, derive(-theme-dark, -52%), derive(-theme-dark, -68%));
     -fx-padding: 16;
-    -fx-spacing: 12;
+    -fx-spacing: 10;
 }
 
-#gameScreen .turn-text {
-    -fx-fill: -theme-light;
-    -fx-font-size: 26px;
+/* One card per player (Black on top, White at the bottom); the side to move gets a highlighted border */
+#gameScreen .player-card {
+    -fx-background-color: derive(-theme-dark, -40%);
+    -fx-background-radius: 10;
+    -fx-border-color: transparent;
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
+    -fx-padding: 8 12 8 12;
+    -fx-spacing: 6;
+}
+
+#gameScreen .player-card.active {
+    -fx-border-color: -theme-light;
+    -fx-background-color: derive(-theme-dark, -30%);
+}
+
+#gameScreen .player-row {
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 8;
+}
+
+#gameScreen .player-name {
+    -fx-text-fill: -theme-light;
+    -fx-font-size: 17px;
     -fx-font-weight: bold;
 }
 
-#gameScreen .clock-box {
-    -fx-background-color: derive(-theme-dark, -40%);
-    -fx-background-radius: 10;
-    -fx-padding: 10 14 10 14;
-    -fx-spacing: 4;
-    -fx-alignment: CENTER;
-}
-
-#gameScreen .clock-text {
-    -fx-fill: derive(-theme-light, 15%);
+#gameScreen .clock {
+    -fx-background-color: derive(-theme-dark, -60%);
+    -fx-background-radius: 6;
+    -fx-padding: 2 8 2 8;
+    -fx-text-fill: derive(-theme-light, 15%);
     -fx-font-size: 20px;
     -fx-font-family: "Monospaced";
+}
+
+#gameScreen .player-card.active .clock {
+    -fx-background-color: -theme-light;
+    -fx-text-fill: -theme-ink;
+    -fx-font-weight: bold;
+}
+
+#gameScreen .clock.low-time,
+#gameScreen .player-card.active .clock.low-time {
+    -fx-background-color: #c0392b;
+    -fx-text-fill: white;
+}
+
+/* Captured pieces and the material lead ("+3"); a fixed height so the card doesn't jump on the first capture */
+#gameScreen .material-row {
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 4;
+    -fx-min-height: 22;
+    -fx-pref-height: 22;
+}
+
+#gameScreen .advantage {
+    -fx-text-fill: derive(-theme-light, 10%);
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 0 2;
+}
+
+#gameScreen .status-text {
+    -fx-text-fill: -theme-light;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER;
+    -fx-text-alignment: CENTER;
 }
 
 #gameScreen .list-view {

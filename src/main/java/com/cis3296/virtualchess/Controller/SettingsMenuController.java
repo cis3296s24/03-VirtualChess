@@ -3,12 +3,15 @@ package com.cis3296.virtualchess.Controller;
 import com.cis3296.virtualchess.Components.Screens;
 import com.cis3296.virtualchess.Components.Settings;
 import com.cis3296.virtualchess.Components.Style;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.WeakChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 import static com.cis3296.virtualchess.Components.Settings.setConfig;
 
@@ -28,7 +31,14 @@ public class SettingsMenuController {
     @FXML
     public CheckBox hints;
     @FXML
+    public CheckBox fullScreen;
+    @FXML
     public Pane menu;
+
+    // Keeps the checkbox right if F11 or Esc changes full screen while this screen is open. Held here because
+    // the window only keeps a weak reference to it, so a closed settings screen can be garbage collected.
+    private final ChangeListener<Boolean> fullScreenWatcher = (observable, was, isFullScreen) ->
+            fullScreen.setSelected(isFullScreen);
 
     /**
      * Fills in the theme list and shows the current settings.
@@ -40,6 +50,26 @@ public class SettingsMenuController {
         ThemeDropDown.setValue(Settings.currentStyle().styleName);
         undo.setSelected(Boolean.parseBoolean(Settings.getConfig(Settings.UNDO_CONFIG_ACCESS_STRING)));
         hints.setSelected(Boolean.parseBoolean(Settings.getConfig(Settings.HINTS_CONFIG_ACCESS_STRING)));
+        Stage window = Screens.mainStage();
+        if (window != null) {
+            fullScreen.setSelected(window.isFullScreen());
+            window.fullScreenProperty().addListener(new WeakChangeListener<>(fullScreenWatcher));
+        } else {
+            fullScreen.setSelected(Boolean.parseBoolean(Settings.getConfig(Settings.FULLSCREEN_CONFIG_ACCESS_STRING)));
+        }
+    }
+
+    /**
+     * Turns full screen on or off for the app's main window (which saves the choice)
+     */
+    @FXML
+    private void setFullScreen() {
+        Stage window = Screens.mainStage();
+        if (window != null) {
+            window.setFullScreen(fullScreen.isSelected());
+        } else {
+            setConfig(Settings.FULLSCREEN_CONFIG_ACCESS_STRING, String.valueOf(fullScreen.isSelected()));
+        }
     }
 
     /**

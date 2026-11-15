@@ -31,6 +31,9 @@ public class Stockfish {
     private static final Logger log = LoggerFactory.getLogger(Stockfish.class);
     private static final long QUIT_TIMEOUT_MILLIS = 1000;
 
+    /** The highest "Skill Level": full strength, with no limit. */
+    public static final int MAX_SKILL_LEVEL = 20;
+
     private final Path executable;
     private Process engineProcess;
     private BufferedReader processReader;
@@ -228,10 +231,22 @@ public class Stockfish {
      * Sets how strongly the engine plays, using Stockfish's "Skill Level" option. Engines without the option
      * ignore it.
      *
-     * @param level 0 (weakest) to 20 (full strength)
+     * @param level 0 (weakest) to {@value #MAX_SKILL_LEVEL} (full strength)
      */
     public void setSkillLevel(int level) {
-        sendCommand("setoption name Skill Level value " + Math.max(0, Math.min(20, level)));
+        sendCommand("setoption name Skill Level value " + Math.max(0, Math.min(MAX_SKILL_LEVEL, level)));
+    }
+
+    /**
+     * Lets the engine search with more CPU threads and a bigger hash table, for full-strength play. Engines
+     * without these options ignore them.
+     *
+     * @param threads search threads (1 is Stockfish's default)
+     * @param hashMegabytes transposition table size (16 is Stockfish's default)
+     */
+    public void setResources(int threads, int hashMegabytes) {
+        sendCommand("setoption name Threads value " + Math.max(1, threads));
+        sendCommand("setoption name Hash value " + Math.max(1, hashMegabytes));
     }
 
     /**

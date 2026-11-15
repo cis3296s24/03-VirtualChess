@@ -30,6 +30,8 @@ public class PlayerSelectionScreenController {
     public void initialize() {
         if (difficulty != null) {
             difficulty.getItems().setAll(Difficulty.values());
+            difficulty.valueProperty().addListener((observable, old, chosen) ->
+                    difficultyHint.setText(chosen == null ? "" : chosen.description()));
             difficulty.setValue(Difficulty.MEDIUM);
         }
     }
@@ -45,6 +47,8 @@ public class PlayerSelectionScreenController {
     // Only on the computer version of the screen
     @FXML
     private ComboBox<Difficulty> difficulty;
+    @FXML
+    private Label difficultyHint;
 
     private boolean vsComputer;
 
@@ -63,7 +67,9 @@ public class PlayerSelectionScreenController {
     @FXML
     public void switchToGame(ActionEvent event) {
         String whiteName = player1name.getText().strip();
-        String blackName = vsComputer ? "Computer" : player2name.getText().strip();
+        Difficulty level = difficulty == null ? Difficulty.MEDIUM : difficulty.getValue();
+        // The computer's name says how strong it was, so the leaderboard does too
+        String blackName = vsComputer ? "Stockfish (" + level + ")" : player2name.getText().strip();
         if (whiteName.isEmpty() || blackName.isEmpty()) {
             showError(vsComputer ? "Please enter your name." : "Please enter a name for both players.");
             return;
@@ -85,8 +91,7 @@ public class PlayerSelectionScreenController {
             }
         }
 
-        GameSession session = new GameSession(new Player(whiteName), new Player(blackName), vsComputer, minutes,
-                difficulty == null ? Difficulty.MEDIUM : difficulty.getValue());
+        GameSession session = new GameSession(new Player(whiteName), new Player(blackName), vsComputer, minutes, level);
         log.info("Starting {} game: {} (White) vs {} (Black), {} min each",
                 vsComputer ? "player vs computer" : "two-player", whiteName, blackName, minutes);
         Screens.<GameController>show(event, Screens.GAME, game -> game.start(session));

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.cis3296.virtualchess.Components.BoardView;
 import com.cis3296.virtualchess.Components.Dialogs;
+import com.cis3296.virtualchess.Components.PieceImages;
 import com.cis3296.virtualchess.Components.Screens;
 import com.cis3296.virtualchess.Components.Settings;
 import com.cis3296.virtualchess.Components.Style;
@@ -17,21 +18,27 @@ import com.cis3296.virtualchess.GameSession;
 import com.cis3296.virtualchess.engine.ChessGame;
 import com.cis3296.virtualchess.engine.Color;
 import com.cis3296.virtualchess.engine.GameResult;
+import com.cis3296.virtualchess.engine.Material;
 import com.cis3296.virtualchess.engine.Move;
+import com.cis3296.virtualchess.engine.Piece;
+import com.cis3296.virtualchess.engine.PieceType;
 import com.cis3296.virtualchess.engine.Square;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -45,17 +52,42 @@ public class GameController {
 
     private static final Logger log = LoggerFactory.getLogger(GameController.class);
 
+    // A clock under this many milliseconds is shown in the warning color
+    private static final long LOW_TIME_MILLIS = 20_000;
+    // Captured pieces are drawn this big, overlapping within each kind of piece
+    private static final double CAPTURED_PIECE_SIZE = 20;
+    private static final double CAPTURED_PIECE_OVERLAP = -11;
+
     // The whole screen; gets the board theme's colors as CSS variables so the side panel matches the board
     @FXML
     private Pane gameScreen;
     @FXML
     private StackPane boardContainer;
     @FXML
-    private Text currentTurnText;
+    private Pane sidePanel;
+    // One card per player: name, clock, captured pieces, and material lead
     @FXML
-    private Text timerTextWhite;
+    private Pane whiteCard;
     @FXML
-    private Text timerTextBlack;
+    private Pane blackCard;
+    @FXML
+    private ImageView whiteIcon;
+    @FXML
+    private ImageView blackIcon;
+    @FXML
+    private Label whiteName;
+    @FXML
+    private Label blackName;
+    @FXML
+    private Label whiteClock;
+    @FXML
+    private Label blackClock;
+    @FXML
+    private HBox whiteMaterial;
+    @FXML
+    private HBox blackMaterial;
+    @FXML
+    private Label statusText;
     @FXML
     private ListView<String> moveList;
     @FXML
@@ -80,6 +112,18 @@ public class GameController {
      */
     public void initialize() {
         boardContainer.getChildren().add(boardView);
+        // The board is the biggest square that fits beside the side panel
+        gameScreen.widthProperty().addListener((observable, old, width) -> fitBoard());
+        gameScreen.heightProperty().addListener((observable, old, height) -> fitBoard());
+    }
+
+    private void fitBoard() {
+        Insets padding = boardContainer.getInsets();
+        double width = gameScreen.getWidth() - sidePanel.getMinWidth() - padding.getLeft() - padding.getRight();
+        double height = gameScreen.getHeight() - padding.getTop() - padding.getBottom();
+        if (width > 0 && height > 0) {
+            boardView.setSquareSize(Math.min(width, height) / 8);
+        }
     }
 
     /**
@@ -96,6 +140,11 @@ public class GameController {
             alert.setHeaderText("Stockfish stopped responding");
             alert.show();
         });
+
+        whiteName.setText(playerName(Color.WHITE));
+        blackName.setText(playerName(Color.BLACK));
+        whiteIcon.setImage(PieceImages.of(Piece.of(Color.WHITE, PieceType.KING)));
+        blackIcon.setImage(PieceImages.of(Piece.of(Color.BLACK, PieceType.KING)));
 
         applySettings();
         boardView.setLegalMovesProvider(game::movesFor);
@@ -150,15 +199,76 @@ public class GameController {
         }
 
         GameResult result = chessGame.result();
-        if (result == null) {
-            currentTurnText.setText("Current Turn:\n" + playerName(chessGame.sideToMove()));
-        } else {
-            currentTurnText.setText("Game over\n" + describe(result));
+        Color toMove = chessGame.sideToMove();
+        setStyleClass(whiteCard, "active", result == null && toMove == Color.WHITE);
+        setStyleClass(blackCard, "active", result == null && toMove == Color.BLACK);
+        statusText.setText(result == null ? status(toMove) : "Game over: " + describe(result));
+        updateMaterial();
+        if (result != null) {
             announceResult(result);
         }
 
         updateButtons();
         updateClocks();
+    }
+
+    private String status(Color toMove) {
+        String status;
+        if (game.isComputerThinking()) {
+            status = "Stockfish is thinking\u2026"; // the full name, with the level, is on its card
+        } else if (game.isVsComputer()) {
+            status = "Your move";
+        } else {
+            status = playerName(toMove) + " to move";
+        }
+        return game.chessGame().position().isInCheck() ? "Check! " + status : status;
+    }
+
+    /**
+     * Shows under each player the pieces they've captured, and how many points ahead they are (counting what's
+     * on the board, so a promoted pawn counts as the piece it became).
+     */
+    private void updateMaterial() {
+        ChessGame chessGame = game.chessGame();
+        List<Piece> captured = Material.captured(chessGame.startingPosition(), chessGame.moves());
+        int whiteLead = Material.balance(chessGame.position());
+        showMaterial(whiteMaterial, captured, Color.WHITE, whiteLead);
+        showMaterial(blackMaterial, captured, Color.BLACK, -whiteLead);
+    }
+
+    private static void showMaterial(HBox row, List<Piece> captured, Color capturer, int lead) {
+        row.getChildren().clear();
+        HBox group = null;
+        PieceType groupType = null;
+        for (Piece piece : captured) {
+            if (piece.color() == capturer) {
+                continue; // that's one of this side's own pieces, captured by the opponent
+            }
+            if (piece.type() != groupType) {
+                group = new HBox(CAPTURED_PIECE_OVERLAP);
+                groupType = piece.type();
+                row.getChildren().add(group);
+            }
+            ImageView image = new ImageView(PieceImages.of(piece));
+            image.setFitWidth(CAPTURED_PIECE_SIZE);
+            image.setFitHeight(CAPTURED_PIECE_SIZE);
+            image.setPreserveRatio(true);
+            image.setSmooth(true);
+            group.getChildren().add(image);
+        }
+        if (lead > 0) {
+            Label advantage = new Label("+" + lead);
+            advantage.getStyleClass().add("advantage");
+            row.getChildren().add(advantage);
+        }
+    }
+
+    private static void setStyleClass(javafx.scene.Node node, String styleClass, boolean on) {
+        if (!on) {
+            node.getStyleClass().remove(styleClass);
+        } else if (!node.getStyleClass().contains(styleClass)) {
+            node.getStyleClass().add(styleClass);
+        }
     }
 
     /**
@@ -252,8 +362,13 @@ public class GameController {
     }
 
     private void updateClocks() {
-        timerTextWhite.setText("White Time: " + game.clock().format(Color.WHITE));
-        timerTextBlack.setText("Black Time: " + game.clock().format(Color.BLACK));
+        updateClock(whiteClock, Color.WHITE);
+        updateClock(blackClock, Color.BLACK);
+    }
+
+    private void updateClock(Label clock, Color side) {
+        clock.setText(game.clock().format(side));
+        setStyleClass(clock, "low-time", !game.chessGame().isOver() && game.clock().remainingMillis(side) < LOW_TIME_MILLIS);
     }
 
     /**
