@@ -456,8 +456,9 @@
     -fx-background-color: derive(-theme-light, -12%);
 }
 
-/* "No" / "Cancel" buttons */
-.game-dialog .button:cancel {
+/* "No" / "Cancel" buttons, and other lesser choices (e.g. "Main Menu" next to "Rematch") */
+.game-dialog .button:cancel,
+.game-dialog .button.secondary {
     -fx-background-color: transparent;
     -fx-border-color: derive(-theme-light, -15%);
     -fx-border-radius: 10;
@@ -466,6 +467,7 @@
     -fx-effect: null;
 }
 
-.game-dialog .button:cancel:hover {
+.game-dialog .button:cancel:hover,
+.game-dialog .button.secondary:hover {
     -fx-background-color: rgba(255, 255, 255, 0.08);
 }

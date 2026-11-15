@@ -22,10 +22,13 @@
         <!-- Small preferred height so the list just fills the space left over (the default is 400px, which made
              the panel taller than the 800px board) -->
         <ListView fx:id="moveList" focusTraversable="false" prefHeight="100.0" VBox.vgrow="ALWAYS" />
+        <!-- While the game is on: Undo, Offer Draw, Resign. Once it's over GameController hides those and shows
+             Rematch instead, and the leave button becomes "Main Menu". -->
         <Button fx:id="undo" maxWidth="Infinity" mnemonicParsing="false" onAction="#undoMoveButton" prefHeight="46.0" text="Undo Move" />
         <Button fx:id="offerDraw" styleClass="secondary" maxWidth="Infinity" mnemonicParsing="false" onAction="#offerDrawButton" prefHeight="46.0" text="Offer Draw" />
         <Button fx:id="resign" styleClass="secondary" maxWidth="Infinity" mnemonicParsing="false" onAction="#resignButton" prefHeight="46.0" text="Resign" />
+        <Button fx:id="rematch" visible="false" managed="false" maxWidth="Infinity" mnemonicParsing="false" onAction="#rematchButton" prefHeight="46.0" text="Rematch" />
         <Button styleClass="secondary" maxWidth="Infinity" mnemonicParsing="false" onAction="#settings" prefHeight="46.0" text="Settings" />
-        <Button styleClass="secondary" maxWidth="Infinity" mnemonicParsing="false" onAction="#leaveGame" prefHeight="46.0" text="End Game" />
+        <Button fx:id="leave" styleClass="secondary" maxWidth="Infinity" mnemonicParsing="false" onAction="#leaveGame" prefHeight="46.0" text="Leave Game" />
     </VBox>
 </HBox>

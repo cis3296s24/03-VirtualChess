@@ -22,4 +22,15 @@ public record GameSession(Player white, Player black, boolean vsComputer, int mi
     public Player player(Color color) {
         return color == Color.WHITE ? white : black;
     }
+
+    /**
+     * @return the setup for a rematch: the same settings, with the players swapping colors in a two-player
+     * game (against the computer the player always has White, so nothing changes)
+     */
+    public GameSession rematch() {
+        if (vsComputer) {
+            return this;
+        }
+        return new GameSession(black, white, false, minutesPerSide, difficulty);
+    }
 }
