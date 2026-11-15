@@ -14,7 +14,10 @@ import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermissions;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -105,6 +108,51 @@ class StockfishTest {
             assertTrue(move != null && MoveGenerator.isLegal(position, Move.parse(move)), "got " + move);
         } finally {
             engine.stopEngine();
+        }
+    }
+
+    /**
+     * Plays a few moves against itself at the weakest and strongest settings; every move must be legal.
+     */
+    @Test
+    void realStockfishPlaysLegalMovesAtEveryDifficulty() {
+        assumeTrue(Files.isExecutable(Stockfish.defaultExecutable()), "Stockfish isn't installed in ./stockfish");
+        for (Difficulty difficulty : Difficulty.values()) {
+            Stockfish engine = new Stockfish();
+            try {
+                assertTrue(engine.startEngine());
+                engine.setUCINewGame();
+                engine.setSkillLevel(difficulty.skillLevel());
+                com.cis3296.virtualchess.engine.ChessGame game = new com.cis3296.virtualchess.engine.ChessGame();
+                for (int ply = 0; ply < 6 && !game.isOver(); ply++) {
+                    String move = engine.getBestMove(game.position().toFen(), 50);
+                    assertNotNull(move, difficulty + " gave no move at ply " + ply);
+                    game.play(Move.parse(move)); // throws if illegal
+                }
+            } finally {
+                engine.stopEngine();
+            }
+        }
+    }
+
+    @Test
+    void systemPropertyOverridesTheDefaultLocation() throws IOException {
+        Path engine = fakeEngine("exit 0\n");
+        System.setProperty(Stockfish.EXECUTABLE_PROPERTY, engine.toString());
+        try {
+            assertEquals(engine, Stockfish.defaultExecutable());
+        } finally {
+            System.clearProperty(Stockfish.EXECUTABLE_PROPERTY);
+        }
+    }
+
+    @Test
+    void ignoresAPropertyThatPointsNowhere() {
+        System.setProperty(Stockfish.EXECUTABLE_PROPERTY, dir.resolve("missing").toString());
+        try {
+            assertNotEquals(dir.resolve("missing"), Stockfish.defaultExecutable());
+        } finally {
+            System.clearProperty(Stockfish.EXECUTABLE_PROPERTY);
         }
     }
 

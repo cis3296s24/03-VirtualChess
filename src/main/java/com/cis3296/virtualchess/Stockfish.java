@@ -11,6 +11,8 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -36,8 +38,7 @@ public class Stockfish {
     private boolean running;
 
     /**
-     * Uses the Stockfish build for this operating system from the "stockfish" folder in the directory the app
-     * was started from (see "Playing Against Stockfish" in the README).
+     * Uses the Stockfish found by {@link #defaultExecutable()}.
      */
     public Stockfish() {
         this(defaultExecutable());
@@ -51,19 +52,75 @@ public class Stockfish {
     }
 
     /**
-     * @return where the app looks for Stockfish on this operating system
+     * System property that names the Stockfish program to use, overriding the search in
+     * {@link #defaultExecutable()}.
+     */
+    public static final String EXECUTABLE_PROPERTY = "virtualchess.stockfish";
+
+    /**
+     * Finds the Stockfish program to run, trying in order: the file named by the
+     * {@value #EXECUTABLE_PROPERTY} system property, the engine bundled with the packaged app (a
+     * {@code stockfish} folder beside the app's jar or up to two folders above it, where each OS's package
+     * layout puts it), {@code stockfish/stockfish} (with {@code .exe} on Windows) in the directory the app was
+     * started from, then a {@code stockfish} on the PATH.
+     *
+     * @return the first that exists, or the local {@code stockfish/} path if none does, so error messages say
+     * where the app looked
      */
     public static Path defaultExecutable() {
-        String os = System.getProperty("os.name", "").toLowerCase(Locale.ROOT);
-        String name;
-        if (os.contains("mac")) {
-            name = "stockfish-macos-x86-64-avx2";
-        } else if (os.contains("win")) {
-            name = "stockfish-windows-x86-64-avx2.exe";
-        } else {
-            name = "stockfish-ubuntu-x86-64-avx2";
+        String configured = System.getProperty(EXECUTABLE_PROPERTY);
+        if (configured != null && !configured.isBlank() && Files.isExecutable(Path.of(configured))) {
+            return Path.of(configured);
         }
-        return Path.of("stockfish", name);
+        for (Path folder : bundledFolders()) {
+            Path bundled = folder.resolve("stockfish").resolve(programName());
+            if (Files.isExecutable(bundled)) {
+                return bundled;
+            }
+        }
+        Path local = Path.of("stockfish", programName());
+        if (Files.isExecutable(local)) {
+            return local;
+        }
+        String pathVariable = System.getenv("PATH");
+        if (pathVariable != null) {
+            for (String directory : pathVariable.split(java.io.File.pathSeparator)) {
+                if (directory.isBlank()) {
+                    continue;
+                }
+                try {
+                    Path onPath = Path.of(directory, programName());
+                    if (Files.isExecutable(onPath)) {
+                        return onPath;
+                    }
+                } catch (java.nio.file.InvalidPathException e) {
+                    // a malformed PATH entry; skip it
+                }
+            }
+        }
+        return local;
+    }
+
+    // The folder holding the app's jar and its parents: where a packaged app keeps its bundled files
+    private static List<Path> bundledFolders() {
+        try {
+            Path jar = Path.of(Stockfish.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            if (!Files.isRegularFile(jar)) {
+                return List.of(); // running from compiled classes (tests, javafx:run), not a packaged app
+            }
+            List<Path> folders = new ArrayList<>();
+            for (Path folder = jar.getParent(); folder != null && folders.size() < 3; folder = folder.getParent()) {
+                folders.add(folder);
+            }
+            return folders;
+        } catch (Exception e) {
+            return List.of();
+        }
+    }
+
+    private static String programName() {
+        boolean windows = System.getProperty("os.name", "").toLowerCase(Locale.ROOT).contains("win");
+        return windows ? "stockfish.exe" : "stockfish";
     }
 
     /**
