@@ -1,5 +1,12 @@
 package com.cis3296.virtualchess.Controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.cis3296.virtualchess.Components.BoardView;
 import com.cis3296.virtualchess.Components.Dialogs;
 import com.cis3296.virtualchess.Components.Screens;
@@ -12,6 +19,7 @@ import com.cis3296.virtualchess.engine.Color;
 import com.cis3296.virtualchess.engine.GameResult;
 import com.cis3296.virtualchess.engine.Move;
 import com.cis3296.virtualchess.engine.Square;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -28,12 +36,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.util.Duration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Controller for the game screen (board.fxml): connects the {@link BoardView}, side panel, and buttons to
@@ -86,9 +88,10 @@ public class GameController {
     public void start(GameSession session) {
         game = new Game(session, this::refresh);
         game.setOnComputerFailure(() -> {
-            Alert alert = Dialogs.themed(new Alert(Alert.AlertType.WARNING,
-                    "The game continues as two players at one board: you can now move the black pieces too.\n\n"
-                            + "The details are in the log."), window());
+            Alert alert = Dialogs.themed(new Alert(Alert.AlertType.WARNING, """
+                    The game continues as two players at one board: you can now move the black pieces too.
+
+                    The details are in the log."""), window());
             alert.setTitle("Computer opponent stopped");
             alert.setHeaderText("Stockfish stopped responding");
             alert.show();
@@ -111,9 +114,10 @@ public class GameController {
         if (game.isComputerUnavailable()) {
             // Wait until the window is showing so the alert has something to sit on top of
             Platform.runLater(() -> {
-                Alert alert = Dialogs.themed(new Alert(Alert.AlertType.WARNING,
-                        "This game is for two players at one board instead.\n\n"
-                                + "See \"Playing Against Stockfish\" in the README for where the app looks for it."),
+                Alert alert = Dialogs.themed(new Alert(Alert.AlertType.WARNING, """
+                        This game is for two players at one board instead.
+
+                        See "Playing Against Stockfish" in the README for where the app looks for it."""),
                         window());
                 alert.setTitle("Stockfish not found");
                 alert.setHeaderText("Stockfish couldn't be started");
@@ -294,9 +298,11 @@ public class GameController {
     @FXML
     private void offerDrawButton() {
         Color offerer = game.chessGame().sideToMove();
-        Alert confirm = Dialogs.themed(new Alert(Alert.AlertType.CONFIRMATION,
-                playerName(offerer) + " has offered a draw.\n\n" + playerName(offerer.opposite())
-                        + ", do you accept?", ButtonType.YES, ButtonType.NO), window());
+        Alert confirm = Dialogs.themed(new Alert(Alert.AlertType.CONFIRMATION, """
+                %s has offered a draw.
+
+                %s, do you accept?""".formatted(playerName(offerer), playerName(offerer.opposite())),
+                ButtonType.YES, ButtonType.NO), window());
         confirm.setTitle("Draw offer");
         confirm.setHeaderText("Accept a draw?");
         confirm.showAndWait()
